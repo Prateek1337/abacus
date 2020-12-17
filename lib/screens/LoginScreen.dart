@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:abacus/screens/HomeScreen.dart';
@@ -73,77 +74,131 @@ class LoginScreen extends StatelessWidget {
   }
 
   void verifyPhoneNumber(String phone, BuildContext context) async {
-    await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: phone,
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          // ANDROID ONLY!
+    try {
+      if (Platform.isAndroid) {
+        await FirebaseAuth.instance.verifyPhoneNumber(
+            phoneNumber: phone,
+            verificationCompleted: (PhoneAuthCredential credential) async {
+              // ANDROID ONLY!
 
-          // Sign the user in (or link) with the auto-generated credential
-          await FirebaseAuth.instance.signInWithCredential(credential);
-        },
-        verificationFailed: (FirebaseAuthException e) {
-          if (e.code == 'invalid-phone-number') {
-            print('The provided phone number is not valid.');
-          }
+              // Sign the user in (or link) with the auto-generated credential
+              await FirebaseAuth.instance.signInWithCredential(credential);
+            },
+            verificationFailed: (FirebaseAuthException e) {
+              if (e.code == 'invalid-phone-number') {
+                print('The provided phone number is not valid.');
+              }
 
-          // Handle other errors
-        },
-        codeSent: (String verificationId, int resendToken) async {
-          // Update the UI - wait for the user to enter the SMS code
-          //String smsCode = 'xxxx';
-          showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (context) {
-                return MaterialApp(
-                  home: AlertDialog(
-                    title: Text("Enter the code"),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextField(
-                          controller: _codeController,
-                        )
-                      ],
-                    ),
-                    actions: [
-                      FlatButton(
-                        child: Text('Confirm'),
-                        textColor: Colors.white,
-                        color: Colors.blue,
-                        onPressed: () async {
-                          final code = _codeController.text.trim();
-                          AuthCredential credential =
-                              PhoneAuthProvider.credential(
-                                  verificationId: verificationId,
-                                  smsCode: code);
+              // Handle other errors
+            },
+            codeSent: (String verificationId, int resendToken) async {
+              // Update the UI - wait for the user to enter the SMS code
+              //String smsCode = 'xxxx';
+              showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) {
+                    return MaterialApp(
+                      home: AlertDialog(
+                        title: Text("Enter the code"),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextField(
+                              controller: _codeController,
+                            )
+                          ],
+                        ),
+                        actions: [
+                          FlatButton(
+                            child: Text('Confirm'),
+                            textColor: Colors.white,
+                            color: Colors.blue,
+                            onPressed: () async {
+                              final code = _codeController.text.trim();
+                              AuthCredential credential =
+                                  PhoneAuthProvider.credential(
+                                      verificationId: verificationId,
+                                      smsCode: code);
 
-                          UserCredential result = await FirebaseAuth.instance
-                              .signInWithCredential(credential);
+                              UserCredential result = await FirebaseAuth
+                                  .instance
+                                  .signInWithCredential(credential);
 
-                          User user = result.user;
+                              User user = result.user;
 
-                          if (user != null) {
-                            saveUser(user.phoneNumber);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomeScreen(
-                                          user: user.phoneNumber,
-                                        )));
-                          } else {
-                            print('Error');
-                          }
-                        },
-                      )
-                    ],
-                  ),
-                );
-              });
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {
-          // Auto-resolution timed out...
-        });
+                              if (user != null) {
+                                saveUser(user.phoneNumber);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => HomeScreen(
+                                              user: user.phoneNumber,
+                                            )));
+                              } else {
+                                print('Error');
+                              }
+                            },
+                          )
+                        ],
+                      ),
+                    );
+                  });
+            },
+            codeAutoRetrievalTimeout: (String verificationId) {
+              // Auto-resolution timed out...
+            });
+      }
+    } catch (e) {
+      print(e.toString());
+      FirebaseAuth auth = FirebaseAuth.instance;
+      ConfirmationResult confirmationResult =
+          await auth.signInWithPhoneNumber(phone);
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) {
+            return MaterialApp(
+              home: AlertDialog(
+                title: Text("Enter the code"),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: _codeController,
+                    )
+                  ],
+                ),
+                actions: [
+                  FlatButton(
+                    child: Text('Confirm'),
+                    textColor: Colors.white,
+                    color: Colors.blue,
+                    onPressed: () async {
+                      final code = _codeController.text.trim();
+                      UserCredential userCredential =
+                          await confirmationResult.confirm(code);
+
+                      User user = userCredential.user;
+
+                      if (user != null) {
+                        saveUser(user.phoneNumber);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomeScreen(
+                                      user: user.phoneNumber,
+                                    )));
+                      } else {
+                        print('Error');
+                      }
+                    },
+                  )
+                ],
+              ),
+            );
+          });
+    }
   }
 
   void saveUser(String phoneNumber) async {
