@@ -1,3 +1,6 @@
+//TODO: validation   of _range1 and _range2, _0<range1<=_range2 and not empty and number
+//TODO: add checkboxs for  _valueIsPos,_ansIsPos. Take their values as 0 and 1
+
 // import 'package:abacus/screens/LoginScreen.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -20,9 +23,8 @@ class AdditionScreen extends StatefulWidget {
 class _AdditionScreenState extends State<AdditionScreen> {
   TextEditingController _numberOfValues, _range1, _range2;
 
-  int tempzero = 0;
+  int _valueIsPos = 0, _ansIsPos = 1;
   final String user;
-
   _AdditionScreenState({
     Key key,
     @required this.user,
@@ -131,8 +133,6 @@ class _AdditionScreenState extends State<AdditionScreen> {
                       //   ],
                       // ),
 
-                      //TODO: Use _numberOfValues to take input value and pass to SolveApp
-                      //TODO: Use _range1 and _range2 values
                       new RaisedButton(
                         onPressed: () => runApp(SolveApp(
                           user: user,
@@ -140,6 +140,13 @@ class _AdditionScreenState extends State<AdditionScreen> {
                           oper: 0,
                           noOfTimes: 1,
                           score: 0,
+                          params: {
+                            'numberOfValues': int.parse(_numberOfValues.text),
+                            'range1': int.parse(_range1.text),
+                            'range2': int.parse(_range2.text),
+                            'valIsPos': _valueIsPos,
+                            'ansIsPos': _ansIsPos,
+                          },
                         )),
                         child: new Text(
                           'Start',

@@ -1,3 +1,5 @@
+//TODO: validation   of _range1 and _range2, _range1>=range2>0 and not empty and number
+
 // import 'package:abacus/screens/LoginScreen.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -107,6 +109,7 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
                           oper: 1,
                           noOfTimes: 1,
                           score: 0,
+                          params: {'range1': _range1, 'range2': _range2},
                         )),
                         child: new Text(
                           'Start',

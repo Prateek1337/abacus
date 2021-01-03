@@ -24,22 +24,28 @@ class ScoreScreen extends StatelessWidget {
                 child: new Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text(
-                      'Your Final Score is ' + score.toString(),
-                      style: new TextStyle(fontSize: 16.0),
-                    ),
-                    RaisedButton(
-                      onPressed: () => runApp(HomeScreen(user: user)),
-                      child: Text(
-                        "Done",
-                        style: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.normal,
-                            color: Colors.white),
+                    ListTile(
+                      title: Column(
+                        children: [
+                          Text(
+                            'Your Final Score is ' + score.toString(),
+                            style: new TextStyle(fontSize: 16.0),
+                          ),
+                          RaisedButton(
+                            onPressed: () => runApp(HomeScreen(user: user)),
+                            child: Text(
+                              "Done",
+                              style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.white),
+                            ),
+                            color: Theme.of(context).accentColor,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0)),
+                          ),
+                        ],
                       ),
-                      color: Theme.of(context).accentColor,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0)),
                     ),
                   ],
                 ))));
