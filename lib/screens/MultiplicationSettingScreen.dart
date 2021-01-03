@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 // import 'package:flutter_tts/flutter_tts.dart';
 // import 'package:abacus/screens/ScoreScreen.dart';
 import 'package:abacus/screens/SolveScreen.dart';
+import 'package:flutter/services.dart';
 
 class MultiplicationScreen extends StatefulWidget {
   final String user;
@@ -18,8 +19,7 @@ class MultiplicationScreen extends StatefulWidget {
 }
 
 class _MultiplicationScreenState extends State<MultiplicationScreen> {
-  int _radioValue1 = -1;
-  int _radioValue2 = -1;
+  TextEditingController _range1, _range2;
   int tempzero = 0;
   final String user;
   _MultiplicationScreenState({
@@ -29,24 +29,14 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
 
   void initState() {
     super.initState();
-    _handleRadioValueChange1(1);
-    _handleRadioValueChange2(1);
+    _range1 = TextEditingController();
+    _range2 = TextEditingController();
   }
 
   void dispose() {
+    _range1.dispose();
+    _range2.dispose();
     super.dispose();
-  }
-
-  void _handleRadioValueChange1(int value) {
-    setState(() {
-      _radioValue1 = value;
-    });
-  }
-
-  void _handleRadioValueChange2(int value) {
-    setState(() {
-      _radioValue2 = value;
-    });
   }
 
   @override
@@ -62,138 +52,58 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       new Text(
-                        'Select Number of digits for first value:',
+                        'Select the range of the digits',
                         style: new TextStyle(
                             fontSize: 20.0, fontWeight: FontWeight.bold),
                       ),
-                      // new Padding(
-                      //   padding: new EdgeInsets.all(8.0),
-                      // ),
-                      // // new Divider(height: 5.0, color: Colors.black),
-                      // new Padding(
-                      //   padding: new EdgeInsets.all(8.0),
-                      // ),
+                      new SizedBox(
+                        height: 16,
+                      ),
                       new Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          new Radio(
-                            value: 1,
-                            groupValue: _radioValue1,
-                            onChanged: _handleRadioValueChange1,
-                          ),
-                          new Text(
-                            '1',
-                            style: new TextStyle(fontSize: 16.0),
-                          ),
-                          new Padding(
-                            padding: new EdgeInsets.all(12.0),
-                          ),
-                          new Radio(
-                            value: 2,
-                            groupValue: _radioValue1,
-                            onChanged: _handleRadioValueChange1,
-                          ),
-                          new Text(
-                            '2',
-                            style: new TextStyle(
-                              fontSize: 16.0,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              width: 120,
+                              child: new TextField(
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  LengthLimitingTextInputFormatter(1),
+                                ],
+                                controller: _range1,
+                                textAlign: TextAlign.center,
+                                decoration: InputDecoration(
+                                    labelText: "Range start",
+                                    border: OutlineInputBorder()),
+                              ),
                             ),
-                          ),
-                          new Padding(
-                            padding: new EdgeInsets.all(12.0),
-                          ),
-                          new Radio(
-                            value: 3,
-                            groupValue: _radioValue1,
-                            onChanged: _handleRadioValueChange1,
-                          ),
-                          new Text(
-                            '3',
-                            style: new TextStyle(fontSize: 16.0),
-                          ),
-                          new Padding(
-                            padding: new EdgeInsets.all(12.0),
-                          ),
-                          new Radio(
-                            value: 4,
-                            groupValue: _radioValue1,
-                            onChanged: _handleRadioValueChange1,
-                          ),
-                          new Text(
-                            '4',
-                            style: new TextStyle(fontSize: 16.0),
-                          ),
-                        ],
-                      ),
-
-                      new Padding(
-                        padding: new EdgeInsets.all(8.0),
-                      ),
-                      // new Column(
-                      //     mainAxisAlignment: MainAxisAlignment.center,
-                      //     children: <Widget>[
-                      new Text(
-                        'Select Number of digits for second value:',
-                        style: new TextStyle(
-                            fontSize: 20.0, fontWeight: FontWeight.bold),
-                      ),
-
-                      new Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          new Radio(
-                            value: 1,
-                            groupValue: _radioValue2,
-                            onChanged: _handleRadioValueChange2,
-                          ),
-                          new Text(
-                            '1',
-                            style: new TextStyle(fontSize: 16.0),
-                          ),
-                          new Padding(
-                            padding: new EdgeInsets.all(12.0),
-                          ),
-                          new Radio(
-                            value: 2,
-                            groupValue: _radioValue2,
-                            onChanged: _handleRadioValueChange2,
-                          ),
-                          new Text(
-                            '2',
-                            style: new TextStyle(
-                              fontSize: 16.0,
+                            SizedBox(
+                              width: 10,
                             ),
-                          ),
-                          new Padding(
-                            padding: new EdgeInsets.all(12.0),
-                          ),
-                          new Radio(
-                            value: 3,
-                            groupValue: _radioValue2,
-                            onChanged: _handleRadioValueChange2,
-                          ),
-                          new Text(
-                            '3',
-                            style: new TextStyle(fontSize: 16.0),
-                          ),
-                          new Padding(
-                            padding: new EdgeInsets.all(12.0),
-                          ),
-                          new Radio(
-                            value: 4,
-                            groupValue: _radioValue2,
-                            onChanged: _handleRadioValueChange2,
-                          ),
-                          new Text(
-                            '4',
-                            style: new TextStyle(fontSize: 16.0),
-                          ),
-                        ],
+                            Container(
+                              width: 120,
+                              child: new TextField(
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  LengthLimitingTextInputFormatter(1),
+                                ],
+                                controller: _range2,
+                                textAlign: TextAlign.center,
+                                decoration: InputDecoration(
+                                    labelText: "Range end",
+                                    border: OutlineInputBorder()),
+                              ),
+                            ),
+                          ]),
+                      SizedBox(
+                        height: 16,
                       ),
+                      //TODO: Use _range1 and _range2 values
                       new RaisedButton(
                         onPressed: () => runApp(SolveApp(
                           user: user,
-                          numdig: _radioValue1,
+                          //numdig: _radioValue1,
                           oper: 1,
                           noOfTimes: 1,
                           score: 0,

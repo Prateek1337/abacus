@@ -18,9 +18,8 @@ class AdditionScreen extends StatefulWidget {
 }
 
 class _AdditionScreenState extends State<AdditionScreen> {
-  TextEditingController _controller;
-  int _radioValue1 = -1;
-  int _radioValue2 = -1;
+  TextEditingController _numberOfValues, _range1, _range2;
+
   int tempzero = 0;
   final String user;
 
@@ -30,26 +29,17 @@ class _AdditionScreenState extends State<AdditionScreen> {
   });
   void initState() {
     super.initState();
-    _handleRadioValueChange1(1);
 
-    _controller = TextEditingController();
+    _numberOfValues = TextEditingController();
+    _range1 = TextEditingController();
+    _range2 = TextEditingController();
   }
 
   void dispose() {
-    _controller.dispose();
+    _numberOfValues.dispose();
+    _range1.dispose();
+    _range2.dispose();
     super.dispose();
-  }
-
-  void _handleRadioValueChange1(int value) {
-    setState(() {
-      _radioValue1 = value;
-    });
-  }
-
-  void _handleRadioValueChange2(int value) {
-    setState(() {
-      _radioValue2 = value;
-    });
   }
 
   @override
@@ -65,76 +55,50 @@ class _AdditionScreenState extends State<AdditionScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       new Text(
-                        'Select Number of digits:',
+                        'Select the range of the digits',
                         style: new TextStyle(
                             fontSize: 20.0, fontWeight: FontWeight.bold),
                       ),
-                      // new Padding(
-                      //   padding: new EdgeInsets.all(8.0),
-                      // ),
-                      // // new Divider(height: 5.0, color: Colors.black),
-                      // new Padding(
-                      //   padding: new EdgeInsets.all(8.0),
-                      // ),
+                      new SizedBox(
+                        height: 16,
+                      ),
                       new Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          new Radio(
-                            value: 1,
-                            groupValue: _radioValue1,
-                            onChanged: _handleRadioValueChange1,
-                          ),
-                          new Text(
-                            '1',
-                            style: new TextStyle(fontSize: 16.0),
-                          ),
-                          new Padding(
-                            padding: new EdgeInsets.all(12.0),
-                          ),
-                          new Radio(
-                            value: 2,
-                            groupValue: _radioValue1,
-                            onChanged: _handleRadioValueChange1,
-                          ),
-                          new Text(
-                            '2',
-                            style: new TextStyle(
-                              fontSize: 16.0,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              width: 120,
+                              child: new TextField(
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  LengthLimitingTextInputFormatter(1),
+                                ],
+                                controller: _range1,
+                                textAlign: TextAlign.center,
+                                decoration: InputDecoration(
+                                    labelText: "Range start",
+                                    border: OutlineInputBorder()),
+                              ),
                             ),
-                          ),
-                          new Padding(
-                            padding: new EdgeInsets.all(12.0),
-                          ),
-                          new Radio(
-                            value: 3,
-                            groupValue: _radioValue1,
-                            onChanged: _handleRadioValueChange1,
-                          ),
-                          new Text(
-                            '3',
-                            style: new TextStyle(fontSize: 16.0),
-                          ),
-                          new Padding(
-                            padding: new EdgeInsets.all(12.0),
-                          ),
-                          new Radio(
-                            value: 4,
-                            groupValue: _radioValue1,
-                            onChanged: _handleRadioValueChange1,
-                          ),
-                          new Text(
-                            '4',
-                            style: new TextStyle(fontSize: 16.0),
-                          ),
-                        ],
-                      ),
-
-                      new Padding(
-                        padding: new EdgeInsets.all(8.0),
-                      ),
-                      // new Column(
-                      //     mainAxisAlignment: MainAxisAlignment.center,
-                      //     children: <Widget>[
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Container(
+                              width: 120,
+                              child: new TextField(
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                  LengthLimitingTextInputFormatter(1),
+                                ],
+                                controller: _range2,
+                                textAlign: TextAlign.center,
+                                decoration: InputDecoration(
+                                    labelText: "Range end",
+                                    border: OutlineInputBorder()),
+                              ),
+                            ),
+                          ]),
                       new SizedBox(
                         height: 16,
                       ),
@@ -146,11 +110,11 @@ class _AdditionScreenState extends State<AdditionScreen> {
                             FilteringTextInputFormatter.digitsOnly,
                             CustomRangeTextInputFormatter(),
                           ],
-                          controller: _controller,
+                          controller: _numberOfValues,
                           textAlign: TextAlign.center,
                           decoration: InputDecoration(
                               labelText: "Enter number of values",
-                              hintText: "Range 1-20",
+                              hintText: "should be between 1-20",
                               border: OutlineInputBorder()),
                         ),
                       ),
@@ -167,12 +131,12 @@ class _AdditionScreenState extends State<AdditionScreen> {
                       //   ],
                       // ),
 
-                      //TODO: Use controller to take input value and pass to SolveApp
-
+                      //TODO: Use _numberOfValues to take input value and pass to SolveApp
+                      //TODO: Use _range1 and _range2 values
                       new RaisedButton(
                         onPressed: () => runApp(SolveApp(
                           user: user,
-                          numdig: _radioValue1,
+                          //numdig: _radioValue1,
                           oper: 0,
                           noOfTimes: 1,
                           score: 0,
