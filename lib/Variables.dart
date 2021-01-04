@@ -1,5 +1,6 @@
 class Variables {
   final String isLoggedIn = "isLoggedIn";
   final String phoneNumber = "phone_number";
-  final String minusCharacter = '−';
+  //final String minusCharacter = '−';
+  final String minusCharacter = '-';
 }

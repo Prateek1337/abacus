@@ -72,7 +72,8 @@ List addString(var params) {
       if ((_ansIsPos == 1 && res - _num >= 0) || _ansIsPos == 0) {
         //when result is positive or negative result is allowed
         res = res - _num;
-        question = question + Variables().minusCharacter + _num.toString();
+        question =
+            question + " " + Variables().minusCharacter + _num.toString();
       } else {
         //when result is getting negative but it shouldn't
         res = res + _num;

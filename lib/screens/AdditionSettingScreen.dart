@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 // import 'package:flutter_tts/flutter_tts.dart';
 // import 'package:abacus/screens/ScoreScreen.dart';
 import 'package:abacus/screens/SolveScreen.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 
 class AdditionScreen extends StatefulWidget {
@@ -22,6 +23,7 @@ class AdditionScreen extends StatefulWidget {
 
 class _AdditionScreenState extends State<AdditionScreen> {
   TextEditingController _numberOfValues, _range1, _range2;
+  bool alwaysPositive = false, useOnlyPositive = false;
 
   int _valueIsPos = 0, _ansIsPos = 1;
   final String user;
@@ -123,31 +125,53 @@ class _AdditionScreenState extends State<AdditionScreen> {
                       new SizedBox(
                         height: 16,
                       ),
-                      // new Row(
-                      //   children: <Widget>[
-                      //     new TextField(
-                      //       decoration: InputDecoration(
-                      //           border: InputBorder.none,
-                      //           hintText: 'Enter number of values'),
-                      //     ),
-                      //   ],
-                      // ),
 
-                      new RaisedButton(
-                        onPressed: () => runApp(SolveApp(
-                          user: user,
-                          //numdig: _radioValue1,
-                          oper: 0,
-                          noOfTimes: 1,
-                          score: 0,
-                          params: {
-                            'numberOfValues': int.parse(_numberOfValues.text),
-                            'range1': int.parse(_range1.text),
-                            'range2': int.parse(_range2.text),
-                            'valIsPos': _valueIsPos,
-                            'ansIsPos': _ansIsPos,
+                      Container(
+                        width: 300,
+                        child: new CheckboxListTile(
+                          title: const Text("Always Positive"),
+                          secondary: const Icon(Icons.check),
+                          value: alwaysPositive,
+                          onChanged: (bool value) {
+                            setState(() {
+                              alwaysPositive = value ? true : false;
+                            });
                           },
-                        )),
+                        ),
+                      ),
+                      Container(
+                        width: 300,
+                        child: new CheckboxListTile(
+                          title: const Text("Use only positive"),
+                          secondary: const Icon(Icons.check),
+                          value: useOnlyPositive,
+                          onChanged: (bool value) {
+                            setState(() {
+                              useOnlyPositive = value ? true : false;
+                            });
+                          },
+                        ),
+                      ),
+                      new RaisedButton(
+                        onPressed: () => {
+                          //print(alwaysPositive),
+                          runApp(SolveApp(
+                            user: user,
+                            //numdig: _radioValue1,
+                            //TODO: use alwaysPositive and useOnlyPositive
+                            //They are bool
+                            oper: 0,
+                            noOfTimes: 1,
+                            score: 0,
+                            params: {
+                              'numberOfValues': int.parse(_numberOfValues.text),
+                              'range1': int.parse(_range1.text),
+                              'range2': int.parse(_range2.text),
+                              'valIsPos': _valueIsPos,
+                              'ansIsPos': _ansIsPos,
+                            },
+                          )),
+                        },
                         child: new Text(
                           'Start',
                           style: new TextStyle(
