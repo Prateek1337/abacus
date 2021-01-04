@@ -25,9 +25,7 @@ class AdditionScreen extends StatefulWidget {
 
 class _AdditionScreenState extends State<AdditionScreen> {
   TextEditingController _numberOfValues, _range1, _range2;
-  bool alwaysPositive = false, useOnlyPositive = false;
-
-  int _valueIsPos = 0, _ansIsPos = 1;
+  bool _ansIsPos = false, _valueIsPos = false;
   final String user;
   _AdditionScreenState({
     Key key,
@@ -152,10 +150,10 @@ class _AdditionScreenState extends State<AdditionScreen> {
                             style: TextStyle(color: (Colors.blue)),
                           ),
                           secondary: const Icon(Icons.check),
-                          value: alwaysPositive,
+                          value: _ansIsPos,
                           onChanged: (bool value) {
                             setState(() {
-                              alwaysPositive = value ? true : false;
+                              _ansIsPos = value ? true : false;
                             });
                           },
                         ),
@@ -168,10 +166,10 @@ class _AdditionScreenState extends State<AdditionScreen> {
                             style: TextStyle(color: (Colors.blue)),
                           ),
                           secondary: const Icon(Icons.check),
-                          value: useOnlyPositive,
+                          value: _valueIsPos,
                           onChanged: (bool value) {
                             setState(() {
-                              useOnlyPositive = value ? true : false;
+                              _valueIsPos = value ? true : false;
                             });
                           },
                         ),

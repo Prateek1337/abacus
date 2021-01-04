@@ -12,5 +12,5 @@ class Variables {
   String score3 = EmojiParser().get('grin').code;
   String score4 = EmojiParser().get('smile').code;
 
-  final int maxScore = 100;
+  final int maxScore = 4;
 }

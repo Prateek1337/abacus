@@ -83,7 +83,7 @@ class ScoreScreen extends StatelessWidget {
 }
 
 getEmoji(int score) {
-  double percentage = (score / Variables().maxScore) * 100;
+  double percentage = (score.toDouble() / Variables().maxScore) * 100;
   if (percentage < 20) {
     return Variables().score0;
   } else if (percentage < 40) {

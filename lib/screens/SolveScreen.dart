@@ -54,9 +54,8 @@ _ansIsPos = intermediate and final result will be positive if 1
 List addString(var params) {
   int _numberOfValues = params['numberOfValues'],
       _range1 = params['range1'],
-      _range2 = params['range2'],
-      _valueIsPos = params['valIsPos'],
-      _ansIsPos = params['ansIsPos'];
+      _range2 = params['range2'];
+  bool _valueIsPos = params['valIsPos'], _ansIsPos = params['ansIsPos'];
   int _lowerNum = minMap[_range1.toString()];
   int _upperNum = maxMap[_range2.toString()];
 
@@ -67,9 +66,9 @@ List addString(var params) {
     int _num = rng.nextInt(_upperNum - _lowerNum + 1) + _lowerNum;
     int sign = rng.nextInt(2);
     // 0 for sub and 1 for add
-    if (_valueIsPos == 0 && sign == 0) {
+    if (_valueIsPos == false && sign == 0) {
       //when subtraction is allowed
-      if ((_ansIsPos == 1 && res - _num >= 0) || _ansIsPos == 0) {
+      if ((_ansIsPos == true && res - _num >= 0) || _ansIsPos == false) {
         //when result is positive or negative result is allowed
         res = res - _num;
         question =
