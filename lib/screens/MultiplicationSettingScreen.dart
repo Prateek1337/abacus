@@ -48,10 +48,22 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
             appBar: AppBar(
               title: Text("Multiplication & Division Setting"),
             ),
-            body: new Container(
-                padding: EdgeInsets.all(8.0),
-                child: new Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+            body: new Center(
+                child: Card(
+              elevation: 10,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                side: BorderSide(
+                  color: Colors.blue,
+                  width: 2.0,
+                ),
+              ),
+              color: Colors.blue[50],
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: new Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    direction: Axis.vertical,
                     children: <Widget>[
                       new Text(
                         'Select the range of the digits',
@@ -65,6 +77,7 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Container(
+                              color: Colors.white,
                               width: 120,
                               child: new TextField(
                                 keyboardType: TextInputType.number,
@@ -83,6 +96,7 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
                               width: 10,
                             ),
                             Container(
+                              color: Colors.white,
                               width: 120,
                               child: new TextField(
                                 keyboardType: TextInputType.number,
@@ -109,7 +123,10 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
                           oper: 1,
                           noOfTimes: 1,
                           score: 0,
-                          params: {'range1': _range1, 'range2': _range2},
+                          params: {
+                            'range1': int.parse(_range1.text),
+                            'range2': int.parse(_range2.text),
+                          },
                         )),
                         child: new Text(
                           'Start',
@@ -123,6 +140,8 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
                             borderRadius: new BorderRadius.circular(5.0)),
                       ),
                       // ])
-                    ]))));
+                    ]),
+              ),
+            ))));
   }
 }

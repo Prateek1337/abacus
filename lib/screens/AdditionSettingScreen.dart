@@ -3,6 +3,8 @@
 
 // import 'package:abacus/screens/LoginScreen.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 // import 'dart:math';
@@ -53,10 +55,23 @@ class _AdditionScreenState extends State<AdditionScreen> {
             appBar: AppBar(
               title: Text("Addition & Subraction Setting"),
             ),
-            body: new Container(
-                padding: EdgeInsets.all(8.0),
-                child: new Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+            body: new Center(
+                child: Card(
+              elevation: 10,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                side: BorderSide(
+                  color: Colors.blue,
+                  width: 2.0,
+                ),
+              ),
+              color: Colors.blue[50],
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: new Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    //mainAxisAlignment: MainAxisAlignment.center,
+                    direction: Axis.vertical,
                     children: <Widget>[
                       new Text(
                         'Select the range of the digits',
@@ -70,6 +85,7 @@ class _AdditionScreenState extends State<AdditionScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Container(
+                              color: Colors.white,
                               width: 120,
                               child: new TextField(
                                 keyboardType: TextInputType.number,
@@ -89,6 +105,7 @@ class _AdditionScreenState extends State<AdditionScreen> {
                             ),
                             Container(
                               width: 120,
+                              color: Colors.white,
                               child: new TextField(
                                 keyboardType: TextInputType.number,
                                 inputFormatters: [
@@ -108,6 +125,7 @@ class _AdditionScreenState extends State<AdditionScreen> {
                       ),
                       Container(
                         width: 250,
+                        color: Colors.white,
                         child: new TextField(
                           keyboardType: TextInputType.number,
                           inputFormatters: [
@@ -129,7 +147,10 @@ class _AdditionScreenState extends State<AdditionScreen> {
                       Container(
                         width: 300,
                         child: new CheckboxListTile(
-                          title: const Text("Always Positive"),
+                          title: const Text(
+                            "Always Positive",
+                            style: TextStyle(color: (Colors.blue)),
+                          ),
                           secondary: const Icon(Icons.check),
                           value: alwaysPositive,
                           onChanged: (bool value) {
@@ -142,7 +163,10 @@ class _AdditionScreenState extends State<AdditionScreen> {
                       Container(
                         width: 300,
                         child: new CheckboxListTile(
-                          title: const Text("Use only positive"),
+                          title: const Text(
+                            "Use only positive",
+                            style: TextStyle(color: (Colors.blue)),
+                          ),
                           secondary: const Icon(Icons.check),
                           value: useOnlyPositive,
                           onChanged: (bool value) {
@@ -184,7 +208,9 @@ class _AdditionScreenState extends State<AdditionScreen> {
                             borderRadius: new BorderRadius.circular(5.0)),
                       ),
                       // ])
-                    ]))));
+                    ]),
+              ),
+            ))));
   }
 }
 
