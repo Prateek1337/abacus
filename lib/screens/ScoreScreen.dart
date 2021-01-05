@@ -63,7 +63,11 @@ class ScoreScreen extends StatelessWidget {
                       height: 16,
                     ),
                     RaisedButton(
-                      onPressed: () => runApp(HomeScreen(user: user)),
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => HomeScreen(user: user)),
+                      ),
                       child: Text(
                         "Done",
                         style: TextStyle(

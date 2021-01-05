@@ -117,17 +117,21 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
                       ),
                       //TODO: Use _range1 and _range2 values
                       new RaisedButton(
-                        onPressed: () => runApp(SolveApp(
-                          user: user,
-                          //numdig: _radioValue1,
-                          oper: 1,
-                          noOfTimes: 1,
-                          score: 0,
-                          params: {
-                            'range1': int.parse(_range1.text),
-                            'range2': int.parse(_range2.text),
-                          },
-                        )),
+                        onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => (SolveApp(
+                                user: user,
+                                //numdig: _radioValue1,
+                                oper: 1,
+                                noOfTimes: 1,
+                                score: 0,
+                                params: {
+                                  'range1': int.parse(_range1.text),
+                                  'range2': int.parse(_range2.text),
+                                },
+                              )),
+                            )),
                         child: new Text(
                           'Start',
                           style: new TextStyle(

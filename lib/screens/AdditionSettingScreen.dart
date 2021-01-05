@@ -177,22 +177,23 @@ class _AdditionScreenState extends State<AdditionScreen> {
                       new RaisedButton(
                         onPressed: () => {
                           //print(alwaysPositive),
-                          runApp(SolveApp(
-                            user: user,
-                            //numdig: _radioValue1,
-                            //TODO: use alwaysPositive and useOnlyPositive
-                            //They are bool
-                            oper: 0,
-                            noOfTimes: 1,
-                            score: 0,
-                            params: {
-                              'numberOfValues': int.parse(_numberOfValues.text),
-                              'range1': int.parse(_range1.text),
-                              'range2': int.parse(_range2.text),
-                              'valIsPos': _valueIsPos,
-                              'ansIsPos': _ansIsPos,
-                            },
-                          )),
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => (SolveApp(
+                                    user: user,
+                                    oper: 0,
+                                    noOfTimes: 1,
+                                    score: 0,
+                                    params: {
+                                      'numberOfValues':
+                                          int.parse(_numberOfValues.text),
+                                      'range1': int.parse(_range1.text),
+                                      'range2': int.parse(_range2.text),
+                                      'valIsPos': _valueIsPos,
+                                      'ansIsPos': _ansIsPos,
+                                    })),
+                              )),
                         },
                         child: new Text(
                           'Start',

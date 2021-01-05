@@ -183,7 +183,12 @@ class SolveApp extends StatelessWidget {
                     ),
                     SizedBox(height: 50),
                     RaisedButton(
-                      onPressed: () => runApp(btnFunction(noOfTimes, score)),
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                btnFunction(noOfTimes, score)),
+                      ),
                       child: Text(
                         'Check Answer',
                         style: TextStyle(
@@ -197,7 +202,12 @@ class SolveApp extends StatelessWidget {
                     ),
 
                     RaisedButton(
-                      onPressed: () => runApp(btnFunction(noOfTimes, score)),
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                btnFunction(noOfTimes, score)),
+                      ),
                       child: Text(
                         btnText(noOfTimes),
                         style: TextStyle(
