@@ -6,8 +6,12 @@ import 'dart:math';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:abacus/screens/ScoreScreen.dart';
 import 'package:abacus/Variables.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+// import 'package:validator/validator.dart';
 
 // ----------------------------------------------------------------------------------
+String currAns;
 // main logic
 var maxMap = {
   '1': 9,
@@ -41,7 +45,10 @@ List multiplyString(var params) {
   int num1 = rng.nextInt(_lowerNumMax - _lowerNumMin + 1) + _lowerNumMin;
   int num2 = rng.nextInt(_upperNumMax - _upperNumMin + 1) + _upperNumMin;
   int res = num1 * num2;
-  return [res.toString(), num1.toString() + '*' + num2.toString()];
+  return [
+    res.toString(),
+    num1.toString() + Variables().multiplyCharacter + num2.toString()
+  ];
 }
 
 /*
@@ -87,6 +94,13 @@ List addString(var params) {
   return [res.toString(), question];
 }
 
+bool isNumeric(String s) {
+  if (s == null) {
+    return false;
+  }
+  return double.tryParse(s) != null;
+}
+
 final FlutterTts flutterTts = FlutterTts();
 
 _speak(String text) async {
@@ -99,13 +113,39 @@ _speak(String text) async {
 
 // ----------------------------------------------------------------------------------
 
-class SolveApp extends StatelessWidget {
+class SolveApp extends StatefulWidget {
   int numdig, oper, noOfTimes, score;
-  int currRes;
   final String user;
-  TextEditingController answerController = TextEditingController();
   var params;
+
   SolveApp({
+    this.user,
+    this.numdig,
+    this.oper,
+    this.noOfTimes,
+    this.score,
+    this.params,
+  });
+  @override
+  _solveAppState createState() => new _solveAppState(
+      user: user,
+      numdig: numdig,
+      oper: oper,
+      noOfTimes: noOfTimes,
+      score: score,
+      params: params);
+}
+
+class _solveAppState extends State<SolveApp> {
+// class SolveApp extends StatelessWidget {
+  int numdig, oper, noOfTimes, score;
+  final String user;
+  var params;
+  bool _isButtonDisabled = false;
+
+  // _isbutton
+  TextEditingController answerController = TextEditingController();
+  _solveAppState({
     Key key,
     @required this.user,
     this.numdig,
@@ -113,8 +153,57 @@ class SolveApp extends StatelessWidget {
     this.noOfTimes,
     this.score,
     this.params,
-  }) : super(key: key);
+  });
   String sumtext = '';
+
+  @override
+  void initState() {
+    _isButtonDisabled = false;
+  }
+
+  // Function disable_button() {
+  //   if (_isButtonDisabled) {
+  //     setState(() {
+  //       _isButtonDisabled = true;
+  //     });
+  //     return null;
+  //     // } else {
+  //     //   return () {
+  //     //     // do anything else you may want to here
+  //     //   };
+  //     // }
+  //   }
+  // }
+
+  void showtoast(String text) {
+    Fluttertoast.showToast(
+        msg: text,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+  }
+
+  Function checkAnswer(String toMatchRes) {
+    if (isNumeric(toMatchRes)) {
+      if (toMatchRes == currAns) {
+        score++;
+        showtoast('correct Answer');
+        _isButtonDisabled = true;
+      } else {
+        showtoast('Wrong Answer');
+        _isButtonDisabled = true;
+      }
+    } else {
+      showtoast('Enter a Valid Number');
+    }
+
+    // print('button value is  ' + _isButtonDisabled.toString());
+    // setState(() {});
+    return null;
+  }
 
   //function to do generate the sum
   String callOper() {
@@ -126,7 +215,7 @@ class SolveApp extends StatelessWidget {
     }
     String result = finalres[0];
     String question_tts = finalres[1];
-    currRes = int.parse(result);
+    currAns = result;
 
     _speak(question_tts);
     return question_tts;
@@ -140,8 +229,8 @@ class SolveApp extends StatelessWidget {
   Widget btnFunction(int noOfTimes, int result) {
     String answerString = answerController.text;
     // if (answerString == '') checkfornumber and give pop
-    int answer = int.parse(answerString);
-    if (answer == currRes) score++;
+    // int answer = int.parse(answerString);
+    // if (answer == currRes) score++;
     if (noOfTimes >= 4) return (ScoreScreen(user: user, score: score));
 
     return (SolveApp(
@@ -156,6 +245,18 @@ class SolveApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Function testfun() {
+    //   setState(() {
+    //     _isButtonDisabled = true;
+    //   });
+    // }
+
+    // var _onpressed;
+    // if (_isButtonDisabled) {
+    //   _onpressed = () {
+    //     testfun();
+    //   };
+    // }
     return new MaterialApp(
         home: new Scaffold(
             body: new Container(
@@ -183,12 +284,28 @@ class SolveApp extends StatelessWidget {
                     ),
                     SizedBox(height: 50),
                     RaisedButton(
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                btnFunction(noOfTimes, score)),
-                      ),
+                      onPressed: checkAnswer(answerController.text),
+                      // onPressed: () => _onpressed,
+                      // onPressed: _isButtonDisabled
+                      //     ? null
+                      //     : () => (_isButtonDisabled = true),
+                      // onPressed: () => () {
+                      //   String toMatchRes = answerController.text;
+                      //   if (isNumeric(toMatchRes)) {
+                      //     if (toMatchRes == currAns) {
+                      //       score++;
+                      //       showtoast('correct Answer');
+                      //       _isButtonDisabled = true;
+                      //     } else {
+                      //       showtoast('Wrong Answer');
+                      //       _isButtonDisabled = true;
+                      //     }
+                      //   } else {
+                      //     showtoast('Enter a Valid Number');
+                      //   }
+                      //   return null;
+                      // },
+
                       child: Text(
                         'Check Answer',
                         style: TextStyle(

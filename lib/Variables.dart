@@ -3,8 +3,8 @@ import 'package:flutter_emoji/flutter_emoji.dart';
 class Variables {
   final String isLoggedIn = "isLoggedIn";
   final String phoneNumber = "phone_number";
-  //final String minusCharacter = '−';
-  final String minusCharacter = '-';
+  final String minusCharacter = '−';
+  final String multiplyCharacter = '×';
   var parser = EmojiParser();
   String score0 = EmojiParser().get('disappointed').code;
   String score1 = EmojiParser().get('worried').code;
