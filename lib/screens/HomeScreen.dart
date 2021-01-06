@@ -2,14 +2,12 @@
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:abacus/screens/AdditionSettingScreen.dart';
 import 'package:abacus/screens/MultiplicationSettingScreen.dart';
-import 'package:abacus/screens/ScoreScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 // import 'dart:math';
 // import 'package:flutter_tts/flutter_tts.dart';
 // import 'package:abacus/screens/ScoreScreen.dart';
-import 'package:abacus/screens/SolveScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'LoginScreen.dart';
@@ -20,14 +18,13 @@ class HomeScreen extends StatefulWidget {
   HomeScreen({this.user});
 
   @override
-  _homescreenState createState() => new _homescreenState(user: user);
+  _HomeScreenState createState() => new _HomeScreenState(user: user);
 }
 
-class _homescreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> {
   int tempzero = 0;
   final String user;
-  _homescreenState({
-    Key key,
+  _HomeScreenState({
     @required this.user,
   });
 

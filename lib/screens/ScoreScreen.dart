@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:abacus/screens/HomeScreen.dart';
 
 class ScoreScreen extends StatelessWidget {
-  int score;
+  final int score;
   final String user;
 
   ScoreScreen({

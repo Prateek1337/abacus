@@ -1,7 +1,4 @@
-import 'package:abacus/screens/LoginScreen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:abacus/screens/ScoreScreen.dart';
@@ -12,6 +9,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 // ----------------------------------------------------------------------------------
 String currAns;
+int finalScore = 0;
+TextEditingController finalController;
 // main logic
 var maxMap = {
   '1': 9,
@@ -114,7 +113,7 @@ _speak(String text) async {
 // ----------------------------------------------------------------------------------
 
 class SolveApp extends StatefulWidget {
-  int numdig, oper, noOfTimes, score;
+  final int numdig, oper, noOfTimes, score;
   final String user;
   var params;
 
@@ -127,7 +126,7 @@ class SolveApp extends StatefulWidget {
     this.params,
   });
   @override
-  _solveAppState createState() => new _solveAppState(
+  _SolveAppState createState() => new _SolveAppState(
       user: user,
       numdig: numdig,
       oper: oper,
@@ -136,17 +135,15 @@ class SolveApp extends StatefulWidget {
       params: params);
 }
 
-class _solveAppState extends State<SolveApp> {
+class _SolveAppState extends State<SolveApp> {
 // class SolveApp extends StatelessWidget {
   int numdig, oper, noOfTimes, score;
   final String user;
   var params;
-  bool _isButtonDisabled = false;
 
   // _isbutton
   TextEditingController answerController = TextEditingController();
-  _solveAppState({
-    Key key,
+  _SolveAppState({
     @required this.user,
     this.numdig,
     this.oper,
@@ -158,7 +155,9 @@ class _solveAppState extends State<SolveApp> {
 
   @override
   void initState() {
-    _isButtonDisabled = false;
+    super.initState();
+    score = finalScore;
+    finalController = answerController;
   }
 
   // Function disable_button() {
@@ -186,25 +185,6 @@ class _solveAppState extends State<SolveApp> {
         fontSize: 16.0);
   }
 
-  Function checkAnswer(String toMatchRes) {
-    if (isNumeric(toMatchRes)) {
-      if (toMatchRes == currAns) {
-        score++;
-        showtoast('correct Answer');
-        _isButtonDisabled = true;
-      } else {
-        showtoast('Wrong Answer');
-        _isButtonDisabled = true;
-      }
-    } else {
-      showtoast('Enter a Valid Number');
-    }
-
-    // print('button value is  ' + _isButtonDisabled.toString());
-    // setState(() {});
-    return null;
-  }
-
   //function to do generate the sum
   String callOper() {
     List finalres;
@@ -214,11 +194,11 @@ class _solveAppState extends State<SolveApp> {
       finalres = multiplyString(params);
     }
     String result = finalres[0];
-    String question_tts = finalres[1];
+    String questionTts = finalres[1];
     currAns = result;
 
-    _speak(question_tts);
-    return question_tts;
+    _speak(questionTts);
+    return questionTts;
   }
 
   String btnText(int noOfTimes) {
@@ -227,11 +207,15 @@ class _solveAppState extends State<SolveApp> {
   }
 
   Widget btnFunction(int noOfTimes, int result) {
-    String answerString = answerController.text;
+    //String answerString = answerController.text;
     // if (answerString == '') checkfornumber and give pop
     // int answer = int.parse(answerString);
     // if (answer == currRes) score++;
-    if (noOfTimes >= 4) return (ScoreScreen(user: user, score: score));
+    if (noOfTimes >= 4) {
+      score = finalScore;
+      finalScore = 0;
+      return (ScoreScreen(user: user, score: score));
+    }
 
     return (SolveApp(
       user: user,
@@ -244,13 +228,19 @@ class _solveAppState extends State<SolveApp> {
   }
 
   @override
+  void dispose() {
+    score = finalScore;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // Function testfun() {
     //   setState(() {
     //     _isButtonDisabled = true;
     //   });
     // }
-
+    //var _enabled = true;
     // var _onpressed;
     // if (_isButtonDisabled) {
     //   _onpressed = () {
@@ -283,41 +273,7 @@ class _solveAppState extends State<SolveApp> {
                           new InputDecoration(hintText: "Enter Your Answer"),
                     ),
                     SizedBox(height: 50),
-                    RaisedButton(
-                      onPressed: checkAnswer(answerController.text),
-                      // onPressed: () => _onpressed,
-                      // onPressed: _isButtonDisabled
-                      //     ? null
-                      //     : () => (_isButtonDisabled = true),
-                      // onPressed: () => () {
-                      //   String toMatchRes = answerController.text;
-                      //   if (isNumeric(toMatchRes)) {
-                      //     if (toMatchRes == currAns) {
-                      //       score++;
-                      //       showtoast('correct Answer');
-                      //       _isButtonDisabled = true;
-                      //     } else {
-                      //       showtoast('Wrong Answer');
-                      //       _isButtonDisabled = true;
-                      //     }
-                      //   } else {
-                      //     showtoast('Enter a Valid Number');
-                      //   }
-                      //   return null;
-                      // },
-
-                      child: Text(
-                        'Check Answer',
-                        style: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.normal,
-                            color: Colors.white),
-                      ),
-                      color: Theme.of(context).accentColor,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0)),
-                    ),
-
+                    new ButtonWidget(),
                     RaisedButton(
                       onPressed: () => Navigator.push(
                         context,
@@ -360,5 +316,67 @@ class _solveAppState extends State<SolveApp> {
                     // )
                   ],
                 ))));
+  }
+}
+
+class ButtonWidget extends StatefulWidget {
+  @override
+  _OneClickDisabledButton createState() => _OneClickDisabledButton();
+}
+
+class _OneClickDisabledButton extends State<ButtonWidget> {
+  bool _enabled = true;
+  void showtoast(String text) {
+    Fluttertoast.showToast(
+        msg: text,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+  }
+
+  Function checkAnswer(String toMatchRes) {
+    if (isNumeric(toMatchRes)) {
+      if (toMatchRes == currAns) {
+        finalScore++;
+        showtoast('correct Answer');
+        //_isButtonDisabled = true;
+      } else {
+        showtoast('Wrong Answer');
+        //_isButtonDisabled = true;
+      }
+    } else {
+      showtoast('Enter a Valid Number');
+    }
+
+    // print('button value is  ' + _isButtonDisabled.toString());
+    // setState(() {});
+    return null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RaisedButton(
+      onPressed: !_enabled
+          ? null
+          : () {
+              if (_enabled) {
+                setState(() => {_enabled = !_enabled});
+                checkAnswer(finalController.text);
+              } else {
+                showtoast("disabled");
+                return null;
+              }
+            },
+      child: Text(
+        'Check Answer',
+        style: TextStyle(
+            fontSize: 20.0, fontWeight: FontWeight.normal, color: Colors.white),
+      ),
+      color: Theme.of(context).accentColor,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+    );
   }
 }

@@ -25,7 +25,6 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
   int tempzero = 0;
   final String user;
   _MultiplicationScreenState({
-    Key key,
     @required this.user,
   });
 

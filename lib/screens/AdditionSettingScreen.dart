@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 // import 'package:flutter_tts/flutter_tts.dart';
 // import 'package:abacus/screens/ScoreScreen.dart';
 import 'package:abacus/screens/SolveScreen.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 
 class AdditionScreen extends StatefulWidget {
@@ -28,7 +27,6 @@ class _AdditionScreenState extends State<AdditionScreen> {
   bool _ansIsPos = false, _valueIsPos = false;
   final String user;
   _AdditionScreenState({
-    Key key,
     @required this.user,
   });
   void initState() {
