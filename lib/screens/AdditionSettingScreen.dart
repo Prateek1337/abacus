@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 // import 'package:abacus/screens/ScoreScreen.dart';
 import 'package:abacus/screens/SolveScreen.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AdditionScreen extends StatefulWidget {
   final String user;
@@ -23,7 +24,7 @@ class AdditionScreen extends StatefulWidget {
 }
 
 class _AdditionScreenState extends State<AdditionScreen> {
-  TextEditingController _numberOfValues, _range1, _range2;
+  TextEditingController _numberOfValues, _range1, _range2, _numberOfQuestions;
   bool _ansIsPos = false, _valueIsPos = false;
   final String user;
   _AdditionScreenState({
@@ -33,12 +34,15 @@ class _AdditionScreenState extends State<AdditionScreen> {
     super.initState();
 
     _numberOfValues = TextEditingController();
+    _numberOfQuestions = TextEditingController();
+
     _range1 = TextEditingController();
     _range2 = TextEditingController();
   }
 
   void dispose() {
     _numberOfValues.dispose();
+    _numberOfQuestions.dispose();
     _range1.dispose();
     _range2.dispose();
     super.dispose();
@@ -124,6 +128,12 @@ class _AdditionScreenState extends State<AdditionScreen> {
                         color: Colors.white,
                         child: new TextField(
                           keyboardType: TextInputType.number,
+                          maxLength: 2,
+                          buildCounter: (BuildContext context,
+                                  {int currentLength,
+                                  int maxLength,
+                                  bool isFocused}) =>
+                              null,
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly,
                             CustomRangeTextInputFormatter(),
@@ -133,6 +143,33 @@ class _AdditionScreenState extends State<AdditionScreen> {
                           decoration: InputDecoration(
                               labelText: "Enter number of values",
                               hintText: "should be between 1-20",
+                              border: OutlineInputBorder()),
+                        ),
+                      ),
+                      new SizedBox(
+                        height: 16,
+                      ),
+
+                      Container(
+                        width: 250,
+                        color: Colors.white,
+                        child: new TextField(
+                          keyboardType: TextInputType.number,
+                          maxLength: 3,
+                          buildCounter: (BuildContext context,
+                                  {int currentLength,
+                                  int maxLength,
+                                  bool isFocused}) =>
+                              null,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            CustomRangeTextInputFormatter2(),
+                          ],
+                          controller: _numberOfQuestions,
+                          textAlign: TextAlign.center,
+                          decoration: InputDecoration(
+                              labelText: "Enter Number of Questions",
+                              hintText: "should be between 1-100",
                               border: OutlineInputBorder()),
                         ),
                       ),
@@ -175,23 +212,39 @@ class _AdditionScreenState extends State<AdditionScreen> {
                       new RaisedButton(
                         onPressed: () => {
                           //print(alwaysPositive),
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => (SolveApp(
-                                    user: user,
-                                    oper: 0,
-                                    noOfTimes: 1,
-                                    score: 0,
-                                    params: {
-                                      'numberOfValues':
-                                          int.parse(_numberOfValues.text),
-                                      'range1': int.parse(_range1.text),
-                                      'range2': int.parse(_range2.text),
-                                      'valIsPos': _valueIsPos,
-                                      'ansIsPos': _ansIsPos,
-                                    })),
-                              )),
+                          if (int.parse(_range1.text) > int.parse(_range2.text))
+                            {
+                              Fluttertoast.showToast(
+                                  msg: "Start range should be smaller that end",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.TOP,
+                                  timeInSecForIosWeb: 3,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0)
+                            }
+                          else
+                            {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => (SolveApp(
+                                        user: user,
+                                        oper: 0,
+                                        noOfTimes: 1,
+                                        score: 0,
+                                        params: {
+                                          'numberOfValues':
+                                              int.parse(_numberOfValues.text),
+                                          'numberOfQuestions': int.parse(
+                                              _numberOfQuestions.text),
+                                          'range1': int.parse(_range1.text),
+                                          'range2': int.parse(_range2.text),
+                                          'valIsPos': _valueIsPos,
+                                          'ansIsPos': _ansIsPos,
+                                        })),
+                                  )),
+                            }
                         },
                         child: new Text(
                           'Start',
@@ -224,6 +277,23 @@ class CustomRangeTextInputFormatter extends TextInputFormatter {
 
     return int.parse(newValue.text) > 20
         ? TextEditingValue().copyWith(text: '20')
+        : newValue;
+  }
+}
+
+class CustomRangeTextInputFormatter2 extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text == '')
+      return TextEditingValue();
+    else if (int.parse(newValue.text) < 1)
+      return TextEditingValue().copyWith(text: '1');
+
+    return int.parse(newValue.text) > 100
+        ? TextEditingValue().copyWith(text: '100')
         : newValue;
   }
 }

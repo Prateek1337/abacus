@@ -34,7 +34,10 @@ var minMap = {
 var rng = new Random();
 
 List multiplyString(var params) {
-  int _range1 = params['range1'], _range2 = params['range2'];
+  int _range1 = params['range1'],
+      _range2 = params['range2'],
+      _numberOfQuestions = params['numberOfQuestions'];
+  print(_numberOfQuestions);
 
   int _lowerNumMin = minMap[_range1.toString()];
   int _upperNumMin = minMap[_range2.toString()];
@@ -59,6 +62,7 @@ _ansIsPos = intermediate and final result will be positive if 1
 */
 List addString(var params) {
   int _numberOfValues = params['numberOfValues'],
+      _numberOfQuestions = params['numberOfQuestions'],
       _range1 = params['range1'],
       _range2 = params['range2'];
   bool _valueIsPos = params['valIsPos'], _ansIsPos = params['ansIsPos'];

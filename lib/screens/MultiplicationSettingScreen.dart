@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 // import 'package:abacus/screens/ScoreScreen.dart';
 import 'package:abacus/screens/SolveScreen.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class MultiplicationScreen extends StatefulWidget {
   final String user;
@@ -21,8 +22,9 @@ class MultiplicationScreen extends StatefulWidget {
 }
 
 class _MultiplicationScreenState extends State<MultiplicationScreen> {
-  TextEditingController _range1, _range2;
+  TextEditingController _range1, _range2, _numberOfQuestions;
   int tempzero = 0;
+  int _isOperation = 0;
   final String user;
   _MultiplicationScreenState({
     @required this.user,
@@ -32,11 +34,13 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
     super.initState();
     _range1 = TextEditingController();
     _range2 = TextEditingController();
+    _numberOfQuestions = TextEditingController();
   }
 
   void dispose() {
     _range1.dispose();
     _range2.dispose();
+    _numberOfQuestions.dispose();
     super.dispose();
   }
 
@@ -114,23 +118,103 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
                       SizedBox(
                         height: 16,
                       ),
+                      Container(
+                        width: 250,
+                        color: Colors.white,
+                        child: new TextField(
+                          keyboardType: TextInputType.number,
+                          maxLength: 3,
+                          buildCounter: (BuildContext context,
+                                  {int currentLength,
+                                  int maxLength,
+                                  bool isFocused}) =>
+                              null,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            CustomRangeTextInputFormatter2(),
+                          ],
+                          controller: _numberOfQuestions,
+                          textAlign: TextAlign.center,
+                          decoration: InputDecoration(
+                              labelText: "Enter Number of Questions",
+                              hintText: "should be between 1-100",
+                              border: OutlineInputBorder()),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      new Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          new Radio(
+                            value: 0,
+                            groupValue: _isOperation,
+                            onChanged: (int value) {
+                              setState(() {
+                                _isOperation = value;
+                                // print(_isOperation);
+                              });
+                            },
+                          ),
+                          new Text(
+                            'Multiplication',
+                            style: new TextStyle(fontSize: 16.0),
+                          ),
+                          new Radio(
+                              value: 1,
+                              groupValue: _isOperation,
+                              onChanged: (int value) {
+                                setState(() {
+                                  _isOperation = value;
+                                  // print(_isOperation);
+                                });
+                              }),
+                          new Text(
+                            'Division',
+                            style: new TextStyle(fontSize: 16.0),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
                       //TODO: Use _range1 and _range2 values
                       new RaisedButton(
-                        onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => (SolveApp(
-                                user: user,
-                                //numdig: _radioValue1,
-                                oper: 1,
-                                noOfTimes: 1,
-                                score: 0,
-                                params: {
-                                  'range1': int.parse(_range1.text),
-                                  'range2': int.parse(_range2.text),
-                                },
-                              )),
-                            )),
+                        onPressed: () => {
+                          if (int.parse(_range1.text) > int.parse(_range2.text))
+                            {
+                              Fluttertoast.showToast(
+                                  msg: "Start range should be smaller that end",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.TOP,
+                                  timeInSecForIosWeb: 3,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0)
+                            }
+                          else
+                            {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => (SolveApp(
+                                      user: user,
+                                      //numdig: _radioValue1,
+                                      oper: 1,
+                                      noOfTimes: 1,
+                                      score: 0,
+                                      params: {
+                                        'range1': int.parse(_range1.text),
+                                        'range2': int.parse(_range2.text),
+                                        'numberOfQuestions':
+                                            int.parse(_numberOfQuestions.text),
+                                        'isOpertaion': _isOperation,
+                                      },
+                                    )),
+                                  )),
+                            }
+                        },
                         child: new Text(
                           'Start',
                           style: new TextStyle(
@@ -142,9 +226,27 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
                         shape: new RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(5.0)),
                       ),
+
                       // ])
                     ]),
               ),
             ))));
+  }
+}
+
+class CustomRangeTextInputFormatter2 extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text == '')
+      return TextEditingValue();
+    else if (int.parse(newValue.text) < 1)
+      return TextEditingValue().copyWith(text: '1');
+
+    return int.parse(newValue.text) > 100
+        ? TextEditingValue().copyWith(text: '100')
+        : newValue;
   }
 }
