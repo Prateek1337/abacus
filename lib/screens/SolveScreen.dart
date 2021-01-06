@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:math';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:abacus/screens/ScoreScreen.dart';
@@ -11,6 +12,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 String currAns;
 int finalScore = 0;
 TextEditingController finalController;
+int quesCount = 0;
 // main logic
 var maxMap = {
   '1': 9,
@@ -38,6 +40,7 @@ List multiplyString(var params) {
       _range2 = params['range2'],
       _numberOfQuestions = params['numberOfQuestions'];
   print(_numberOfQuestions);
+  quesCount = _numberOfQuestions;
 
   int _lowerNumMin = minMap[_range1.toString()];
   int _upperNumMin = minMap[_range2.toString()];
@@ -65,6 +68,7 @@ List addString(var params) {
       _numberOfQuestions = params['numberOfQuestions'],
       _range1 = params['range1'],
       _range2 = params['range2'];
+  quesCount = _numberOfQuestions;
   bool _valueIsPos = params['valIsPos'], _ansIsPos = params['ansIsPos'];
   int _lowerNum = minMap[_range1.toString()];
   int _upperNum = maxMap[_range2.toString()];
@@ -194,8 +198,12 @@ class _SolveAppState extends State<SolveApp> {
     List finalres;
     if (oper == 0) {
       finalres = addString(params);
-    } else {
+    } else if (oper == 1) {
       finalres = multiplyString(params);
+    } else {
+      //TODO
+      finalres = ["0", "0"];
+      showtoast("TODO Division");
     }
     String result = finalres[0];
     String questionTts = finalres[1];
@@ -206,7 +214,7 @@ class _SolveAppState extends State<SolveApp> {
   }
 
   String btnText(int noOfTimes) {
-    if (noOfTimes >= 4) return 'Finish';
+    if (noOfTimes >= quesCount) return 'Finish';
     return 'Next';
   }
 
@@ -215,10 +223,14 @@ class _SolveAppState extends State<SolveApp> {
     // if (answerString == '') checkfornumber and give pop
     // int answer = int.parse(answerString);
     // if (answer == currRes) score++;
-    if (noOfTimes >= 4) {
+    if (noOfTimes >= quesCount) {
       score = finalScore;
       finalScore = 0;
-      return (ScoreScreen(user: user, score: score));
+      return (ScoreScreen(
+        user: user,
+        score: score,
+        quesCount: quesCount,
+      ));
     }
 
     return (SolveApp(
@@ -255,70 +267,105 @@ class _SolveAppState extends State<SolveApp> {
         home: new Scaffold(
             body: new Container(
                 padding: EdgeInsets.all(8.0),
-                child: new Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      callOper(),
-                      style: new TextStyle(fontSize: 16.0),
-                    ),
-                    Text(
-                      "Question No " + noOfTimes.toString(),
-                      style: new TextStyle(fontSize: 16.0),
-                    ),
-                    Text(
-                      "Score is " + score.toString(),
-                      style: new TextStyle(fontSize: 16.0),
-                    ),
-
-                    TextField(
-                      controller: answerController,
-                      decoration:
-                          new InputDecoration(hintText: "Enter Your Answer"),
-                    ),
-                    SizedBox(height: 50),
-                    new ButtonWidget(),
-                    RaisedButton(
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                btnFunction(noOfTimes, score)),
+                child: Center(
+                  child: Card(
+                    elevation: 10,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      side: BorderSide(
+                        color: Colors.blue,
+                        width: 2.0,
                       ),
-                      child: Text(
-                        btnText(noOfTimes),
-                        style: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.normal,
-                            color: Colors.white),
-                      ),
-                      color: Theme.of(context).accentColor,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0)),
                     ),
+                    color: Colors.blue[50],
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: new Wrap(
+                        //mainAxisAlignment: MainAxisAlignment.center,
+                        direction: Axis.vertical,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            callOper(),
+                            textAlign: TextAlign.center,
+                            style: new TextStyle(fontSize: 16.0),
+                          ),
+                          Text(
+                            "Question No " + noOfTimes.toString(),
+                            textAlign: TextAlign.center,
+                            style: new TextStyle(fontSize: 16.0),
+                          ),
+                          Text(
+                            "Score is " + score.toString(),
+                            textAlign: TextAlign.center,
+                            style: new TextStyle(fontSize: 16.0),
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          Container(
+                            width: 300,
+                            color: Colors.white,
+                            child: TextField(
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'[0-9-]')),
+                                  //LengthLimitingTextInputFormatter(1),
+                                ],
+                                controller: answerController,
+                                decoration: InputDecoration(
+                                  labelText: "Enter Your Answer",
+                                  border: OutlineInputBorder(),
+                                )),
+                          ),
+                          SizedBox(height: 24),
+                          new ButtonWidget(),
+                          SizedBox(height: 16),
+                          RaisedButton(
+                            onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      btnFunction(noOfTimes, score)),
+                            ),
+                            child: Text(
+                              btnText(noOfTimes),
+                              style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.white),
+                            ),
+                            color: Theme.of(context).accentColor,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0)),
+                          ),
 
-                    // Container(
-                    //   width: 120,
-                    //   child: FlatButton(
-                    //     child: Text("Logout"),
-                    //     textColor: Colors.white,
-                    //     padding: EdgeInsets.all(16),
-                    //     onPressed: () async {
-                    //       SharedPreferences prefs =
-                    //           await SharedPreferences.getInstance();
-                    //       prefs.clear();
-                    //       FirebaseAuth.instance.signOut();
-                    //       Navigator.push(
-                    //           context,
-                    //           MaterialPageRoute(
-                    //               builder: (context) => LoginScreen()));
-                    //     },
-                    //     color: Colors.blue,
-                    //     shape: new RoundedRectangleBorder(
-                    //         borderRadius: new BorderRadius.circular(5.0)),
-                    //   ),
-                    // )
-                  ],
+                          // Container(
+                          //   width: 120,
+                          //   child: FlatButton(
+                          //     child: Text("Logout"),
+                          //     textColor: Colors.white,
+                          //     padding: EdgeInsets.all(16),
+                          //     onPressed: () async {
+                          //       SharedPreferences prefs =
+                          //           await SharedPreferences.getInstance();
+                          //       prefs.clear();
+                          //       FirebaseAuth.instance.signOut();
+                          //       Navigator.push(
+                          //           context,
+                          //           MaterialPageRoute(
+                          //               builder: (context) => LoginScreen()));
+                          //     },
+                          //     color: Colors.blue,
+                          //     shape: new RoundedRectangleBorder(
+                          //         borderRadius: new BorderRadius.circular(5.0)),
+                          //   ),
+                          // )
+                        ],
+                      ),
+                    ),
+                  ),
                 ))));
   }
 }
@@ -351,6 +398,7 @@ class _OneClickDisabledButton extends State<ButtonWidget> {
         showtoast('Wrong Answer');
         //_isButtonDisabled = true;
       }
+      setState(() => {_enabled = !_enabled});
     } else {
       showtoast('Enter a Valid Number');
     }
@@ -367,7 +415,6 @@ class _OneClickDisabledButton extends State<ButtonWidget> {
           ? null
           : () {
               if (_enabled) {
-                setState(() => {_enabled = !_enabled});
                 checkAnswer(finalController.text);
               } else {
                 showtoast("disabled");

@@ -7,14 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:abacus/screens/HomeScreen.dart';
 
 class ScoreScreen extends StatelessWidget {
-  final int score;
+  final int score, quesCount;
   final String user;
 
-  ScoreScreen({
-    Key key,
-    @required this.user,
-    this.score,
-  }) : super(key: key);
+  ScoreScreen({Key key, @required this.user, this.score, this.quesCount})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +45,7 @@ class ScoreScreen extends StatelessWidget {
                                     color: Colors.blue),
                               ),
                               Text(
-                                "${getEmoji(score)}",
+                                "${getEmoji(score, quesCount)}",
                                 style: new TextStyle(
                                     fontSize: 24.0,
                                     fontWeight: FontWeight.bold,
@@ -86,8 +83,8 @@ class ScoreScreen extends StatelessWidget {
   // _scoreScreenState createState() => new _scoreScreenState(res,user);
 }
 
-getEmoji(int score) {
-  double percentage = (score.toDouble() / Variables().maxScore) * 100;
+getEmoji(int score, int maxScore) {
+  double percentage = (score.toDouble() / maxScore) * 100;
   if (percentage < 20) {
     return Variables().score0;
   } else if (percentage < 40) {

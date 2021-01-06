@@ -24,7 +24,7 @@ class MultiplicationScreen extends StatefulWidget {
 class _MultiplicationScreenState extends State<MultiplicationScreen> {
   TextEditingController _range1, _range2, _numberOfQuestions;
   int tempzero = 0;
-  int _isOperation = 0;
+  int _isOperation = 1;
   final String user;
   _MultiplicationScreenState({
     @required this.user,
@@ -148,7 +148,7 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           new Radio(
-                            value: 0,
+                            value: 1,
                             groupValue: _isOperation,
                             onChanged: (int value) {
                               setState(() {
@@ -162,7 +162,7 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
                             style: new TextStyle(fontSize: 16.0),
                           ),
                           new Radio(
-                              value: 1,
+                              value: 2,
                               groupValue: _isOperation,
                               onChanged: (int value) {
                                 setState(() {
@@ -201,7 +201,7 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
                                     builder: (context) => (SolveApp(
                                       user: user,
                                       //numdig: _radioValue1,
-                                      oper: 1,
+                                      oper: _isOperation,
                                       noOfTimes: 1,
                                       score: 0,
                                       params: {
