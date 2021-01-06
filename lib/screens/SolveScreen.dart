@@ -34,6 +34,32 @@ var minMap = {
   '7': 1000000
 };
 var rng = new Random();
+void showtoast(String text) {
+  Fluttertoast.showToast(
+      msg: text,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.TOP,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0);
+}
+
+List divideString(var params) {
+  int _range1 = params['range1'],
+      _range2 = params['range2'],
+      _numberOfQuestions = params['numberOfQuestions'];
+  quesCount = _numberOfQuestions;
+
+  int _lowerNumMin = minMap[_range1.toString()];
+  int _lowerNumMax = maxMap[_range1.toString()];
+  int num1 = rng.nextInt(_lowerNumMax - _lowerNumMin + 1) + _lowerNumMin;
+  int _upperNumMin = minMap[_range2.toString()];
+  int _upperNumMax = num1;
+  int num2 = rng.nextInt(_upperNumMax - _upperNumMin + 1) + _upperNumMin;
+  double res = num1 / num2;
+  return [res.toString(), num1.toString() + '/' + num2.toString()];
+}
 
 List multiplyString(var params) {
   int _range1 = params['range1'],
@@ -182,17 +208,6 @@ class _SolveAppState extends State<SolveApp> {
   //   }
   // }
 
-  void showtoast(String text) {
-    Fluttertoast.showToast(
-        msg: text,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.TOP,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
-  }
-
   //function to do generate the sum
   String callOper() {
     List finalres;
@@ -201,9 +216,8 @@ class _SolveAppState extends State<SolveApp> {
     } else if (oper == 1) {
       finalres = multiplyString(params);
     } else {
-      //TODO
-      finalres = ["0", "0"];
-      showtoast("TODO Division");
+      // showtoast("I am in division");
+      finalres = divideString(params);
     }
     String result = finalres[0];
     String questionTts = finalres[1];

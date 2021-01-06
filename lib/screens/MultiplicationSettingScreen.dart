@@ -182,10 +182,11 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
                       //TODO: Use _range1 and _range2 values
                       new RaisedButton(
                         onPressed: () => {
-                          if (int.parse(_range1.text) > int.parse(_range2.text))
+                          if (int.parse(_range1.text) < int.parse(_range2.text))
                             {
                               Fluttertoast.showToast(
-                                  msg: "Start range should be smaller that end",
+                                  msg:
+                                      "Start range should be greater than or equal to end",
                                   toastLength: Toast.LENGTH_SHORT,
                                   gravity: ToastGravity.TOP,
                                   timeInSecForIosWeb: 3,
