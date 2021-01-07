@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
           // return LoginScreen();
-          return HomeScreen(user: '+919113523095');
+          return IsAllowedScreen(user: '+919113523095');
         }
 
         // Otherwise, show something whilst waiting for initialization to complete
