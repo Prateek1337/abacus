@@ -2,6 +2,7 @@
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:abacus/screens/AdditionSettingScreen.dart';
 import 'package:abacus/screens/MultiplicationSettingScreen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
@@ -11,6 +12,36 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'LoginScreen.dart';
+
+class IsAllowedScreen extends StatelessWidget {
+  final String user;
+
+  IsAllowedScreen({this.user});
+  @override
+  Widget build(BuildContext context) {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    return FutureBuilder<DocumentSnapshot>(
+      future: users.doc("phoneNumberAccess").get(),
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Text("Something went wrong");
+        }
+
+        if (snapshot.connectionState == ConnectionState.done) {
+          Map<String, dynamic> data = snapshot.data.data();
+          if (data[user] != null && data[user] == true) {
+            return HomeScreen(user: user);
+          }
+          return Text(
+              "The Phone Number $user is not allowed or invalid. Please get your phone number validated ");
+        }
+
+        return Text("loading");
+      },
+    );
+  }
+}
 
 class HomeScreen extends StatefulWidget {
   final String user;
