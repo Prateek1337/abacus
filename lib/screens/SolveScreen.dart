@@ -6,6 +6,8 @@ import 'package:abacus/screens/ScoreScreen.dart';
 import 'package:abacus/Variables.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import 'HomeScreen.dart';
+
 // import 'package:validator/validator.dart';
 
 // ----------------------------------------------------------------------------------
@@ -13,6 +15,7 @@ String currAns;
 int finalScore = 0;
 TextEditingController finalController;
 int quesCount = 0;
+String questionTts;
 // main logic
 var maxMap = {
   '1': 9,
@@ -212,7 +215,7 @@ class _SolveAppState extends State<SolveApp> {
       finalres = divideString(params);
     }
     String result = finalres[0];
-    String questionTts = finalres[1];
+    questionTts = finalres[1];
     currAns = result;
 
     _speak(questionTts);
@@ -272,108 +275,138 @@ class _SolveAppState extends State<SolveApp> {
     // }
     return new MaterialApp(
         home: new Scaffold(
-            body: new Container(
-                padding: EdgeInsets.all(8.0),
-                child: Center(
-                  child: Card(
-                    elevation: 10,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      side: BorderSide(
-                        color: Colors.blue,
-                        width: 2.0,
-                      ),
-                    ),
-                    color: Colors.blue[50],
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: new Wrap(
-                        //mainAxisAlignment: MainAxisAlignment.center,
-                        direction: Axis.vertical,
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            callOper(),
-                            textAlign: TextAlign.center,
-                            style: new TextStyle(fontSize: 16.0),
-                          ),
-                          Text(
-                            "Question No " + noOfTimes.toString(),
-                            textAlign: TextAlign.center,
-                            style: new TextStyle(fontSize: 16.0),
-                          ),
-                          Text(
-                            "Score is " + score.toString(),
-                            textAlign: TextAlign.center,
-                            style: new TextStyle(fontSize: 16.0),
-                          ),
-                          SizedBox(
-                            height: 16,
-                          ),
-                          Container(
-                            width: 300,
-                            color: Colors.white,
-                            child: TextField(
-                                keyboardType: TextInputType.number,
-                                // inputFormatters: [
-                                //   FilteringTextInputFormatter.allow(
-                                //       RegExp(r'[0-9-]')),
-                                //   //LengthLimitingTextInputFormatter(1),
-                                // ],
-                                controller: answerController,
-                                decoration: InputDecoration(
-                                  labelText: "Enter Your Answer",
-                                  border: OutlineInputBorder(),
-                                )),
-                          ),
-                          SizedBox(height: 24),
-                          new ButtonWidget(),
-                          SizedBox(height: 16),
-                          RaisedButton(
-                            onPressed: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      btnFunction(noOfTimes, score)),
-                            ),
+            body: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Container(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Text(
+                "Question No:" + noOfTimes.toString(),
+                textAlign: TextAlign.center,
+                style: new TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold),
+              ),
+              Text(
+                "Score:" + score.toString(),
+                textAlign: TextAlign.center,
+                style: new TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
+        new Container(
+            padding: EdgeInsets.all(8.0),
+            child: Center(
+              child: Card(
+                elevation: 10,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  side: BorderSide(
+                    color: Colors.blue,
+                    width: 2.0,
+                  ),
+                ),
+                color: Colors.blue[50],
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: new Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Row(
+                        children: [
+                          Expanded(
                             child: Text(
-                              btnText(noOfTimes),
-                              style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.white),
+                              callOper(),
+                              textAlign: TextAlign.center,
+                              style: new TextStyle(fontSize: 16.0),
                             ),
-                            color: Theme.of(context).accentColor,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5.0)),
                           ),
-
-                          // Container(
-                          //   width: 120,
-                          //   child: FlatButton(
-                          //     child: Text("Logout"),
-                          //     textColor: Colors.white,
-                          //     padding: EdgeInsets.all(16),
-                          //     onPressed: () async {
-                          //       SharedPreferences prefs =
-                          //           await SharedPreferences.getInstance();
-                          //       prefs.clear();
-                          //       FirebaseAuth.instance.signOut();
-                          //       Navigator.push(
-                          //           context,
-                          //           MaterialPageRoute(
-                          //               builder: (context) => LoginScreen()));
-                          //     },
-                          //     color: Colors.blue,
-                          //     shape: new RoundedRectangleBorder(
-                          //         borderRadius: new BorderRadius.circular(5.0)),
-                          //   ),
-                          // )
+                          Positioned(
+                            top: 0,
+                            right: 0,
+                            child: IconButton(
+                              onPressed: () {
+                                _speak(questionTts);
+                              },
+                              icon: Icon(Icons.replay),
+                            ),
+                          ),
                         ],
                       ),
-                    ),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      Container(
+                        width: 300,
+                        color: Colors.white,
+                        child: TextField(
+                            keyboardType: TextInputType.number,
+                            // inputFormatters: [
+                            //   FilteringTextInputFormatter.allow(
+                            //       RegExp(r'[0-9-]')),
+                            //   //LengthLimitingTextInputFormatter(1),
+                            // ],
+                            controller: answerController,
+                            decoration: InputDecoration(
+                              labelText: "Enter Your Answer",
+                              border: OutlineInputBorder(),
+                            )),
+                      ),
+                      SizedBox(height: 24),
+                      new ButtonWidget(),
+                      SizedBox(height: 16),
+                    ],
                   ),
-                ))));
+                ),
+              ),
+            )),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            RaisedButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen(user: user)),
+              ),
+              child: Text(
+                'Reset',
+                style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.white),
+              ),
+              color: Theme.of(context).accentColor,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0)),
+            ),
+            RaisedButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => btnFunction(noOfTimes, score)),
+              ),
+              child: Text(
+                btnText(noOfTimes),
+                style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.white),
+              ),
+              color: Theme.of(context).accentColor,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0)),
+            ),
+          ],
+        ),
+      ],
+    )));
   }
 }
 

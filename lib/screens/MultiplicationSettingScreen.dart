@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:abacus/screens/SolveScreen.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'dart:math';
 
 class MultiplicationScreen extends StatefulWidget {
   final String user;
@@ -32,7 +33,7 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
     '1.75',
     '2.0',
   ];
-  String _selectedSpeed;
+  String _selectedSpeed = '1.0';
   TextEditingController _range1, _range2, _numberOfQuestions;
   int tempzero = 0;
   int _isOperation = 1;
@@ -43,9 +44,9 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
 
   void initState() {
     super.initState();
-    _range1 = TextEditingController();
-    _range2 = TextEditingController();
-    _numberOfQuestions = TextEditingController();
+    _range1 = TextEditingController(text: '1');
+    _range2 = TextEditingController(text: '2');
+    _numberOfQuestions = TextEditingController(text: '3');
   }
 
   void dispose() {
@@ -155,21 +156,30 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
                       SizedBox(
                         height: 16,
                       ),
-                      DropdownButton(
-                        hint: Text(
-                            'Select Speed'), // N  ot necessary for Option 1
-                        value: _selectedSpeed,
-                        onChanged: (newValue) {
-                          setState(() {
-                            _selectedSpeed = newValue;
-                          });
-                        },
-                        items: _speed.map((speed) {
-                          return DropdownMenuItem(
-                            child: new Text(speed),
-                            value: speed,
-                          );
-                        }).toList(),
+
+                      Row(
+                        children: [
+                          Text('Speed',
+                              style: TextStyle(
+                                  fontSize: 20, color: (Colors.blue))),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          DropdownButton(
+                            value: _selectedSpeed,
+                            onChanged: (newValue) {
+                              setState(() {
+                                _selectedSpeed = newValue;
+                              });
+                            },
+                            items: _speed.map((speed) {
+                              return DropdownMenuItem(
+                                child: new Text(speed),
+                                value: speed,
+                              );
+                            }).toList(),
+                          ),
+                        ],
                       ),
                       SizedBox(
                         height: 16,
@@ -212,40 +222,29 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
                       //TODO: Use _range1 and _range2 values
                       new RaisedButton(
                         onPressed: () => {
-                          if (int.parse(_range1.text) < int.parse(_range2.text))
-                            {
-                              Fluttertoast.showToast(
-                                  msg:
-                                      "Start range should be greater than or equal to end",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.TOP,
-                                  timeInSecForIosWeb: 3,
-                                  backgroundColor: Colors.red,
-                                  textColor: Colors.white,
-                                  fontSize: 16.0)
-                            }
-                          else
-                            {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => (SolveApp(
-                                      user: user,
-                                      //numdig: _radioValue1,
-                                      oper: _isOperation,
-                                      noOfTimes: 1,
-                                      score: 0,
-                                      params: {
-                                        'range1': int.parse(_range1.text),
-                                        'range2': int.parse(_range2.text),
-                                        'numberOfQuestions':
-                                            int.parse(_numberOfQuestions.text),
-                                        'isOpertaion': _isOperation,
-                                        'speed': _selectedSpeed,
-                                      },
-                                    )),
+                          {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => (SolveApp(
+                                    user: user,
+                                    //numdig: _radioValue1,
+                                    oper: _isOperation,
+                                    noOfTimes: 1,
+                                    score: 0,
+                                    params: {
+                                      'range1': min(int.parse(_range1.text),
+                                          int.parse(_range2.text)),
+                                      'range2': max(int.parse(_range2.text),
+                                          int.parse(_range2.text)),
+                                      'numberOfQuestions':
+                                          int.parse(_numberOfQuestions.text),
+                                      'isOpertaion': _isOperation,
+                                      'speed': _selectedSpeed,
+                                    },
                                   )),
-                            }
+                                )),
+                          }
                         },
                         child: new Text(
                           'Start',

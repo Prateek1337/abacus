@@ -5,6 +5,8 @@
 // import 'package:firebase_auth/firebase_auth.dart';
 // import 'dart:html';
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 // import 'dart:math';
@@ -12,7 +14,6 @@ import 'package:flutter/material.dart';
 // import 'package:abacus/screens/ScoreScreen.dart';
 import 'package:abacus/screens/SolveScreen.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class AdditionScreen extends StatefulWidget {
   final String user;
@@ -34,7 +35,7 @@ class _AdditionScreenState extends State<AdditionScreen> {
     '1.75',
     '2.0',
   ];
-  String _selectedSpeed;
+  String _selectedSpeed = '1.0';
   TextEditingController _numberOfValues, _range1, _range2, _numberOfQuestions;
   bool _ansIsPos = false, _valueIsPos = false;
   final String user;
@@ -44,11 +45,11 @@ class _AdditionScreenState extends State<AdditionScreen> {
   void initState() {
     super.initState();
 
-    _numberOfValues = TextEditingController();
-    _numberOfQuestions = TextEditingController();
+    _numberOfValues = TextEditingController(text: '2');
+    _numberOfQuestions = TextEditingController(text: '3');
 
-    _range1 = TextEditingController();
-    _range2 = TextEditingController();
+    _range1 = TextEditingController(text: '1');
+    _range2 = TextEditingController(text: '2');
   }
 
   void dispose() {
@@ -220,60 +221,59 @@ class _AdditionScreenState extends State<AdditionScreen> {
                           },
                         ),
                       ),
-                      DropdownButton(
-                        hint: Text(
-                            'Select Speed'), // N  ot necessary for Option 1
-                        value: _selectedSpeed,
-                        onChanged: (newValue) {
-                          setState(() {
-                            _selectedSpeed = newValue;
-                          });
-                        },
-                        items: _speed.map((speed) {
-                          return DropdownMenuItem(
-                            child: new Text(speed),
-                            value: speed,
-                          );
-                        }).toList(),
+
+                      Row(
+                        children: [
+                          Text('Speed',
+                              style: TextStyle(
+                                  fontSize: 20, color: (Colors.blue))),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          DropdownButton(
+                            value: _selectedSpeed,
+                            onChanged: (newValue) {
+                              setState(() {
+                                _selectedSpeed = newValue;
+                              });
+                            },
+                            items: _speed.map((speed) {
+                              return DropdownMenuItem(
+                                child: new Text(speed),
+                                value: speed,
+                              );
+                            }).toList(),
+                          ),
+                        ],
                       ),
 
                       new RaisedButton(
                         onPressed: () => {
                           //print(alwaysPositive),
-                          if (int.parse(_range1.text) > int.parse(_range2.text))
-                            {
-                              Fluttertoast.showToast(
-                                  msg: "Start range should be smaller that end",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.TOP,
-                                  timeInSecForIosWeb: 3,
-                                  backgroundColor: Colors.red,
-                                  textColor: Colors.white,
-                                  fontSize: 16.0)
-                            }
-                          else
-                            {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => (SolveApp(
-                                        user: user,
-                                        oper: 0,
-                                        noOfTimes: 1,
-                                        score: 0,
-                                        params: {
-                                          'numberOfValues':
-                                              int.parse(_numberOfValues.text),
-                                          'numberOfQuestions': int.parse(
-                                              _numberOfQuestions.text),
-                                          'range1': int.parse(_range1.text),
-                                          'range2': int.parse(_range2.text),
-                                          'valIsPos': _valueIsPos,
-                                          'ansIsPos': _ansIsPos,
-                                          'speed': _selectedSpeed,
-                                        })),
-                                  )),
-                            }
+                          {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => (SolveApp(
+                                      user: user,
+                                      oper: 0,
+                                      noOfTimes: 1,
+                                      score: 0,
+                                      params: {
+                                        'numberOfValues':
+                                            int.parse(_numberOfValues.text),
+                                        'numberOfQuestions':
+                                            int.parse(_numberOfQuestions.text),
+                                        'range1': min(int.parse(_range1.text),
+                                            int.parse(_range2.text)),
+                                        'range2': max(int.parse(_range2.text),
+                                            int.parse(_range2.text)),
+                                        'valIsPos': _valueIsPos,
+                                        'ansIsPos': _ansIsPos,
+                                        'speed': _selectedSpeed,
+                                      })),
+                                )),
+                          }
                         },
                         child: new Text(
                           'Start',
