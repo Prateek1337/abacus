@@ -24,6 +24,17 @@ class AdditionScreen extends StatefulWidget {
 }
 
 class _AdditionScreenState extends State<AdditionScreen> {
+  List<String> _speed = [
+    '0.25',
+    '0.5',
+    '0.75',
+    '1.0',
+    '1.25',
+    '1.5',
+    '1.75',
+    '2.0',
+  ];
+  String _selectedSpeed;
   TextEditingController _numberOfValues, _range1, _range2, _numberOfQuestions;
   bool _ansIsPos = false, _valueIsPos = false;
   final String user;
@@ -209,6 +220,23 @@ class _AdditionScreenState extends State<AdditionScreen> {
                           },
                         ),
                       ),
+                      DropdownButton(
+                        hint: Text(
+                            'Select Speed'), // N  ot necessary for Option 1
+                        value: _selectedSpeed,
+                        onChanged: (newValue) {
+                          setState(() {
+                            _selectedSpeed = newValue;
+                          });
+                        },
+                        items: _speed.map((speed) {
+                          return DropdownMenuItem(
+                            child: new Text(speed),
+                            value: speed,
+                          );
+                        }).toList(),
+                      ),
+
                       new RaisedButton(
                         onPressed: () => {
                           //print(alwaysPositive),
@@ -242,6 +270,7 @@ class _AdditionScreenState extends State<AdditionScreen> {
                                           'range2': int.parse(_range2.text),
                                           'valIsPos': _valueIsPos,
                                           'ansIsPos': _ansIsPos,
+                                          'speed': _selectedSpeed,
                                         })),
                                   )),
                             }

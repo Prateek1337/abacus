@@ -5,6 +5,8 @@ class Variables {
   final String phoneNumber = "phone_number";
   final String minusCharacter = '−';
   final String multiplyCharacter = '×';
+  final String divideCharacter = '÷';
+
   var parser = EmojiParser();
   String score0 = EmojiParser().get('disappointed').code;
   String score1 = EmojiParser().get('worried').code;

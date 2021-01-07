@@ -57,8 +57,11 @@ List divideString(var params) {
   int _upperNumMin = minMap[_range2.toString()];
   int _upperNumMax = num1;
   int num2 = rng.nextInt(_upperNumMax - _upperNumMin + 1) + _upperNumMin;
-  double res = num1 / num2;
-  return [res.toString(), num1.toString() + '/' + num2.toString()];
+  double res = double.parse((num1 / num2).toStringAsFixed(2));
+  return [
+    res.toString(),
+    num1.toString() + Variables().divideCharacter + num2.toString()
+  ];
 }
 
 List multiplyString(var params) {
@@ -111,16 +114,19 @@ List addString(var params) {
       if ((_ansIsPos == true && res - _num >= 0) || _ansIsPos == false) {
         //when result is positive or negative result is allowed
         res = res - _num;
-        question =
-            question + " " + Variables().minusCharacter + _num.toString();
+        question = question +
+            "\n" +
+            Variables().minusCharacter +
+            ' ' +
+            _num.toString();
       } else {
         //when result is getting negative but it shouldn't
         res = res + _num;
-        question = question + '+' + _num.toString();
+        question = question + '\n+ ' + _num.toString();
       }
     } else {
       res = res + _num;
-      question = question + '+' + _num.toString();
+      question = question + '\n+ ' + _num.toString();
     }
   }
 
@@ -137,11 +143,8 @@ bool isNumeric(String s) {
 final FlutterTts flutterTts = FlutterTts();
 
 _speak(String text) async {
-  // await flutterTts.setLanguage(language)
-  // await flutterTts.setPitch(pitch)
-
+  flutterTts.stop();
   await flutterTts.speak(text);
-  // textEditingController.text = '';
 }
 
 // ----------------------------------------------------------------------------------
@@ -174,6 +177,7 @@ class _SolveAppState extends State<SolveApp> {
   int numdig, oper, noOfTimes, score;
   final String user;
   var params;
+  double _playbackSpeed;
 
   // _isbutton
   TextEditingController answerController = TextEditingController();
@@ -192,21 +196,10 @@ class _SolveAppState extends State<SolveApp> {
     super.initState();
     score = finalScore;
     finalController = answerController;
+    _playbackSpeed = double.parse(params['speed']);
+    flutterTts.setSpeechRate(_playbackSpeed);
+    flutterTts.setVolume(1.0);
   }
-
-  // Function disable_button() {
-  //   if (_isButtonDisabled) {
-  //     setState(() {
-  //       _isButtonDisabled = true;
-  //     });
-  //     return null;
-  //     // } else {
-  //     //   return () {
-  //     //     // do anything else you may want to here
-  //     //   };
-  //     // }
-  //   }
-  // }
 
   //function to do generate the sum
   String callOper() {
@@ -216,7 +209,6 @@ class _SolveAppState extends State<SolveApp> {
     } else if (oper == 1) {
       finalres = multiplyString(params);
     } else {
-      // showtoast("I am in division");
       finalres = divideString(params);
     }
     String result = finalres[0];
@@ -240,6 +232,7 @@ class _SolveAppState extends State<SolveApp> {
     if (noOfTimes >= quesCount) {
       score = finalScore;
       finalScore = 0;
+      flutterTts.stop();
       return (ScoreScreen(
         user: user,
         score: score,
@@ -322,11 +315,11 @@ class _SolveAppState extends State<SolveApp> {
                             color: Colors.white,
                             child: TextField(
                                 keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                      RegExp(r'[0-9-]')),
-                                  //LengthLimitingTextInputFormatter(1),
-                                ],
+                                // inputFormatters: [
+                                //   FilteringTextInputFormatter.allow(
+                                //       RegExp(r'[0-9-]')),
+                                //   //LengthLimitingTextInputFormatter(1),
+                                // ],
                                 controller: answerController,
                                 decoration: InputDecoration(
                                   labelText: "Enter Your Answer",

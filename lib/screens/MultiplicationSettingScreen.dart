@@ -22,6 +22,17 @@ class MultiplicationScreen extends StatefulWidget {
 }
 
 class _MultiplicationScreenState extends State<MultiplicationScreen> {
+  List<String> _speed = [
+    '0.25',
+    '0.5',
+    '0.75',
+    '1.0',
+    '1.25',
+    '1.5',
+    '1.75',
+    '2.0',
+  ];
+  String _selectedSpeed;
   TextEditingController _range1, _range2, _numberOfQuestions;
   int tempzero = 0;
   int _isOperation = 1;
@@ -144,6 +155,25 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
                       SizedBox(
                         height: 16,
                       ),
+                      DropdownButton(
+                        hint: Text(
+                            'Select Speed'), // N  ot necessary for Option 1
+                        value: _selectedSpeed,
+                        onChanged: (newValue) {
+                          setState(() {
+                            _selectedSpeed = newValue;
+                          });
+                        },
+                        items: _speed.map((speed) {
+                          return DropdownMenuItem(
+                            child: new Text(speed),
+                            value: speed,
+                          );
+                        }).toList(),
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
                       new Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
@@ -211,6 +241,7 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
                                         'numberOfQuestions':
                                             int.parse(_numberOfQuestions.text),
                                         'isOpertaion': _isOperation,
+                                        'speed': _selectedSpeed,
                                       },
                                     )),
                                   )),
