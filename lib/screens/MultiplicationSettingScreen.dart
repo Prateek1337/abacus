@@ -235,7 +235,7 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
                                     params: {
                                       'range1': min(int.parse(_range1.text),
                                           int.parse(_range2.text)),
-                                      'range2': max(int.parse(_range2.text),
+                                      'range2': max(int.parse(_range1.text),
                                           int.parse(_range2.text)),
                                       'numberOfQuestions':
                                           int.parse(_numberOfQuestions.text),
