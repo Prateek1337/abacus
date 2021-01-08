@@ -61,6 +61,8 @@ List divideString(var params) {
   int _upperNumMax = num1;
   int num2 = rng.nextInt(_upperNumMax - _upperNumMin + 1) + _upperNumMin;
   double res = double.parse((num1 / num2).toStringAsFixed(2));
+  //this string is for speaking
+  questionTts = num1.toString() + ' divided by ' + num2.toString();
   return [
     res.toString(),
     num1.toString() + Variables().divideCharacter + num2.toString()
@@ -82,6 +84,8 @@ List multiplyString(var params) {
   int num1 = rng.nextInt(_lowerNumMax - _lowerNumMin + 1) + _lowerNumMin;
   int num2 = rng.nextInt(_upperNumMax - _upperNumMin + 1) + _upperNumMin;
   int res = num1 * num2;
+  questionTts = num1.toString() + ' times ' + num2.toString();
+
   return [
     res.toString(),
     num1.toString() + Variables().multiplyCharacter + num2.toString()
@@ -209,16 +213,17 @@ class _SolveAppState extends State<SolveApp> {
     List finalres;
     if (oper == 0) {
       finalres = addString(params);
+      _speak(finalres[1]);
     } else if (oper == 1) {
       finalres = multiplyString(params);
+      _speak(questionTts);
     } else {
       finalres = divideString(params);
+      _speak(questionTts);
     }
     String result = finalres[0];
-    questionTts = finalres[1];
     currAns = result;
-
-    _speak(questionTts);
+    questionTts = finalres[1];
     return questionTts;
   }
 
