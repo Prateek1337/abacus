@@ -132,7 +132,7 @@ class LoginScreen extends StatelessWidget {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => HomeScreen(
+                                        builder: (context) => IsAllowedScreen(
                                               user: user.phoneNumber,
                                             )));
                               } else {
@@ -186,7 +186,7 @@ class LoginScreen extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => HomeScreen(
+                                builder: (context) => IsAllowedScreen(
                                       user: user.phoneNumber,
                                     )));
                       } else {

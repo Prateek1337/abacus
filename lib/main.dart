@@ -1,4 +1,5 @@
 import 'package:abacus/screens/HomeScreen.dart';
+import 'package:abacus/screens/LoginScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,8 +43,8 @@ class MyApp extends StatelessWidget {
 
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
-          // return LoginScreen();
-          return IsAllowedScreen(user: '+919113523095');
+          return LoginScreen();
+          // return IsAllowedScreen(user: '');
         }
 
         // Otherwise, show something whilst waiting for initialization to complete
