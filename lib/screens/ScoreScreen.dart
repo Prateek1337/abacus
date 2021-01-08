@@ -6,12 +6,33 @@ import 'package:flutter/material.dart';
 // import 'dart:math';
 import 'package:abacus/screens/HomeScreen.dart';
 
-class ScoreScreen extends StatelessWidget {
+import 'SolveScreen.dart';
+
+Future _stop() async {
+  if (flutterTts != null) await flutterTts.stop();
+}
+
+class ScoreScreen extends StatefulWidget {
   final int score, quesCount;
   final String user;
-
   ScoreScreen({Key key, @required this.user, this.score, this.quesCount})
       : super(key: key);
+
+  @override
+  _ScoreScreenState createState() =>
+      _ScoreScreenState(user: user, score: score, quesCount: quesCount);
+}
+
+class _ScoreScreenState extends State<ScoreScreen> {
+  final int score, quesCount;
+  final String user;
+  _ScoreScreenState({@required this.user, this.score, this.quesCount});
+
+  @override
+  void initState() {
+    super.initState();
+    _stop();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,9 +100,84 @@ class ScoreScreen extends StatelessWidget {
                   ],
                 ))));
   }
-  // @override
-  // _scoreScreenState createState() => new _scoreScreenState(res,user);
 }
+
+// class ScoreScreen extends StatelessWidget {
+//   final int score, quesCount;
+//   final String user;
+
+//   ScoreScreen({Key key, @required this.user, this.score, this.quesCount})
+//       : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return new MaterialApp(
+//         home: new Scaffold(
+//             body: new Container(
+//                 padding: EdgeInsets.all(8.0),
+//                 child: new Column(
+//                   mainAxisAlignment: MainAxisAlignment.center,
+//                   children: <Widget>[
+//                     Card(
+//                       shape: RoundedRectangleBorder(
+//                         borderRadius: BorderRadius.circular(10.0),
+//                         side: BorderSide(
+//                           color: Colors.blue,
+//                           width: 2.0,
+//                         ),
+//                       ),
+//                       elevation: 10,
+//                       color: Colors.blue[50],
+//                       child: Padding(
+//                         padding: const EdgeInsets.all(16.0),
+//                         child: ListTile(
+//                           title: Column(
+//                             children: [
+//                               Text(
+//                                 'Your Final Score is ' + score.toString(),
+//                                 style: new TextStyle(
+//                                     fontSize: 24.0,
+//                                     fontWeight: FontWeight.bold,
+//                                     color: Colors.blue),
+//                               ),
+//                               Text(
+//                                 "${getEmoji(score, quesCount)}",
+//                                 style: new TextStyle(
+//                                     fontSize: 24.0,
+//                                     fontWeight: FontWeight.bold,
+//                                     color: Colors.blue),
+//                               ),
+//                             ],
+//                           ),
+//                         ),
+//                       ),
+//                     ),
+//                     SizedBox(
+//                       height: 16,
+//                     ),
+//                     RaisedButton(
+//                       onPressed: () => Navigator.push(
+//                         context,
+//                         MaterialPageRoute(
+//                             builder: (context) => HomeScreen(user: user)),
+//                       ),
+//                       child: Text(
+//                         "Done",
+//                         style: TextStyle(
+//                             fontSize: 20.0,
+//                             fontWeight: FontWeight.normal,
+//                             color: Colors.white),
+//                       ),
+//                       color: Theme.of(context).accentColor,
+//                       shape: RoundedRectangleBorder(
+//                           borderRadius: BorderRadius.circular(5.0)),
+//                     ),
+//                   ],
+//                 ))));
+//   }
+//   // @override
+//   // _scoreScreenState createState() => new _scoreScreenState(res,user);
+// }
 
 getEmoji(int score, int maxScore) {
   double percentage = (score.toDouble() / maxScore) * 100;

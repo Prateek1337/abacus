@@ -16,6 +16,7 @@ int finalScore = 0;
 TextEditingController finalController;
 int quesCount = 0;
 String questionTts;
+final FlutterTts flutterTts = FlutterTts();
 // main logic
 var maxMap = {
   '1': 9,
@@ -148,8 +149,6 @@ bool isNumeric(String s) {
   }
   return double.tryParse(s) != null;
 }
-
-final FlutterTts flutterTts = FlutterTts();
 
 _speak(String text) async {
   flutterTts.stop();

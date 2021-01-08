@@ -105,6 +105,7 @@ class _AdditionScreenState extends State<AdditionScreen> {
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,
                                   LengthLimitingTextInputFormatter(1),
+                                  CustomRangeTextInputFormatter3(),
                                 ],
                                 controller: _range1,
                                 textAlign: TextAlign.center,
@@ -124,6 +125,7 @@ class _AdditionScreenState extends State<AdditionScreen> {
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,
                                   LengthLimitingTextInputFormatter(1),
+                                  CustomRangeTextInputFormatter3(),
                                 ],
                                 controller: _range2,
                                 textAlign: TextAlign.center,
@@ -339,6 +341,23 @@ class CustomRangeTextInputFormatter2 extends TextInputFormatter {
 
     return int.parse(newValue.text) > 100
         ? TextEditingValue().copyWith(text: '100')
+        : newValue;
+  }
+}
+
+class CustomRangeTextInputFormatter3 extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text == '')
+      return TextEditingValue();
+    else if (int.parse(newValue.text) < 1)
+      return TextEditingValue().copyWith(text: '1');
+
+    return int.parse(newValue.text) > 7
+        ? TextEditingValue().copyWith(text: '7')
         : newValue;
   }
 }

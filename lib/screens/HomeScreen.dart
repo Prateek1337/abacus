@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 import 'LoginScreen.dart';
+import 'SolveScreen.dart';
 
 class IsAllowedScreen extends StatelessWidget {
   final String user;
@@ -134,6 +135,10 @@ addUser(String phNo) {
 //   }
 // }
 
+Future _stop() async {
+  if (flutterTts != null) await flutterTts.stop();
+}
+
 class HomeScreen extends StatefulWidget {
   final String user;
 
@@ -151,6 +156,11 @@ class _HomeScreenState extends State<HomeScreen> {
     @required this.user,
   });
 
+  void initState() {
+    super.initState();
+    _stop();
+  }
+
   @override
   Widget build(BuildContext context) {
     // Future _speak(String text) async {
@@ -167,6 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     //  print(FlutterTts().getVoices);
     // print('\n\n\n\n\n\n\n\n\n\n\n hello\n\n\n\n\n\n\n\n\n');
+
     return new MaterialApp(
       home: Scaffold(
         body: new Container(
