@@ -44,9 +44,9 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
 
   void initState() {
     super.initState();
-    _range1 = TextEditingController(text: '1');
-    _range2 = TextEditingController(text: '2');
-    _numberOfQuestions = TextEditingController(text: '3');
+    _range1 = TextEditingController();
+    _range2 = TextEditingController();
+    _numberOfQuestions = TextEditingController();
   }
 
   void dispose() {
@@ -222,29 +222,43 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
                       //TODO: Use _range1 and _range2 values
                       new RaisedButton(
                         onPressed: () => {
-                          {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => (SolveApp(
-                                    user: user,
-                                    //numdig: _radioValue1,
-                                    oper: _isOperation,
-                                    noOfTimes: 1,
-                                    score: 0,
-                                    params: {
-                                      'range1': max(int.parse(_range1.text),
-                                          int.parse(_range2.text)),
-                                      'range2': min(int.parse(_range1.text),
-                                          int.parse(_range2.text)),
-                                      'numberOfQuestions':
-                                          int.parse(_numberOfQuestions.text),
-                                      'isOpertaion': _isOperation,
-                                      'speed': _selectedSpeed,
-                                    },
+                          if (_range1.text.isEmpty ||
+                              _range2.text.isEmpty ||
+                              _numberOfQuestions.text.isEmpty)
+                            {
+                              Fluttertoast.showToast(
+                                  msg: 'All fields are compulsary',
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.TOP,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0)
+                            }
+                          else
+                            {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => (SolveApp(
+                                      user: user,
+                                      //numdig: _radioValue1,
+                                      oper: _isOperation,
+                                      noOfTimes: 1,
+                                      score: 0,
+                                      params: {
+                                        'range1': max(int.parse(_range1.text),
+                                            int.parse(_range2.text)),
+                                        'range2': min(int.parse(_range1.text),
+                                            int.parse(_range2.text)),
+                                        'numberOfQuestions':
+                                            int.parse(_numberOfQuestions.text),
+                                        'isOpertaion': _isOperation,
+                                        'speed': _selectedSpeed,
+                                      },
+                                    )),
                                   )),
-                                )),
-                          }
+                            }
                         },
                         child: new Text(
                           'Start',

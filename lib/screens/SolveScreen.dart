@@ -42,8 +42,9 @@ void showtoast(String text) {
       msg: text,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.TOP,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.red,
+      timeInSecForIosWeb: 3,
+      backgroundColor:
+          identical(text, 'Correct Answer') ? Colors.green : Colors.red,
       textColor: Colors.white,
       fontSize: 16.0);
 }
@@ -424,13 +425,13 @@ class ButtonWidget extends StatefulWidget {
 
 class _OneClickDisabledButton extends State<ButtonWidget> {
   bool _enabled = true;
-  void showtoast(String text) {
+  void showtoast(String text, bool isGreen) {
     Fluttertoast.showToast(
         msg: text,
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.TOP,
         timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
+        backgroundColor: isGreen ? Colors.green : Colors.red,
         textColor: Colors.white,
         fontSize: 16.0);
   }
@@ -439,15 +440,15 @@ class _OneClickDisabledButton extends State<ButtonWidget> {
     if (isNumeric(toMatchRes)) {
       if (toMatchRes == currAns) {
         finalScore++;
-        showtoast('correct Answer');
+        showtoast('Correct Answer', true);
         //_isButtonDisabled = true;
       } else {
-        showtoast('Wrong Answer');
+        showtoast('Wrong Answer \n Correct Answer is ' + currAns, false);
         //_isButtonDisabled = true;
       }
       setState(() => {_enabled = !_enabled});
     } else {
-      showtoast('Enter a Valid Number');
+      showtoast('Enter a Valid Number', false);
     }
 
     // print('button value is  ' + _isButtonDisabled.toString());
@@ -464,7 +465,7 @@ class _OneClickDisabledButton extends State<ButtonWidget> {
               if (_enabled) {
                 checkAnswer(finalController.text);
               } else {
-                showtoast("disabled");
+                showtoast("disabled", false);
                 return null;
               }
             },

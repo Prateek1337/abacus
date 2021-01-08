@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 // import 'package:abacus/screens/ScoreScreen.dart';
 import 'package:abacus/screens/SolveScreen.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class AdditionScreen extends StatefulWidget {
   final String user;
@@ -45,11 +46,11 @@ class _AdditionScreenState extends State<AdditionScreen> {
   void initState() {
     super.initState();
 
-    _numberOfValues = TextEditingController(text: '2');
-    _numberOfQuestions = TextEditingController(text: '3');
+    _numberOfValues = TextEditingController();
+    _numberOfQuestions = TextEditingController();
 
-    _range1 = TextEditingController(text: '1');
-    _range2 = TextEditingController(text: '2');
+    _range1 = TextEditingController();
+    _range2 = TextEditingController();
   }
 
   void dispose() {
@@ -250,30 +251,45 @@ class _AdditionScreenState extends State<AdditionScreen> {
                       new RaisedButton(
                         onPressed: () => {
                           //print(alwaysPositive),
-                          {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => (SolveApp(
-                                      user: user,
-                                      oper: 0,
-                                      noOfTimes: 1,
-                                      score: 0,
-                                      params: {
-                                        'numberOfValues':
-                                            int.parse(_numberOfValues.text),
-                                        'numberOfQuestions':
-                                            int.parse(_numberOfQuestions.text),
-                                        'range1': min(int.parse(_range1.text),
-                                            int.parse(_range2.text)),
-                                        'range2': max(int.parse(_range1.text),
-                                            int.parse(_range2.text)),
-                                        'valIsPos': _valueIsPos,
-                                        'ansIsPos': _ansIsPos,
-                                        'speed': _selectedSpeed,
-                                      })),
-                                )),
-                          }
+                          if (_range1.text.isEmpty ||
+                              _range2.text.isEmpty ||
+                              _numberOfQuestions.text.isEmpty ||
+                              _numberOfValues.text.isEmpty)
+                            {
+                              Fluttertoast.showToast(
+                                  msg: 'All fields are compulsary',
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.TOP,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0)
+                            }
+                          else
+                            {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => (SolveApp(
+                                        user: user,
+                                        oper: 0,
+                                        noOfTimes: 1,
+                                        score: 0,
+                                        params: {
+                                          'numberOfValues':
+                                              int.parse(_numberOfValues.text),
+                                          'numberOfQuestions': int.parse(
+                                              _numberOfQuestions.text),
+                                          'range1': min(int.parse(_range1.text),
+                                              int.parse(_range2.text)),
+                                          'range2': max(int.parse(_range1.text),
+                                              int.parse(_range2.text)),
+                                          'valIsPos': _valueIsPos,
+                                          'ansIsPos': _ansIsPos,
+                                          'speed': _selectedSpeed,
+                                        })),
+                                  )),
+                            }
                         },
                         child: new Text(
                           'Start',
