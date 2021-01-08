@@ -58,8 +58,9 @@ List divideString(var params) {
   int _lowerNumMax = maxMap[_range1.toString()];
   int num1 = rng.nextInt(_lowerNumMax - _lowerNumMin + 1) + _lowerNumMin;
   int _upperNumMin = minMap[_range2.toString()];
-  int _upperNumMax = num1;
-  int num2 = rng.nextInt(_upperNumMax - _upperNumMin + 1) + _upperNumMin;
+  int _upperNumMax = min(num1, maxMap[_range2.toString()]);
+  int num2 =
+      max(rng.nextInt(_upperNumMax - _upperNumMin + 1) + _upperNumMin, 2);
   double res = double.parse((num1 / num2).toStringAsFixed(2));
   //this string is for speaking
   questionTts = num1.toString() + ' divided by ' + num2.toString();
@@ -84,7 +85,7 @@ List multiplyString(var params) {
   int num1 = rng.nextInt(_lowerNumMax - _lowerNumMin + 1) + _lowerNumMin;
   int num2 = rng.nextInt(_upperNumMax - _upperNumMin + 1) + _upperNumMin;
   int res = num1 * num2;
-  questionTts = num1.toString() + ' times ' + num2.toString();
+  questionTts = num1.toString() + ' multiplied by ' + num2.toString();
 
   return [
     res.toString(),
@@ -214,6 +215,7 @@ class _SolveAppState extends State<SolveApp> {
     if (oper == 0) {
       finalres = addString(params);
       _speak(finalres[1]);
+      questionTts = finalres[1];
     } else if (oper == 1) {
       finalres = multiplyString(params);
       _speak(questionTts);
@@ -223,8 +225,8 @@ class _SolveAppState extends State<SolveApp> {
     }
     String result = finalres[0];
     currAns = result;
-    questionTts = finalres[1];
-    return questionTts;
+
+    return finalres[1];
   }
 
   String btnText(int noOfTimes) {
