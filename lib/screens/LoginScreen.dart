@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:abacus/screens/HomeScreen.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:abacus/Variables.dart';
 
@@ -55,8 +57,8 @@ class LoginScreen extends StatelessWidget {
                       padding: EdgeInsets.all(16),
                       onPressed: () {
                         print('Started');
-                        final phone = _phoneController.text.trim();
-
+                        final phone = "+91${_phoneController.text.trim()}";
+                        showtoast(phone, false);
                         verifyPhoneNumber(phone, context);
 
                         //loginUser(phone, context);
@@ -182,6 +184,7 @@ class LoginScreen extends StatelessWidget {
                       User user = userCredential.user;
 
                       if (user != null) {
+                        //saveToDb(user.phoneNumber);
                         saveUser(user.phoneNumber);
                         Navigator.push(
                             context,
@@ -190,7 +193,8 @@ class LoginScreen extends StatelessWidget {
                                       user: user.phoneNumber,
                                     )));
                       } else {
-                        print('Error');
+                        print('Wrong Code');
+                        showtoast("Wrong Code", false);
                       }
                     },
                   )
@@ -201,9 +205,48 @@ class LoginScreen extends StatelessWidget {
     }
   }
 
+  void showtoast(String text, bool isGreen) {
+    Fluttertoast.showToast(
+        msg: text,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        timeInSecForIosWeb: 1,
+        backgroundColor: isGreen ? Colors.green : Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+  }
+
   void saveUser(String phoneNumber) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     pref.setBool(Variables().isLoggedIn, true);
     pref.setString(Variables().phoneNumber, phoneNumber);
   }
+}
+
+void saveToDb(String phoneNumber) {
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
+  FutureBuilder<DocumentSnapshot>(
+    future: users.doc("phoneNumberAccess").get(),
+    builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+      if (snapshot.hasError) {
+        print("xyz");
+        //return Text("Something went wrong");
+      }
+
+      if (snapshot.connectionState == ConnectionState.done) {
+        Map<String, dynamic> data = snapshot.data.data();
+        if (data[phoneNumber] != null && data[phoneNumber] == true) {
+          //return HomeScreen(user: phoneNumber);
+
+        } else if (data[phoneNumber] != null) {
+          //return Text("PhoneNumber not present");
+          print("PhoneNumber not present");
+        }
+        print("abc");
+        //return Text("The Phone Number $phoneNumber is not allowed or invalid. Please get your phone number validated ");
+      }
+
+      return Text("loading");
+    },
+  );
 }

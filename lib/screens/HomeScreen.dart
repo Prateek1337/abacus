@@ -33,6 +33,8 @@ class IsAllowedScreen extends StatelessWidget {
           if (data[user] != null && data[user] == true) {
             return HomeScreen(user: user);
           }
+          //users.doc("phoneNumberAcccess").set({'$user': false});
+          addUser(user);
           return Text(
               "The Phone Number $user is not allowed or invalid. Please get your phone number validated ");
         }
@@ -41,6 +43,20 @@ class IsAllowedScreen extends StatelessWidget {
       },
     );
   }
+}
+
+addUser(String phNo) {
+  FirebaseFirestore.instance.collection("users").doc('phoneNumberAccess').set({
+    '$phNo': false,
+  }, SetOptions(merge: true));
+  // CollectionReference addedUser = FirebaseFirestore.instance.collection('users');
+  // return addedUser
+  //     .doc('phoneNumberAccess')
+  //     .set({
+  //       '$phNo': false,
+  //     })
+  //     .then((value) => print("User Added"))
+  //     .catchError((error) => print("Failed to add user: $error"));
 }
 
 class HomeScreen extends StatefulWidget {

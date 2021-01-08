@@ -13,7 +13,7 @@ void main() async {
     await Firebase.initializeApp();
     String phone = prefs.getString(Variables().phoneNumber);
     runApp(MaterialApp(
-      home: HomeScreen(
+      home: IsAllowedScreen(
         user: phone,
       ),
     ));
