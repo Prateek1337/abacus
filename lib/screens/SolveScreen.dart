@@ -103,6 +103,7 @@ _valueIsPos = each number will be positive if it is 1
 _ansIsPos = intermediate and final result will be positive if 1
 */
 List addString(var params) {
+  questionTts = '';
   int _numberOfValues = params['numberOfValues'],
       _numberOfQuestions = params['numberOfQuestions'],
       _range1 = params['range1'],
@@ -114,7 +115,7 @@ List addString(var params) {
 
   int res = rng.nextInt(_upperNum - _lowerNum + 1) + _lowerNum;
   String question = res.toString();
-
+  questionTts += res.toString();
   for (int i = 0; i < _numberOfValues - 1; i++) {
     int _num = rng.nextInt(_upperNum - _lowerNum + 1) + _lowerNum;
     int sign = rng.nextInt(2);
@@ -125,18 +126,21 @@ List addString(var params) {
         //when result is positive or negative result is allowed
         res = res - _num;
         question = question +
-            "\n" +
+            '\n' +
             Variables().minusCharacter +
             ' ' +
             _num.toString();
+        questionTts += " minus " + _num.toString();
       } else {
         //when result is getting negative but it shouldn't
         res = res + _num;
         question = question + '\n+ ' + _num.toString();
+        questionTts += " plus " + _num.toString();
       }
     } else {
       res = res + _num;
       question = question + '\n+ ' + _num.toString();
+      questionTts += " plus " + _num.toString();
     }
   }
 
@@ -153,6 +157,7 @@ bool isNumeric(String s) {
 _speak(String text) async {
   flutterTts.stop();
   await flutterTts.speak(text);
+  // await flutterTts.speak("1234567 plus 2837");
 }
 
 // ----------------------------------------------------------------------------------
@@ -215,15 +220,17 @@ class _SolveAppState extends State<SolveApp> {
     List finalres;
     if (oper == 0) {
       finalres = addString(params);
-      _speak(finalres[1]);
-      questionTts = finalres[1];
+      // _speak(finalres[1]);
+      // questionTts = finalres[1];
     } else if (oper == 1) {
       finalres = multiplyString(params);
-      _speak(questionTts);
+      // _speak(questionTts);
     } else {
       finalres = divideString(params);
-      _speak(questionTts);
+      // _speak(questionTts);
     }
+    _speak(questionTts);
+
     String result = finalres[0];
     currAns = result;
 
