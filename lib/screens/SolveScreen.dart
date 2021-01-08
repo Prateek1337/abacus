@@ -208,6 +208,7 @@ class _SolveAppState extends State<SolveApp> {
     _playbackSpeed = double.parse(params['speed']);
     flutterTts.setSpeechRate(_playbackSpeed);
     flutterTts.setVolume(1.0);
+    flutterTts.setVoice('hi-in-x-hia-local');
   }
 
   //function to do generate the sum
