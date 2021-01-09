@@ -1,6 +1,5 @@
 // import 'package:abacus/screens/LoginScreen.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:developer';
 
 import 'package:abacus/screens/AdditionSettingScreen.dart';
 import 'package:abacus/screens/MultiplicationSettingScreen.dart';
@@ -8,7 +7,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 
 import 'LoginScreen.dart';
 import 'SolveScreen.dart';

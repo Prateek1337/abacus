@@ -13,7 +13,7 @@ import 'HomeScreen.dart';
 // ----------------------------------------------------------------------------------
 String currAns;
 int finalScore = 0;
-TextEditingController finalController;
+TextEditingController finalController, scoreController;
 int quesCount = 0;
 String questionTts;
 final FlutterTts flutterTts = FlutterTts();
@@ -208,6 +208,8 @@ class _SolveAppState extends State<SolveApp> {
   void initState() {
     super.initState();
     score = finalScore;
+    scoreController = TextEditingController();
+    scoreController.text = "Score: $finalScore";
     finalController = answerController;
     _playbackSpeed = double.parse(params['speed']);
     flutterTts.setSpeechRate(_playbackSpeed);
@@ -305,13 +307,25 @@ class _SolveAppState extends State<SolveApp> {
                     color: Colors.blue,
                     fontWeight: FontWeight.bold),
               ),
-              Text(
-                "Score:" + score.toString(),
-                textAlign: TextAlign.center,
-                style: new TextStyle(
-                    fontSize: 16.0,
-                    color: Colors.blue,
-                    fontWeight: FontWeight.bold),
+              Container(
+                width: 200,
+                child: TextField(
+                  enabled: false,
+                  textAlign: TextAlign.center,
+                  decoration: new InputDecoration(
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                  ),
+                  style: new TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold),
+                  controller: scoreController,
+                  cursorColor: null,
+                ),
               ),
             ],
           ),
@@ -447,6 +461,7 @@ class _OneClickDisabledButton extends State<ButtonWidget> {
     if (isNumeric(toMatchRes)) {
       if (toMatchRes == currAns) {
         finalScore++;
+        scoreController.text = "Score: $finalScore";
         showtoast('Correct Answer', true);
         //_isButtonDisabled = true;
       } else {
