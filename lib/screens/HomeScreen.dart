@@ -6,6 +6,8 @@ import 'package:abacus/screens/MultiplicationSettingScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:abacus/Variables.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'LoginScreen.dart';
@@ -188,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 elevation: 10,
                 child: ListTile(
                   leading: Icon(Icons.add),
-                  title: Text("Addition and Subtraction"),
+                  title: Text("Add & Subtract"),
                   onTap: () => {
                     Navigator.push(
                       context,
@@ -210,7 +212,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 elevation: 10,
                 child: ListTile(
                   leading: Icon(Icons.star),
-                  title: Text("Multiplication and Division"),
+                  title: Text("Multiply & Divide"),
                   onTap: () => {
                     Navigator.push(
                       context,

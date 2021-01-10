@@ -64,7 +64,7 @@ class _AdditionScreenState extends State<AdditionScreen> {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      debugShowCheckedModeBanner: false,
+        debugShowCheckedModeBanner: false,
         home: Scaffold(
             appBar: AppBar(
               title: Text("Addition & Subraction Setting"),
@@ -111,7 +111,8 @@ class _AdditionScreenState extends State<AdditionScreen> {
                                 controller: _range1,
                                 textAlign: TextAlign.center,
                                 decoration: InputDecoration(
-                                    labelText: "Range start",
+                                    labelText: "Min Digit",
+                                    hintText: "1-7",
                                     border: OutlineInputBorder()),
                               ),
                             ),
@@ -131,7 +132,8 @@ class _AdditionScreenState extends State<AdditionScreen> {
                                 controller: _range2,
                                 textAlign: TextAlign.center,
                                 decoration: InputDecoration(
-                                    labelText: "Range end",
+                                    labelText: "Max Digit",
+                                    hintText: "1-7",
                                     border: OutlineInputBorder()),
                               ),
                             ),
@@ -197,7 +199,7 @@ class _AdditionScreenState extends State<AdditionScreen> {
                         width: 300,
                         child: new CheckboxListTile(
                           title: const Text(
-                            "Always Positive",
+                            "Answer Positive",
                             style: TextStyle(color: (Colors.blue)),
                           ),
                           secondary: const Icon(Icons.check),
@@ -213,7 +215,7 @@ class _AdditionScreenState extends State<AdditionScreen> {
                         width: 300,
                         child: new CheckboxListTile(
                           title: const Text(
-                            "Use only positive",
+                            "Use positive values",
                             style: TextStyle(color: (Colors.blue)),
                           ),
                           secondary: const Icon(Icons.check),
@@ -260,7 +262,7 @@ class _AdditionScreenState extends State<AdditionScreen> {
                               _numberOfValues.text.isEmpty)
                             {
                               Fluttertoast.showToast(
-                                  msg: 'All fields are compulsary',
+                                  msg: 'All fields are compulsory',
                                   toastLength: Toast.LENGTH_SHORT,
                                   gravity: ToastGravity.TOP,
                                   timeInSecForIosWeb: 1,

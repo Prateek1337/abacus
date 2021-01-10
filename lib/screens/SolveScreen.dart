@@ -130,17 +130,17 @@ List addString(var params) {
             Variables().minusCharacter +
             ' ' +
             _num.toString();
-        questionTts += " minus " + _num.toString();
+        questionTts += " less " + _num.toString();
       } else {
         //when result is getting negative but it shouldn't
         res = res + _num;
-        question = question + '\n+ ' + _num.toString();
-        questionTts += " plus " + _num.toString();
+        question = question + '\n ' + _num.toString();
+        questionTts += _num.toString();
       }
     } else {
       res = res + _num;
-      question = question + '\n+ ' + _num.toString();
-      questionTts += " plus " + _num.toString();
+      question = question + '\n ' + _num.toString();
+      questionTts += _num.toString();
     }
   }
 
