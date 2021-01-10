@@ -37,6 +37,7 @@ class _ScoreScreenState extends State<ScoreScreen> {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
+      debugShowCheckedModeBanner: false,
         home: new Scaffold(
             body: new Container(
                 padding: EdgeInsets.all(8.0),

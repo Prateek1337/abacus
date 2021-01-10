@@ -177,6 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // print('\n\n\n\n\n\n\n\n\n\n\n hello\n\n\n\n\n\n\n\n\n');
 
     return new MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: new Container(
           padding: EdgeInsets.all(8.0),

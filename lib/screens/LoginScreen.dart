@@ -14,6 +14,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: SingleChildScrollView(
           child: Container(
@@ -101,6 +102,7 @@ class LoginScreen extends StatelessWidget {
                   barrierDismissible: false,
                   builder: (context) {
                     return MaterialApp(
+                      debugShowCheckedModeBanner: false,
                       home: AlertDialog(
                         title: Text("Enter the code"),
                         content: Column(
@@ -161,6 +163,7 @@ class LoginScreen extends StatelessWidget {
           barrierDismissible: false,
           builder: (context) {
             return MaterialApp(
+              debugShowCheckedModeBanner: false,
               home: AlertDialog(
                 title: Text("Enter the code"),
                 content: Column(

@@ -59,6 +59,7 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
+      debugShowCheckedModeBanner: false,
         home: Scaffold(
             appBar: AppBar(
               title: Text("Multiplication & Division Setting"),

@@ -13,12 +13,14 @@ void main() async {
     await Firebase.initializeApp();
     String phone = prefs.getString(Variables().phoneNumber);
     runApp(MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: IsAllowedScreen(
         user: phone,
       ),
     ));
   } else {
     runApp(MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: MyApp(),
     ));
   }
@@ -58,6 +60,7 @@ class Loading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: Container(
           padding: EdgeInsets.all(32),
@@ -85,6 +88,7 @@ class SomethingWentWrong extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: Container(
           padding: EdgeInsets.all(32),

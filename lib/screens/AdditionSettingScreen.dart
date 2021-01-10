@@ -64,6 +64,7 @@ class _AdditionScreenState extends State<AdditionScreen> {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
+      debugShowCheckedModeBanner: false,
         home: Scaffold(
             appBar: AppBar(
               title: Text("Addition & Subraction Setting"),
