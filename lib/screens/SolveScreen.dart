@@ -134,13 +134,13 @@ List addString(var params) {
       } else {
         //when result is getting negative but it shouldn't
         res = res + _num;
-        question = question + '\n ' + _num.toString();
-        questionTts += _num.toString();
+        question = question + '' + _num.toString();
+        questionTts += ' \n' + _num.toString();
       }
     } else {
       res = res + _num;
       question = question + '\n ' + _num.toString();
-      questionTts += _num.toString();
+      questionTts += ' \n' + _num.toString();
     }
   }
 
@@ -152,6 +152,10 @@ bool isNumeric(String s) {
     return false;
   }
   return double.tryParse(s) != null;
+}
+
+Future _stop() async {
+  if (flutterTts != null) await flutterTts.stop();
 }
 
 _speak(String text) async {
@@ -185,7 +189,7 @@ class SolveApp extends StatefulWidget {
       params: params);
 }
 
-class _SolveAppState extends State<SolveApp> {
+class _SolveAppState extends State<SolveApp> with WidgetsBindingObserver {
 // class SolveApp extends StatelessWidget {
   int numdig, oper, noOfTimes, score;
   final String user;
@@ -207,6 +211,7 @@ class _SolveAppState extends State<SolveApp> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     score = finalScore;
     scoreController = TextEditingController();
     scoreController.text = "Score: $finalScore";
@@ -215,6 +220,22 @@ class _SolveAppState extends State<SolveApp> {
     flutterTts.setSpeechRate(_playbackSpeed);
     flutterTts.setVolume(1.0);
     flutterTts.setVoice('hi-in-x-hia-local');
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    score = finalScore;
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    print('app changed state');
+    if (AppLifecycleState.paused == state) {
+      _stop();
+    }
   }
 
   //function to do generate the sum
@@ -268,12 +289,6 @@ class _SolveAppState extends State<SolveApp> {
       score: score,
       params: params,
     ));
-  }
-
-  @override
-  void dispose() {
-    score = finalScore;
-    super.dispose();
   }
 
   @override
