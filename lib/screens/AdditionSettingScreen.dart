@@ -36,7 +36,26 @@ class _AdditionScreenState extends State<AdditionScreen> {
     '1.75',
     '2.0',
   ];
+  List<String> _time = [
+    'No Timer',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '10',
+    '12',
+    '15',
+    '20',
+    '25',
+    '30'
+  ];
   String _selectedSpeed = '1.0';
+  String _selectedTime = 'No Timer';
   TextEditingController _numberOfValues, _range1, _range2, _numberOfQuestions;
   bool _ansIsPos = false, _valueIsPos = false;
   final String user;
@@ -250,6 +269,26 @@ class _AdditionScreenState extends State<AdditionScreen> {
                               );
                             }).toList(),
                           ),
+                          Text('Timer',
+                              style: TextStyle(
+                                  fontSize: 20, color: (Colors.blue))),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          DropdownButton(
+                            value: _selectedTime,
+                            onChanged: (newValue) {
+                              setState(() {
+                                _selectedTime = newValue;
+                              });
+                            },
+                            items: _time.map((time) {
+                              return DropdownMenuItem(
+                                child: new Text(time),
+                                value: time,
+                              );
+                            }).toList(),
+                          ),
                         ],
                       ),
 
@@ -272,7 +311,7 @@ class _AdditionScreenState extends State<AdditionScreen> {
                             }
                           else
                             {
-                              Navigator.push(
+                              Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => (SolveApp(
@@ -292,8 +331,10 @@ class _AdditionScreenState extends State<AdditionScreen> {
                                           'valIsPos': _valueIsPos,
                                           'ansIsPos': _ansIsPos,
                                           'speed': _selectedSpeed,
+                                          'time': _selectedTime,
                                         })),
-                                  )),
+                                  ),
+                                  (r) => false),
                             }
                         },
                         child: new Text(

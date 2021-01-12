@@ -59,7 +59,7 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      debugShowCheckedModeBanner: false,
+        debugShowCheckedModeBanner: false,
         home: Scaffold(
             appBar: AppBar(
               title: Text("Multiplication & Division Setting"),
@@ -240,7 +240,7 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
                             }
                           else
                             {
-                              Navigator.push(
+                              Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => (SolveApp(
@@ -260,7 +260,8 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
                                         'speed': _selectedSpeed,
                                       },
                                     )),
-                                  )),
+                                  ),
+                                  (r) => false),
                             }
                         },
                         child: new Text(
