@@ -37,7 +37,7 @@ class _ScoreScreenState extends State<ScoreScreen> {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      debugShowCheckedModeBanner: false,
+        debugShowCheckedModeBanner: false,
         home: new Scaffold(
             body: new Container(
                 padding: EdgeInsets.all(8.0),
@@ -60,7 +60,12 @@ class _ScoreScreenState extends State<ScoreScreen> {
                           title: Column(
                             children: [
                               Text(
-                                'Your Final Score is ' + score.toString(),
+                                'Your Final Score is ' +
+                                    score.toString() +
+                                    '\n' +
+                                    score.toString() +
+                                    '\n' +
+                                    quesCount.toString(),
                                 style: new TextStyle(
                                     fontSize: 24.0,
                                     fontWeight: FontWeight.bold,

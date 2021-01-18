@@ -5,7 +5,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:abacus/screens/ScoreScreen.dart';
 import 'package:abacus/Variables.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:circular_countdown_timer/circular_countdown_timer.dart';
+
 import 'HomeScreen.dart';
 
 // import 'package:validator/validator.dart';
@@ -13,12 +13,10 @@ import 'HomeScreen.dart';
 // ----------------------------------------------------------------------------------
 String currAns;
 int finalScore = 0;
-TextEditingController finalController, scoreController;
+TextEditingController finalController;
 int quesCount = 0;
 String questionTts;
 final FlutterTts flutterTts = FlutterTts();
-CountDownController _controller = CountDownController();
-Color timeColor = Colors.black;
 // main logic
 var maxMap = {
   '1': 9,
@@ -40,21 +38,6 @@ var minMap = {
   '7': 1000000
 };
 var rng = new Random();
-
-int toSeconds(String s) {
-  print('time String=' + s);
-  if (s == 'No Timer') {
-    timeColor = Colors.blue[50];
-    return 0;
-  }
-  int idx = s.indexOf(":");
-  if (idx == -1) {
-    return int.parse(s) * 60;
-  }
-  List parts = [s.substring(0, idx).trim(), s.substring(idx + 1).trim()];
-  return int.parse(parts[0]) * 60 + int.parse(parts[1]);
-}
-
 void showtoast(String text) {
   Fluttertoast.showToast(
       msg: text,
@@ -147,17 +130,17 @@ List addString(var params) {
             Variables().minusCharacter +
             ' ' +
             _num.toString();
-        questionTts += " less " + _num.toString();
+        questionTts += " minus " + _num.toString();
       } else {
         //when result is getting negative but it shouldn't
         res = res + _num;
-        question = question + '' + _num.toString();
-        questionTts += ' \n' + _num.toString();
+        question = question + '\n+ ' + _num.toString();
+        questionTts += " plus " + _num.toString();
       }
     } else {
       res = res + _num;
-      question = question + '\n ' + _num.toString();
-      questionTts += ' \n' + _num.toString();
+      question = question + '\n+ ' + _num.toString();
+      questionTts += " plus " + _num.toString();
     }
   }
 
@@ -169,10 +152,6 @@ bool isNumeric(String s) {
     return false;
   }
   return double.tryParse(s) != null;
-}
-
-Future _stop() async {
-  if (flutterTts != null) await flutterTts.stop();
 }
 
 _speak(String text) async {
@@ -206,33 +185,12 @@ class SolveApp extends StatefulWidget {
       params: params);
 }
 
-class _SolveAppState extends State<SolveApp> with WidgetsBindingObserver {
+class _SolveAppState extends State<SolveApp> {
 // class SolveApp extends StatelessWidget {
   int numdig, oper, noOfTimes, score;
   final String user;
   var params;
   double _playbackSpeed;
-
-  Future<bool> _onWillPop() async {
-    return (await showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: new Text('Are you sure?'),
-            content: new Text('Do you want to exit the App'),
-            actions: <Widget>[
-              new FlatButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: new Text('No'),
-              ),
-              new FlatButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: new Text('Yes'),
-              ),
-            ],
-          ),
-        )) ??
-        false;
-  }
 
   // _isbutton
   TextEditingController answerController = TextEditingController();
@@ -249,34 +207,12 @@ class _SolveAppState extends State<SolveApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     score = finalScore;
-    scoreController = TextEditingController();
-    scoreController.text = "Score: $finalScore";
     finalController = answerController;
     _playbackSpeed = double.parse(params['speed']);
     flutterTts.setSpeechRate(_playbackSpeed);
     flutterTts.setVolume(1.0);
     flutterTts.setVoice('hi-in-x-hia-local');
-    // print('\nDuration1=' + params['time']);
-    // currentTime = int.parse(params['time']) * 60;
-    // print('\nDuration2=' + params['time']);
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    score = finalScore;
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    print('app changed state');
-    if (AppLifecycleState.paused == state) {
-      _stop();
-    }
   }
 
   //function to do generate the sum
@@ -315,7 +251,6 @@ class _SolveAppState extends State<SolveApp> with WidgetsBindingObserver {
       score = finalScore;
       finalScore = 0;
       flutterTts.stop();
-      timeColor = Colors.black;
       return (ScoreScreen(
         user: user,
         score: score,
@@ -333,6 +268,23 @@ class _SolveAppState extends State<SolveApp> with WidgetsBindingObserver {
     ));
   }
 
+  Widget btnEnd(int totalQuestions) {
+    score = finalScore;
+    finalScore = 0;
+    flutterTts.stop();
+    return (ScoreScreen(
+      user: user,
+      score: score,
+      quesCount: totalQuestions,
+    ));
+  }
+
+  @override
+  void dispose() {
+    score = finalScore;
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     // Function testfun() {
@@ -348,237 +300,155 @@ class _SolveAppState extends State<SolveApp> with WidgetsBindingObserver {
     //   };
     // }
     return new MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: WillPopScope(
-          onWillPop: _onWillPop,
-          child: new Scaffold(
-              body: Center(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text(
-                          "Question No:" + noOfTimes.toString(),
-                          textAlign: TextAlign.center,
-                          style: new TextStyle(
-                              fontSize: 16.0,
-                              color: Colors.blue,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Container(
-                          width: 200,
-                          child: TextField(
-                            enabled: false,
-                            textAlign: TextAlign.center,
-                            decoration: new InputDecoration(
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              errorBorder: InputBorder.none,
-                              disabledBorder: InputBorder.none,
+        home: new Scaffold(
+            body: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Container(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Text(
+                "Question No:" + noOfTimes.toString(),
+                textAlign: TextAlign.center,
+                style: new TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold),
+              ),
+              Text(
+                "Score:" + score.toString(),
+                textAlign: TextAlign.center,
+                style: new TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
+        new Container(
+            padding: EdgeInsets.all(8.0),
+            child: Center(
+              child: Card(
+                elevation: 10,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  side: BorderSide(
+                    color: Colors.blue,
+                    width: 2.0,
+                  ),
+                ),
+                color: Colors.blue[50],
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: new Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              callOper(),
+                              textAlign: TextAlign.center,
+                              style: new TextStyle(fontSize: 16.0),
                             ),
-                            style: new TextStyle(
-                                fontSize: 16.0,
-                                color: Colors.blue,
-                                fontWeight: FontWeight.bold),
-                            controller: scoreController,
-                            cursorColor: null,
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  new Container(
-                    padding: EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Card(
-                        elevation: 10,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          side: BorderSide(
-                            color: Colors.blue,
-                            width: 2.0,
+                          Positioned(
+                            top: 0,
+                            right: 0,
+                            child: IconButton(
+                              onPressed: () {
+                                _speak(questionTts);
+                              },
+                              icon: Icon(Icons.replay),
+                            ),
                           ),
-                        ),
-                        color: Colors.blue[50],
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: new Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  //Spacer(),
-                                  Text(
-                                    callOper(),
-                                    textAlign: TextAlign.center,
-                                    style: new TextStyle(fontSize: 16.0),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {
-                                      _speak(questionTts);
-                                    },
-                                    icon: Icon(Icons.replay),
-                                  ),
-                                  CircularCountDownTimer(
-                                    // Countdown duration in Seconds
-                                    duration: toSeconds(params['time']),
-                                    // Controller to control (i.e Pause, Resume, Restart) the Countdown
-                                    controller: _controller,
-
-                                    // Width of the Countdown Widget
-                                    width:
-                                        MediaQuery.of(context).size.width / 7,
-
-                                    // Height of the Countdown Widget
-                                    height:
-                                        MediaQuery.of(context).size.height / 7,
-
-                                    // Default Color for Countdown Timer
-                                    color: Colors.blue[50],
-
-                                    // Filling Color for Countdown Timer
-                                    fillColor: Colors.blue[50],
-
-                                    // Background Color for Countdown Widget
-                                    backgroundColor: null,
-
-                                    // Border Thickness of the Countdown Circle
-                                    strokeWidth: 0.0,
-
-                                    // Begin and end contours with a flat edge and no extension
-                                    strokeCap: StrokeCap.butt,
-
-                                    // Text Style for Countdown Text
-                                    textStyle: TextStyle(
-                                        fontSize: 10.0,
-                                        color: timeColor,
-                                        fontWeight: FontWeight.bold),
-
-                                    // true for reverse countdown (max to 0), false for forward countdown (0 to max)
-                                    isReverse: true,
-
-                                    // true for reverse animation, false for forward animation
-                                    isReverseAnimation: true,
-
-                                    // Optional [bool] to hide the [Text] in this widget.
-                                    isTimerTextShown: true,
-
-                                    // Function which will execute when the Countdown Ends
-                                    onComplete: () {
-                                      // Here, do whatever you wan
-                                      print('Countdown Ended');
-                                      if (timeColor == Colors.black) {
-                                        score = finalScore;
-                                        finalScore = 0;
-                                        flutterTts.stop();
-                                        Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ScoreScreen(
-                                                      user: user,
-                                                      score: score,
-                                                      quesCount: quesCount,
-                                                    )),
-                                            (r) => false);
-                                      }
-                                    },
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 16,
-                              ),
-                              Container(
-                                width: 300,
-                                color: Colors.white,
-                                child: TextField(
-                                    keyboardType: TextInputType.number,
-                                    // inputFormatters: [
-                                    //   FilteringTextInputFormatter.allow(
-                                    //       RegExp(r'[0-9-]')),
-                                    //   //LengthLimitingTextInputFormatter(1),
-                                    // ],
-                                    controller: answerController,
-                                    decoration: InputDecoration(
-                                      labelText: "Enter Your Answer",
-                                      border: OutlineInputBorder(),
-                                    )),
-                              ),
-                              SizedBox(height: 24),
-                              new ButtonWidget(),
-                              SizedBox(height: 16),
-                            ],
-                          ),
-                        ),
+                        ],
                       ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      RaisedButton(
-                        onPressed: () => {
-                          timeColor = Colors.black,
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => HomeScreen(user: user)),
-                          ),
-                        },
-                        child: Text(
-                          'Reset',
-                          style: TextStyle(
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.white),
-                        ),
-                        color: Theme.of(context).accentColor,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0)),
+                      SizedBox(
+                        height: 16,
                       ),
-                      RaisedButton(
-                        onPressed: () => {
-                          // print("\nTime" +
-                          //     toSeconds(_controller.getTime()).toString()),
-                          params['time'] = _controller.getTime(),
-                          Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      btnFunction(noOfTimes, score)),
-                              (r) => false),
-                        },
-                        child: Text(
-                          btnText(noOfTimes),
-                          style: TextStyle(
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.white),
-                        ),
-                        color: Theme.of(context).accentColor,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0)),
+                      Container(
+                        width: 300,
+                        color: Colors.white,
+                        child: TextField(
+                            keyboardType: TextInputType.number,
+                            // inputFormatters: [
+                            //   FilteringTextInputFormatter.allow(
+                            //       RegExp(r'[0-9-]')),
+                            //   //LengthLimitingTextInputFormatter(1),
+                            // ],
+                            controller: answerController,
+                            decoration: InputDecoration(
+                              labelText: "Enter Your Answer",
+                              border: OutlineInputBorder(),
+                            )),
                       ),
+                      SizedBox(height: 24),
+                      new ButtonWidget(),
+                      SizedBox(height: 16),
                     ],
                   ),
-                ],
+                ),
               ),
+            )),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            RaisedButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen(user: user)),
+              ),
+              child: Text(
+                'Reset',
+                style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.white),
+              ),
+              color: Theme.of(context).accentColor,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0)),
             ),
-          )),
-        ));
+            RaisedButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => btnFunction(noOfTimes, score)),
+              ),
+              child: Text(
+                btnText(noOfTimes),
+                style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.white),
+              ),
+              color: Theme.of(context).accentColor,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0)),
+            ),
+          ],
+        ),
+        RaisedButton(
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => btnEnd(noOfTimes)),
+          ),
+          child: Text(
+            'End',
+            style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.normal,
+                color: Colors.white),
+          ),
+          color: Theme.of(context).accentColor,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+        ),
+      ],
+    )));
   }
 }
 
@@ -604,11 +474,9 @@ class _OneClickDisabledButton extends State<ButtonWidget> {
     if (isNumeric(toMatchRes)) {
       if (toMatchRes == currAns) {
         finalScore++;
-        scoreController.text = "Score: $finalScore";
         showtoast('Correct Answer', true);
         //_isButtonDisabled = true;
       } else {
-        print('in wrong ans else');
         showtoast('Wrong Answer \n Correct Answer is ' + currAns, false);
         //_isButtonDisabled = true;
       }
