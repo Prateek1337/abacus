@@ -513,80 +513,83 @@ class _HomeScreenState extends State<HomeScreen> {
     //  print(FlutterTts().getVoices);
     // print('\n\n\n\n\n\n\n\n\n\n\n hello\n\n\n\n\n\n\n\n\n');
 
-    return new MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: new Container(
-          padding: EdgeInsets.all(8.0),
-          child: new Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Card(
-                elevation: 10,
-                child: ListTile(
-                  leading: Icon(Icons.add),
-                  title: Text("Add & Subtract"),
-                  onTap: () => {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AdditionScreen(
-                                user: user,
-                              )),
-                    ),
-                    // runApp(AdditionScreen(
-                    //   user: user,
-                    // ))
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              Card(
-                elevation: 10,
-                child: ListTile(
-                  leading: Icon(Icons.star),
-                  title: Text("Multiply & Divide"),
-                  onTap: () => {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MultiplicationScreen(
-                                user: user,
-                              )),
-                    ),
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              Container(
-                width: 120,
-                child: Card(
+    return WillPopScope(
+      onWillPop: () {},
+      child: new MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          body: new Container(
+            padding: EdgeInsets.all(8.0),
+            child: new Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Card(
                   elevation: 10,
-                  child: FlatButton(
-                    child: Text("Logout"),
-                    textColor: Colors.white,
-                    padding: EdgeInsets.all(16),
-                    onPressed: () async {
-                      SharedPreferences prefs =
-                          await SharedPreferences.getInstance();
-                      prefs.clear();
-                      FirebaseAuth.instance.signOut();
+                  child: ListTile(
+                    leading: Icon(Icons.add),
+                    title: Text("Add & Subtract"),
+                    onTap: () => {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => LoginScreen()));
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AdditionScreen(
+                                  user: user,
+                                )),
+                      ),
+                      // runApp(AdditionScreen(
+                      //   user: user,
+                      // ))
                     },
-                    color: Colors.blue,
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(5.0)),
                   ),
                 ),
-              ),
-            ],
+                SizedBox(
+                  height: 16,
+                ),
+                Card(
+                  elevation: 10,
+                  child: ListTile(
+                    leading: Icon(Icons.star),
+                    title: Text("Multiply & Divide"),
+                    onTap: () => {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MultiplicationScreen(
+                                  user: user,
+                                )),
+                      ),
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                Container(
+                  width: 120,
+                  child: Card(
+                    elevation: 10,
+                    child: FlatButton(
+                      child: Text("Logout"),
+                      textColor: Colors.white,
+                      padding: EdgeInsets.all(16),
+                      onPressed: () async {
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        prefs.clear();
+                        FirebaseAuth.instance.signOut();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()));
+                      },
+                      color: Colors.blue,
+                      shape: new RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(5.0)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

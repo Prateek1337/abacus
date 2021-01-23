@@ -65,219 +65,221 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
               title: Text("Multiplication & Division Setting"),
             ),
             body: new Center(
-                child: Card(
-              elevation: 10,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                side: BorderSide(
-                  color: Colors.blue,
-                  width: 2.0,
+                child: SingleChildScrollView(
+              child: Card(
+                elevation: 10,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  side: BorderSide(
+                    color: Colors.blue,
+                    width: 2.0,
+                  ),
                 ),
-              ),
-              color: Colors.blue[50],
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: new Wrap(
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    direction: Axis.vertical,
-                    children: <Widget>[
-                      new Text(
-                        'Select the range of the digits',
-                        style: new TextStyle(
-                            fontSize: 20.0, fontWeight: FontWeight.bold),
-                      ),
-                      new SizedBox(
-                        height: 16,
-                      ),
-                      new Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Container(
-                              color: Colors.white,
-                              width: 120,
-                              child: new TextField(
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                  LengthLimitingTextInputFormatter(1),
-                                  CustomRangeTextInputFormatter3(),
-                                ],
-                                controller: _range1,
-                                textAlign: TextAlign.center,
-                                decoration: InputDecoration(
-                                    labelText: "Range start",
-                                    border: OutlineInputBorder()),
+                color: Colors.blue[50],
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: new Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      direction: Axis.vertical,
+                      children: <Widget>[
+                        new Text(
+                          'Select the range of the digits',
+                          style: new TextStyle(
+                              fontSize: 20.0, fontWeight: FontWeight.bold),
+                        ),
+                        new SizedBox(
+                          height: 16,
+                        ),
+                        new Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                color: Colors.white,
+                                width: 120,
+                                child: new TextField(
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                    LengthLimitingTextInputFormatter(1),
+                                    CustomRangeTextInputFormatter3(),
+                                  ],
+                                  controller: _range1,
+                                  textAlign: TextAlign.center,
+                                  decoration: InputDecoration(
+                                      labelText: "Range start",
+                                      border: OutlineInputBorder()),
+                                ),
                               ),
-                            ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Container(
+                                color: Colors.white,
+                                width: 120,
+                                child: new TextField(
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                    LengthLimitingTextInputFormatter(1),
+                                    CustomRangeTextInputFormatter3()
+                                  ],
+                                  controller: _range2,
+                                  textAlign: TextAlign.center,
+                                  decoration: InputDecoration(
+                                      labelText: "Range end",
+                                      border: OutlineInputBorder()),
+                                ),
+                              ),
+                            ]),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        Container(
+                          width: 250,
+                          color: Colors.white,
+                          child: new TextField(
+                            keyboardType: TextInputType.number,
+                            maxLength: 3,
+                            buildCounter: (BuildContext context,
+                                    {int currentLength,
+                                    int maxLength,
+                                    bool isFocused}) =>
+                                null,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              CustomRangeTextInputFormatter2(),
+                            ],
+                            controller: _numberOfQuestions,
+                            textAlign: TextAlign.center,
+                            decoration: InputDecoration(
+                                labelText: "Enter Number of Questions",
+                                hintText: "should be between 1-100",
+                                border: OutlineInputBorder()),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 16,
+                        ),
+
+                        Row(
+                          children: [
+                            Text('Speed',
+                                style: TextStyle(
+                                    fontSize: 20, color: (Colors.blue))),
                             SizedBox(
                               width: 10,
                             ),
-                            Container(
-                              color: Colors.white,
-                              width: 120,
-                              child: new TextField(
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                  LengthLimitingTextInputFormatter(1),
-                                  CustomRangeTextInputFormatter3()
-                                ],
-                                controller: _range2,
-                                textAlign: TextAlign.center,
-                                decoration: InputDecoration(
-                                    labelText: "Range end",
-                                    border: OutlineInputBorder()),
-                              ),
+                            DropdownButton(
+                              value: _selectedSpeed,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  _selectedSpeed = newValue;
+                                });
+                              },
+                              items: _speed.map((speed) {
+                                return DropdownMenuItem(
+                                  child: new Text(speed),
+                                  value: speed,
+                                );
+                              }).toList(),
                             ),
-                          ]),
-                      SizedBox(
-                        height: 16,
-                      ),
-                      Container(
-                        width: 250,
-                        color: Colors.white,
-                        child: new TextField(
-                          keyboardType: TextInputType.number,
-                          maxLength: 3,
-                          buildCounter: (BuildContext context,
-                                  {int currentLength,
-                                  int maxLength,
-                                  bool isFocused}) =>
-                              null,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                            CustomRangeTextInputFormatter2(),
                           ],
-                          controller: _numberOfQuestions,
-                          textAlign: TextAlign.center,
-                          decoration: InputDecoration(
-                              labelText: "Enter Number of Questions",
-                              hintText: "should be between 1-100",
-                              border: OutlineInputBorder()),
                         ),
-                      ),
-                      SizedBox(
-                        height: 16,
-                      ),
-
-                      Row(
-                        children: [
-                          Text('Speed',
-                              style: TextStyle(
-                                  fontSize: 20, color: (Colors.blue))),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          DropdownButton(
-                            value: _selectedSpeed,
-                            onChanged: (newValue) {
-                              setState(() {
-                                _selectedSpeed = newValue;
-                              });
-                            },
-                            items: _speed.map((speed) {
-                              return DropdownMenuItem(
-                                child: new Text(speed),
-                                value: speed,
-                              );
-                            }).toList(),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 16,
-                      ),
-                      new Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          new Radio(
-                            value: 1,
-                            groupValue: _isOperation,
-                            onChanged: (int value) {
-                              setState(() {
-                                _isOperation = value;
-                                // print(_isOperation);
-                              });
-                            },
-                          ),
-                          new Text(
-                            'Multiplication',
-                            style: new TextStyle(fontSize: 16.0),
-                          ),
-                          new Radio(
-                              value: 2,
+                        SizedBox(
+                          height: 16,
+                        ),
+                        new Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            new Radio(
+                              value: 1,
                               groupValue: _isOperation,
                               onChanged: (int value) {
                                 setState(() {
                                   _isOperation = value;
                                   // print(_isOperation);
                                 });
-                              }),
-                          new Text(
-                            'Division',
-                            style: new TextStyle(fontSize: 16.0),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 16,
-                      ),
-                      //TODO: Use _range1 and _range2 values
-                      new RaisedButton(
-                        onPressed: () => {
-                          if (_range1.text.isEmpty ||
-                              _range2.text.isEmpty ||
-                              _numberOfQuestions.text.isEmpty)
-                            {
-                              Fluttertoast.showToast(
-                                  msg: 'All fields are compulsary',
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.TOP,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: Colors.red,
-                                  textColor: Colors.white,
-                                  fontSize: 16.0)
-                            }
-                          else
-                            {
-                              Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => (SolveApp(
-                                      user: user,
-                                      //numdig: _radioValue1,
-                                      oper: _isOperation,
-                                      noOfTimes: 1,
-                                      score: 0,
-                                      params: {
-                                        'range1': max(int.parse(_range1.text),
-                                            int.parse(_range2.text)),
-                                        'range2': min(int.parse(_range1.text),
-                                            int.parse(_range2.text)),
-                                        'numberOfQuestions':
-                                            int.parse(_numberOfQuestions.text),
-                                        'isOpertaion': _isOperation,
-                                        'speed': _selectedSpeed,
-                                      },
-                                    )),
-                                  ),
-                                  (r) => false),
-                            }
-                        },
-                        child: new Text(
-                          'Start',
-                          style: new TextStyle(
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.white),
+                              },
+                            ),
+                            new Text(
+                              'Multiplication',
+                              style: new TextStyle(fontSize: 16.0),
+                            ),
+                            new Radio(
+                                value: 2,
+                                groupValue: _isOperation,
+                                onChanged: (int value) {
+                                  setState(() {
+                                    _isOperation = value;
+                                    // print(_isOperation);
+                                  });
+                                }),
+                            new Text(
+                              'Division',
+                              style: new TextStyle(fontSize: 16.0),
+                            ),
+                          ],
                         ),
-                        color: Theme.of(context).accentColor,
-                        shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(5.0)),
-                      ),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        //TODO: Use _range1 and _range2 values
+                        new RaisedButton(
+                          onPressed: () => {
+                            if (_range1.text.isEmpty ||
+                                _range2.text.isEmpty ||
+                                _numberOfQuestions.text.isEmpty)
+                              {
+                                Fluttertoast.showToast(
+                                    msg: 'All fields are compulsary',
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.TOP,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0)
+                              }
+                            else
+                              {
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => (SolveApp(
+                                        user: user,
+                                        //numdig: _radioValue1,
+                                        oper: _isOperation,
+                                        noOfTimes: 1,
+                                        score: 0,
+                                        params: {
+                                          'range1': max(int.parse(_range1.text),
+                                              int.parse(_range2.text)),
+                                          'range2': min(int.parse(_range1.text),
+                                              int.parse(_range2.text)),
+                                          'numberOfQuestions': int.parse(
+                                              _numberOfQuestions.text),
+                                          'isOpertaion': _isOperation,
+                                          'speed': _selectedSpeed,
+                                        },
+                                      )),
+                                    ),
+                                    (r) => false),
+                              }
+                          },
+                          child: new Text(
+                            'Start',
+                            style: new TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.white),
+                          ),
+                          color: Theme.of(context).accentColor,
+                          shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(5.0)),
+                        ),
 
-                      // ])
-                    ]),
+                        // ])
+                      ]),
+                ),
               ),
             ))));
   }

@@ -36,75 +36,78 @@ class _ScoreScreenState extends State<ScoreScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: new Scaffold(
-            body: new Container(
-                padding: EdgeInsets.all(8.0),
-                child: new Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        side: BorderSide(
-                          color: Colors.blue,
-                          width: 2.0,
+    return WillPopScope(
+      onWillPop: () {},
+      child: new MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: new Scaffold(
+              body: new Container(
+                  padding: EdgeInsets.all(8.0),
+                  child: new Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          side: BorderSide(
+                            color: Colors.blue,
+                            width: 2.0,
+                          ),
                         ),
-                      ),
-                      elevation: 10,
-                      color: Colors.blue[50],
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: ListTile(
-                          title: Column(
-                            children: [
-                              Text(
-                                'Your Final Score is ' +
-                                    score.toString() +
-                                    '\n' +
-                                    score.toString() +
-                                    '\n' +
-                                    quesCount.toString(),
-                                style: new TextStyle(
-                                    fontSize: 24.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.blue),
-                              ),
-                              Text(
-                                "${getEmoji(score, quesCount)}",
-                                style: new TextStyle(
-                                    fontSize: 24.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.blue),
-                              ),
-                            ],
+                        elevation: 10,
+                        color: Colors.blue[50],
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: ListTile(
+                            title: Column(
+                              children: [
+                                Text(
+                                  'Your Final Score is ' +
+                                      score.toString() +
+                                      '\n' +
+                                      score.toString() +
+                                      '\n' +
+                                      quesCount.toString(),
+                                  style: new TextStyle(
+                                      fontSize: 24.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue),
+                                ),
+                                Text(
+                                  "${getEmoji(score, quesCount)}",
+                                  style: new TextStyle(
+                                      fontSize: 24.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    RaisedButton(
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => HomeScreen(user: user)),
+                      SizedBox(
+                        height: 16,
                       ),
-                      child: Text(
-                        "Done",
-                        style: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.normal,
-                            color: Colors.white),
+                      RaisedButton(
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomeScreen(user: user)),
+                        ),
+                        child: Text(
+                          "Done",
+                          style: TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.white),
+                        ),
+                        color: Theme.of(context).accentColor,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0)),
                       ),
-                      color: Theme.of(context).accentColor,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0)),
-                    ),
-                  ],
-                ))));
+                    ],
+                  )))),
+    );
   }
 }
 

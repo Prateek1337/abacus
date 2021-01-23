@@ -299,156 +299,160 @@ class _SolveAppState extends State<SolveApp> {
     //     testfun();
     //   };
     // }
-    return new MaterialApp(
-        home: new Scaffold(
-            body: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Container(
-          child: Row(
+    return WillPopScope(
+      onWillPop: () {},
+      child: new MaterialApp(
+          home: new Scaffold(
+              body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  "Question No:" + noOfTimes.toString(),
+                  textAlign: TextAlign.center,
+                  style: new TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  "Score:" + score.toString(),
+                  textAlign: TextAlign.center,
+                  style: new TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+          new Container(
+              padding: EdgeInsets.all(8.0),
+              child: Center(
+                child: Card(
+                  elevation: 10,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    side: BorderSide(
+                      color: Colors.blue,
+                      width: 2.0,
+                    ),
+                  ),
+                  color: Colors.blue[50],
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: new Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                callOper(),
+                                textAlign: TextAlign.center,
+                                style: new TextStyle(fontSize: 16.0),
+                              ),
+                            ),
+                            Positioned(
+                              top: 0,
+                              right: 0,
+                              child: IconButton(
+                                onPressed: () {
+                                  _speak(questionTts);
+                                },
+                                icon: Icon(Icons.replay),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        Container(
+                          width: 300,
+                          color: Colors.white,
+                          child: TextField(
+                              keyboardType: TextInputType.number,
+                              // inputFormatters: [
+                              //   FilteringTextInputFormatter.allow(
+                              //       RegExp(r'[0-9-]')),
+                              //   //LengthLimitingTextInputFormatter(1),
+                              // ],
+                              controller: answerController,
+                              decoration: InputDecoration(
+                                labelText: "Enter Your Answer",
+                                border: OutlineInputBorder(),
+                              )),
+                        ),
+                        SizedBox(height: 24),
+                        new ButtonWidget(),
+                        SizedBox(height: 16),
+                      ],
+                    ),
+                  ),
+                ),
+              )),
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Text(
-                "Question No:" + noOfTimes.toString(),
-                textAlign: TextAlign.center,
-                style: new TextStyle(
-                    fontSize: 16.0,
-                    color: Colors.blue,
-                    fontWeight: FontWeight.bold),
+              RaisedButton(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => HomeScreen(user: user)),
+                ),
+                child: Text(
+                  'Reset',
+                  style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.white),
+                ),
+                color: Theme.of(context).accentColor,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0)),
               ),
-              Text(
-                "Score:" + score.toString(),
-                textAlign: TextAlign.center,
-                style: new TextStyle(
-                    fontSize: 16.0,
-                    color: Colors.blue,
-                    fontWeight: FontWeight.bold),
+              RaisedButton(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => btnFunction(noOfTimes, score)),
+                ),
+                child: Text(
+                  btnText(noOfTimes),
+                  style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.white),
+                ),
+                color: Theme.of(context).accentColor,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0)),
               ),
             ],
           ),
-        ),
-        new Container(
-            padding: EdgeInsets.all(8.0),
-            child: Center(
-              child: Card(
-                elevation: 10,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                  side: BorderSide(
-                    color: Colors.blue,
-                    width: 2.0,
-                  ),
-                ),
-                color: Colors.blue[50],
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: new Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              callOper(),
-                              textAlign: TextAlign.center,
-                              style: new TextStyle(fontSize: 16.0),
-                            ),
-                          ),
-                          Positioned(
-                            top: 0,
-                            right: 0,
-                            child: IconButton(
-                              onPressed: () {
-                                _speak(questionTts);
-                              },
-                              icon: Icon(Icons.replay),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 16,
-                      ),
-                      Container(
-                        width: 300,
-                        color: Colors.white,
-                        child: TextField(
-                            keyboardType: TextInputType.number,
-                            // inputFormatters: [
-                            //   FilteringTextInputFormatter.allow(
-                            //       RegExp(r'[0-9-]')),
-                            //   //LengthLimitingTextInputFormatter(1),
-                            // ],
-                            controller: answerController,
-                            decoration: InputDecoration(
-                              labelText: "Enter Your Answer",
-                              border: OutlineInputBorder(),
-                            )),
-                      ),
-                      SizedBox(height: 24),
-                      new ButtonWidget(),
-                      SizedBox(height: 16),
-                    ],
-                  ),
-                ),
-              ),
-            )),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            RaisedButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => HomeScreen(user: user)),
-              ),
-              child: Text(
-                'Reset',
-                style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.normal,
-                    color: Colors.white),
-              ),
-              color: Theme.of(context).accentColor,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5.0)),
+          RaisedButton(
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => btnEnd(noOfTimes)),
             ),
-            RaisedButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => btnFunction(noOfTimes, score)),
-              ),
-              child: Text(
-                btnText(noOfTimes),
-                style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.normal,
-                    color: Colors.white),
-              ),
-              color: Theme.of(context).accentColor,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5.0)),
+            child: Text(
+              'End',
+              style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.normal,
+                  color: Colors.white),
             ),
-          ],
-        ),
-        RaisedButton(
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => btnEnd(noOfTimes)),
+            color: Theme.of(context).accentColor,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0)),
           ),
-          child: Text(
-            'End',
-            style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.normal,
-                color: Colors.white),
-          ),
-          color: Theme.of(context).accentColor,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-        ),
-      ],
-    )));
+        ],
+      ))),
+    );
   }
 }
 
