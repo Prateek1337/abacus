@@ -33,7 +33,26 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
     '1.75',
     '2.0',
   ];
+  List<String> _time = [
+    'No Timer',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '10',
+    '12',
+    '15',
+    '20',
+    '25',
+    '30'
+  ];
   String _selectedSpeed = '1.0';
+  String _selectedTime = 'No Timer';
   TextEditingController _range1, _range2, _numberOfQuestions;
   int tempzero = 0;
   int _isOperation = 1;
@@ -165,7 +184,7 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
                           children: [
                             Text('Speed',
                                 style: TextStyle(
-                                    fontSize: 20, color: (Colors.blue))),
+                                    fontSize: 18, color: (Colors.blue))),
                             SizedBox(
                               width: 10,
                             ),
@@ -180,6 +199,26 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
                                 return DropdownMenuItem(
                                   child: new Text(speed),
                                   value: speed,
+                                );
+                              }).toList(),
+                            ),
+                            Text('Timer',
+                                style: TextStyle(
+                                    fontSize: 18, color: (Colors.blue))),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            DropdownButton(
+                              value: _selectedTime,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  _selectedTime = newValue;
+                                });
+                              },
+                              items: _time.map((time) {
+                                return DropdownMenuItem(
+                                  child: new Text(time),
+                                  value: time,
                                 );
                               }).toList(),
                             ),
@@ -259,6 +298,7 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
                                               _numberOfQuestions.text),
                                           'isOpertaion': _isOperation,
                                           'speed': _selectedSpeed,
+                                          'time': _selectedTime,
                                         },
                                       )),
                                     ),

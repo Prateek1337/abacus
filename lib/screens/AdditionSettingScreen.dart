@@ -252,7 +252,7 @@ class _AdditionScreenState extends State<AdditionScreen> {
                           children: [
                             Text('Speed',
                                 style: TextStyle(
-                                    fontSize: 20, color: (Colors.blue))),
+                                    fontSize: 18, color: (Colors.blue))),
                             SizedBox(
                               width: 10,
                             ),
@@ -272,7 +272,7 @@ class _AdditionScreenState extends State<AdditionScreen> {
                             ),
                             Text('Timer',
                                 style: TextStyle(
-                                    fontSize: 20, color: (Colors.blue))),
+                                    fontSize: 18, color: (Colors.blue))),
                             SizedBox(
                               width: 10,
                             ),

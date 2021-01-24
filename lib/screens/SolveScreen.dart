@@ -5,7 +5,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'package:abacus/screens/ScoreScreen.dart';
 import 'package:abacus/Variables.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
+import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'HomeScreen.dart';
 
 // import 'package:validator/validator.dart';
@@ -17,6 +17,24 @@ TextEditingController finalController;
 int quesCount = 0;
 String questionTts;
 final FlutterTts flutterTts = FlutterTts();
+var timerMap = {
+  'No Timer': 1,
+  '1': 60,
+  '2': 120,
+  '3': 180,
+  '4': 240,
+  '5': 300,
+  '6': 360,
+  '7': 420,
+  '8': 480,
+  '9': 540,
+  '10': 600,
+  '12': 720,
+  '15': 900,
+  '20': 1200,
+  '25': 1500,
+  '30': 1800
+};
 // main logic
 var maxMap = {
   '1': 9,
@@ -191,6 +209,9 @@ class _SolveAppState extends State<SolveApp> {
   final String user;
   var params;
   double _playbackSpeed;
+  bool _enabled;
+  bool timerVisibility;
+  String currQuestion;
 
   // _isbutton
   TextEditingController answerController = TextEditingController();
@@ -213,6 +234,10 @@ class _SolveAppState extends State<SolveApp> {
     flutterTts.setSpeechRate(_playbackSpeed);
     flutterTts.setVolume(1.0);
     flutterTts.setVoice('hi-in-x-hia-local');
+    _enabled = true;
+    timerVisibility = timerMap[params['time']] != 1;
+    currQuestion = callOper();
+    _speak(questionTts);
   }
 
   //function to do generate the sum
@@ -229,7 +254,6 @@ class _SolveAppState extends State<SolveApp> {
       finalres = divideString(params);
       // _speak(questionTts);
     }
-    _speak(questionTts);
 
     String result = finalres[0];
     currAns = result;
@@ -242,7 +266,7 @@ class _SolveAppState extends State<SolveApp> {
     return 'Next';
   }
 
-  Widget btnFunction(int noOfTimes, int result) {
+  void btnFunction(int result) {
     //String answerString = answerController.text;
     // if (answerString == '') checkfornumber and give pop
     // int answer = int.parse(answerString);
@@ -251,21 +275,25 @@ class _SolveAppState extends State<SolveApp> {
       score = finalScore;
       finalScore = 0;
       flutterTts.stop();
-      return (ScoreScreen(
-        user: user,
-        score: score,
-        quesCount: quesCount,
-      ));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => (ScoreScreen(
+                    user: user,
+                    score: finalScore,
+                    quesCount: quesCount,
+                  ))));
     }
-
-    return (SolveApp(
-      user: user,
-      numdig: numdig,
-      oper: oper,
-      noOfTimes: noOfTimes + 1,
-      score: score,
-      params: params,
-    ));
+    setState(() {
+      // print('\n\nSet State1 Called score=$score , finalscore=$finalScore\n\n');
+      finalController.clear();
+      answerController.clear();
+      noOfTimes++;
+      _enabled = true;
+      currQuestion = callOper();
+      _speak(questionTts);
+      score = finalScore;
+    });
   }
 
   Widget btnEnd(int totalQuestions) {
@@ -348,22 +376,84 @@ class _SolveAppState extends State<SolveApp> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Expanded(
                               child: Text(
-                                callOper(),
+                                currQuestion,
                                 textAlign: TextAlign.center,
                                 style: new TextStyle(fontSize: 16.0),
                               ),
                             ),
-                            Positioned(
-                              top: 0,
-                              right: 0,
-                              child: IconButton(
-                                onPressed: () {
-                                  _speak(questionTts);
+                            IconButton(
+                              padding: EdgeInsets.only(right: 10),
+                              onPressed: () {
+                                _speak(questionTts);
+                              },
+                              icon: Icon(Icons.replay),
+                            ),
+                            Visibility(
+                              visible: timerVisibility,
+                              child: CircularCountDownTimer(
+                                // Countdown duration in Seconds
+                                duration: timerMap[params['time']],
+                                // Controller to control (i.e Pause, Resume, Restart) the Countdown
+                                controller: CountDownController(),
+
+                                // Width of the Countdown Widget
+                                width: MediaQuery.of(context).size.width / 7,
+
+                                // Height of the Countdown Widget
+                                height: MediaQuery.of(context).size.height / 7,
+
+                                // Default Color for Countdown Timer
+                                color: Colors.white,
+
+                                // Filling Color for Countdown Timer
+                                fillColor: Colors.blue[100],
+
+                                // Background Color for Countdown Widget
+                                backgroundColor: Colors.blue[500],
+
+                                // Border Thickness of the Countdown Circle
+                                strokeWidth: 10.0,
+
+                                // Begin and end contours with a flat edge and no extension
+                                strokeCap: StrokeCap.round,
+
+                                // Text Style for Countdown Text
+                                textStyle: TextStyle(
+                                    fontSize: 10.0,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+
+                                // true for reverse countdown (max to 0), false for forward countdown (0 to max)
+                                isReverse: true,
+
+                                // true for reverse animation, false for forward animation
+                                isReverseAnimation: true,
+
+                                // Optional [bool] to hide the [Text] in this widget.
+                                isTimerTextShown: true,
+
+                                // Function which will execute when the Countdown Ends
+                                onComplete: () {
+                                  // Here, do whatever you wan
+                                  print('\n\nCountdown Ended\n\n');
+                                  if (timerVisibility) {
+                                    score = finalScore;
+                                    finalScore = 0;
+                                    flutterTts.stop();
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => (ScoreScreen(
+                                                  user: user,
+                                                  score: finalScore,
+                                                  quesCount: quesCount,
+                                                ))));
+                                  }
                                 },
-                                icon: Icon(Icons.replay),
                               ),
                             ),
                           ],
@@ -388,7 +478,46 @@ class _SolveAppState extends State<SolveApp> {
                               )),
                         ),
                         SizedBox(height: 24),
-                        new ButtonWidget(),
+                        RaisedButton(
+                          onPressed: !_enabled
+                              ? null
+                              : () {
+                                  if (_enabled) {
+                                    String toMatchRes = finalController.text;
+                                    if (isNumeric(toMatchRes)) {
+                                      if (toMatchRes == currAns) {
+                                        finalScore++;
+                                        showtoast('Correct Answer');
+                                        //_isButtonDisabled = true;
+                                      } else {
+                                        showtoast(
+                                            'Wrong Answer \n Correct Answer is ' +
+                                                currAns);
+                                        //_isButtonDisabled = true;
+                                      }
+                                      setState(() {
+                                        print('\n\nsetState2 called\n\n');
+                                        _enabled = !_enabled;
+                                      });
+                                    } else {
+                                      showtoast('Enter a Valid Number');
+                                    }
+                                  } else {
+                                    showtoast("disabled");
+                                    return null;
+                                  }
+                                },
+                          child: Text(
+                            'Check Answer',
+                            style: TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.white),
+                          ),
+                          color: Theme.of(context).accentColor,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0)),
+                        ),
                         SizedBox(height: 16),
                       ],
                     ),
@@ -416,11 +545,7 @@ class _SolveAppState extends State<SolveApp> {
                     borderRadius: BorderRadius.circular(5.0)),
               ),
               RaisedButton(
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => btnFunction(noOfTimes, score)),
-                ),
+                onPressed: () => btnFunction(score),
                 child: Text(
                   btnText(noOfTimes),
                   style: TextStyle(
@@ -456,64 +581,65 @@ class _SolveAppState extends State<SolveApp> {
   }
 }
 
-class ButtonWidget extends StatefulWidget {
-  @override
-  _OneClickDisabledButton createState() => _OneClickDisabledButton();
-}
 
-class _OneClickDisabledButton extends State<ButtonWidget> {
-  bool _enabled = true;
-  void showtoast(String text, bool isGreen) {
-    Fluttertoast.showToast(
-        msg: text,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.TOP,
-        timeInSecForIosWeb: 1,
-        backgroundColor: isGreen ? Colors.green : Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
-  }
+// class ButtonWidget extends StatefulWidget  {
+//   @override
+//   _OneClickDisabledButton createState() => _OneClickDisabledButton();
+// }
 
-  Function checkAnswer(String toMatchRes) {
-    if (isNumeric(toMatchRes)) {
-      if (toMatchRes == currAns) {
-        finalScore++;
-        showtoast('Correct Answer', true);
-        //_isButtonDisabled = true;
-      } else {
-        showtoast('Wrong Answer \n Correct Answer is ' + currAns, false);
-        //_isButtonDisabled = true;
-      }
-      setState(() => {_enabled = !_enabled});
-    } else {
-      showtoast('Enter a Valid Number', false);
-    }
+// class _OneClickDisabledButton extends State<ButtonWidget> {
+//   bool _enabled = true;
+//   void showtoast(String text, bool isGreen) {
+//     Fluttertoast.showToast(
+//         msg: text,
+//         toastLength: Toast.LENGTH_SHORT,
+//         gravity: ToastGravity.TOP,
+//         timeInSecForIosWeb: 1,
+//         backgroundColor: isGreen ? Colors.green : Colors.red,
+//         textColor: Colors.white,
+//         fontSize: 16.0);
+//   }
 
-    // print('button value is  ' + _isButtonDisabled.toString());
-    // setState(() {});
-    return null;
-  }
+//   Function checkAnswer(String toMatchRes) {
+//     if (isNumeric(toMatchRes)) {
+//       if (toMatchRes == currAns) {
+//         finalScore++;
+//         showtoast('Correct Answer', true);
+//         //_isButtonDisabled = true;
+//       } else {
+//         showtoast('Wrong Answer \n Correct Answer is ' + currAns, false);
+//         //_isButtonDisabled = true;
+//       }
+//       setState(() => {_enabled = !_enabled});
+//     } else {
+//       showtoast('Enter a Valid Number', false);
+//     }
 
-  @override
-  Widget build(BuildContext context) {
-    return RaisedButton(
-      onPressed: !_enabled
-          ? null
-          : () {
-              if (_enabled) {
-                checkAnswer(finalController.text);
-              } else {
-                showtoast("disabled", false);
-                return null;
-              }
-            },
-      child: Text(
-        'Check Answer',
-        style: TextStyle(
-            fontSize: 20.0, fontWeight: FontWeight.normal, color: Colors.white),
-      ),
-      color: Theme.of(context).accentColor,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-    );
-  }
-}
+//     // print('button value is  ' + _isButtonDisabled.toString());
+//     // setState(() {});
+//     return null;
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return RaisedButton(
+//       onPressed: !_enabled
+//           ? null
+//           : () {
+//               if (_enabled) {
+//                 checkAnswer(finalController.text);
+//               } else {
+//                 showtoast("disabled", false);
+//                 return null;
+//               }
+//             },
+//       child: Text(
+//         'Check Answer',
+//         style: TextStyle(
+//             fontSize: 20.0, fontWeight: FontWeight.normal, color: Colors.white),
+//       ),
+//       color: Theme.of(context).accentColor,
+//       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+//     );
+//   }
+// }
