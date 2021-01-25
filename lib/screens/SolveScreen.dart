@@ -228,7 +228,7 @@ class _SolveAppState extends State<SolveApp> {
   @override
   void initState() {
     super.initState();
-    score = finalScore;
+    // score = finalScore;
     finalController = answerController;
     _playbackSpeed = double.parse(params['speed']);
     flutterTts.setSpeechRate(_playbackSpeed);
@@ -272,15 +272,15 @@ class _SolveAppState extends State<SolveApp> {
     // int answer = int.parse(answerString);
     // if (answer == currRes) score++;
     if (noOfTimes >= quesCount) {
-      score = finalScore;
-      finalScore = 0;
+      // score = finalScore;
+      // finalScore = 0;
       flutterTts.stop();
       Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) => (ScoreScreen(
                     user: user,
-                    score: finalScore,
+                    score: score,
                     quesCount: quesCount,
                   ))));
     }
@@ -292,13 +292,13 @@ class _SolveAppState extends State<SolveApp> {
       _enabled = true;
       currQuestion = callOper();
       _speak(questionTts);
-      score = finalScore;
+      score = score;
     });
   }
 
   Widget btnEnd(int totalQuestions) {
-    score = finalScore;
-    finalScore = 0;
+    // score = finalScore;
+    // finalScore = 0;
     flutterTts.stop();
     return (ScoreScreen(
       user: user,
@@ -309,7 +309,7 @@ class _SolveAppState extends State<SolveApp> {
 
   @override
   void dispose() {
-    score = finalScore;
+    // score = finalScore;
     super.dispose();
   }
 
@@ -441,15 +441,15 @@ class _SolveAppState extends State<SolveApp> {
                                   // Here, do whatever you wan
                                   print('\n\nCountdown Ended\n\n');
                                   if (timerVisibility) {
-                                    score = finalScore;
-                                    finalScore = 0;
+                                    // score = finalScore;
+                                    // finalScore = 0;
                                     flutterTts.stop();
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => (ScoreScreen(
                                                   user: user,
-                                                  score: finalScore,
+                                                  score: score,
                                                   quesCount: quesCount,
                                                 ))));
                                   }
@@ -486,7 +486,7 @@ class _SolveAppState extends State<SolveApp> {
                                     String toMatchRes = finalController.text;
                                     if (isNumeric(toMatchRes)) {
                                       if (toMatchRes == currAns) {
-                                        finalScore++;
+                                        score++;
                                         showtoast('Correct Answer');
                                         //_isButtonDisabled = true;
                                       } else {
@@ -580,7 +580,6 @@ class _SolveAppState extends State<SolveApp> {
     );
   }
 }
-
 
 // class ButtonWidget extends StatefulWidget  {
 //   @override
