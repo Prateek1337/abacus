@@ -444,14 +444,44 @@ class _SolveAppState extends State<SolveApp> {
                                     // score = finalScore;
                                     // finalScore = 0;
                                     flutterTts.stop();
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => (ScoreScreen(
-                                                  user: user,
-                                                  score: score,
-                                                  quesCount: quesCount,
-                                                ))));
+                                    showDialog<void>(
+                                      context: context,
+                                      barrierDismissible:
+                                          false, // user must tap button!
+                                      builder: (BuildContext context) {
+                                        return WillPopScope(
+                                          onWillPop: () async => false,
+                                          child: AlertDialog(
+                                            title: Text('Times Up!'),
+                                            content: SingleChildScrollView(
+                                              child: ListBody(
+                                                children: <Widget>[
+                                                  Text(
+                                                      'Press continue to see your score.'),
+                                                ],
+                                              ),
+                                            ),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: Text('Continue'),
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              (ScoreScreen(
+                                                                user: user,
+                                                                score: score,
+                                                                quesCount:
+                                                                    quesCount,
+                                                              ))));
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    );
                                   }
                                 },
                               ),

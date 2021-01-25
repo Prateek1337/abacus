@@ -65,7 +65,7 @@ class _ScoreScreenState extends State<ScoreScreen> {
                                   'Your Final Score is ' +
                                       score.toString() +
                                       '\n' +
-                                      'out of' +
+                                      'out of ' +
                                       quesCount.toString(),
                                   style: new TextStyle(
                                       fontSize: 24.0,
