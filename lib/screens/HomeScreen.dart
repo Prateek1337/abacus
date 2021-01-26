@@ -562,31 +562,60 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 SizedBox(
-                  height: 16,
+                  height: 36,
                 ),
-                Container(
-                  width: 120,
-                  child: Card(
-                    elevation: 10,
-                    child: FlatButton(
-                      child: Text("Logout"),
-                      textColor: Colors.white,
-                      padding: EdgeInsets.all(16),
-                      onPressed: () async {
-                        SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-                        prefs.clear();
-                        FirebaseAuth.instance.signOut();
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginScreen()));
-                      },
-                      color: Colors.blue,
-                      shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(5.0)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      child: Card(
+                        color: Colors.blue,
+                        elevation: 10,
+                        child: FlatButton(
+                          child: Text("Logout"),
+                          textColor: Colors.white,
+                          padding: EdgeInsets.all(16),
+                          onPressed: () async {
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            prefs.clear();
+                            FirebaseAuth.instance.signOut();
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginScreen()));
+                          },
+                          color: Colors.blue,
+                          shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(5.0)),
+                        ),
+                      ),
                     ),
-                  ),
+                    SizedBox(
+                      width: 36,
+                    ),
+                    Container(
+                      child: Card(
+                        color: Colors.blue,
+                        elevation: 10,
+                        child: FlatButton(
+                          child: Text("Edit Details"),
+                          textColor: Colors.white,
+                          padding: EdgeInsets.all(16),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        RegistrationScreen()));
+                          },
+                          color: Colors.blue,
+                          shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(5.0)),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
