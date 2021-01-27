@@ -41,7 +41,17 @@ class _ScoreScreenState extends State<ScoreScreen> {
       child: new MaterialApp(
           debugShowCheckedModeBanner: false,
           home: new Scaffold(
-              body: new Container(
+              body: Stack(
+            children: [
+              Container(
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage("images/1.jpg"),
+                          fit: BoxFit.cover))),
+              Container(
+                color: Color.fromRGBO(255, 255, 255, 0.6),
+              ),
+              new Container(
                   padding: EdgeInsets.all(8.0),
                   child: new Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -55,7 +65,7 @@ class _ScoreScreenState extends State<ScoreScreen> {
                           ),
                         ),
                         elevation: 10,
-                        color: Colors.blue[50],
+                        color: Color.fromRGBO(235, 235, 252, 0.8),
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: ListTile(
@@ -105,7 +115,9 @@ class _ScoreScreenState extends State<ScoreScreen> {
                             borderRadius: BorderRadius.circular(5.0)),
                       ),
                     ],
-                  )))),
+                  )),
+            ],
+          ))),
     );
   }
 }
