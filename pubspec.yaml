@@ -36,7 +36,7 @@ dependencies:
   shared_preferences: ^0.5.12+4
   flutter_tts: ^1.0.0
   fluttertoast: ^7.1.6
-
+  flutter_spinkit: ^4.1.2+1
   flutter_emoji: ^2.2.1+1
   circular_countdown_timer: ^0.0.9
 
