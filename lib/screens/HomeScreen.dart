@@ -167,36 +167,14 @@ class IsAllowedScreen extends StatelessWidget {
           );
         }
 
-        return Center(
-          child: Wrap(children: <Widget>[
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-                side: BorderSide(
-                  color: Colors.blue,
-                  width: 2.0,
-                ),
-              ),
-              elevation: 10,
-              color: Colors.blue[50],
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: ListTile(
-                  title: Column(
-                    children: [
-                      Text(
-                        "LOADING...",
-                        style: new TextStyle(
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+        return Container(
+          color: Colors.white,
+          child: Center(
+            child: SpinKitFadingCircle(
+              color: Colors.blue,
+              size: 50.0,
             ),
-          ]),
+          ),
         );
       },
     );
