@@ -15,7 +15,8 @@ String currAns;
 int finalScore = 0;
 TextEditingController finalController;
 int quesCount = 0;
-String questionTts;
+// String questionTts;
+List<String> questionTtsList;
 final FlutterTts flutterTts = FlutterTts();
 var timerMap = {
   'Free': 1,
@@ -83,7 +84,8 @@ List divideString(var params) {
       max(rng.nextInt(_upperNumMax - _upperNumMin + 1) + _upperNumMin, 2);
   double res = double.parse((num1 / num2).toStringAsFixed(2));
   //this string is for speaking
-  questionTts = num1.toString() + ' divided by ' + num2.toString();
+  // questionTts = num1.toString() + ' divided by ' + num2.toString();
+  questionTtsList.addAll([num1.toString(), 'divided by', num2.toString()]);
   return [
     res.toString(),
     num1.toString() + Variables().divideCharacter + num2.toString()
@@ -105,7 +107,8 @@ List multiplyString(var params) {
   int num1 = rng.nextInt(_lowerNumMax - _lowerNumMin + 1) + _lowerNumMin;
   int num2 = rng.nextInt(_upperNumMax - _upperNumMin + 1) + _upperNumMin;
   int res = num1 * num2;
-  questionTts = num1.toString() + ' multiplied by ' + num2.toString();
+  // questionTts = num1.toString() + ' multiplied by ' + num2.toString();
+  questionTtsList.addAll([num1.toString(), 'multiplied by', num2.toString()]);
 
   return [
     res.toString(),
@@ -121,7 +124,7 @@ _valueIsPos = each number will be positive if it is 1
 _ansIsPos = intermediate and final result will be positive if 1
 */
 List addString(var params) {
-  questionTts = '';
+  // questionTts = '';
   int _numberOfValues = params['numberOfValues'],
       _numberOfQuestions = params['numberOfQuestions'],
       _range1 = params['range1'],
@@ -133,7 +136,8 @@ List addString(var params) {
 
   int res = rng.nextInt(_upperNum - _lowerNum + 1) + _lowerNum;
   String question = res.toString();
-  questionTts += res.toString();
+  // questionTts += res.toString();
+  questionTtsList.add(res.toString());
   for (int i = 0; i < _numberOfValues - 1; i++) {
     int _num = rng.nextInt(_upperNum - _lowerNum + 1) + _lowerNum;
     int sign = rng.nextInt(2);
@@ -148,17 +152,29 @@ List addString(var params) {
             Variables().minusCharacter +
             ' ' +
             _num.toString();
-        questionTts += " minus " + _num.toString();
+        // questionTts += " minus " + _num.toString();
+        questionTtsList.addAll([
+          "minus",
+          _num.toString(),
+        ]);
       } else {
         //when result is getting negative but it shouldn't
         res = res + _num;
         question = question + '\n+ ' + _num.toString();
-        questionTts += " plus " + _num.toString();
+        // questionTts += " plus " + _num.toString();
+        questionTtsList.addAll([
+          "plus",
+          _num.toString(),
+        ]);
       }
     } else {
       res = res + _num;
       question = question + '\n+ ' + _num.toString();
-      questionTts += " plus " + _num.toString();
+      // questionTts += " plus " + _num.toString();
+      questionTtsList.addAll([
+        "plus",
+        _num.toString(),
+      ]);
     }
   }
 
@@ -176,6 +192,20 @@ _speak(String text) async {
   flutterTts.stop();
   await flutterTts.speak(text);
   // await flutterTts.speak("1234567 plus 2837");
+}
+
+// speaks each word sequentially
+_speakList(List<String> texts) async {
+  int i = 0;
+  await flutterTts.speak(texts[i]);
+  print("\n\n\n\n\n\n" + texts.length.toString());
+  flutterTts.setCompletionHandler(() async {
+    if (i < texts.length - 1) {
+      i++;
+
+      await flutterTts.speak(texts[i]);
+    }
+  });
 }
 
 // ----------------------------------------------------------------------------------
@@ -228,6 +258,7 @@ class _SolveAppState extends State<SolveApp> {
   @override
   void initState() {
     super.initState();
+    // questionTtsList = [];
     // score = finalScore;
     finalController = answerController;
     _playbackSpeed = double.parse(params['speed']);
@@ -237,12 +268,14 @@ class _SolveAppState extends State<SolveApp> {
     _enabled = true;
     timerVisibility = timerMap[params['time']] != 1;
     currQuestion = callOper();
-    _speak(questionTts);
+    _speakList(questionTtsList);
   }
 
+// 9113790187
   //function to do generate the sum
   String callOper() {
     List finalres;
+    questionTtsList = [];
     if (oper == 0) {
       finalres = addString(params);
       // _speak(finalres[1]);
@@ -291,7 +324,7 @@ class _SolveAppState extends State<SolveApp> {
       noOfTimes++;
       _enabled = true;
       currQuestion = callOper();
-      _speak(questionTts);
+      _speakList(questionTtsList);
       score = score;
     });
   }
@@ -434,7 +467,7 @@ class _SolveAppState extends State<SolveApp> {
                                 IconButton(
                                   padding: EdgeInsets.only(right: 10),
                                   onPressed: () {
-                                    _speak(questionTts);
+                                    _speakList(questionTtsList);
                                   },
                                   icon: Icon(Icons.replay),
                                 ),

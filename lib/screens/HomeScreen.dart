@@ -479,19 +479,36 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     // Future _speak(String text) async {
-    //   final FlutterTts flutterTts = FlutterTts();
-    //   print(await flutterTts.getVoices);
-    //   LogPrint(await flutterTts.getVoices);
-    //   await flutterTts.setLanguage('en-US');
-    //   await flutterTts.setVoice('en-in-x-ahp-local');
-    //   await flutterTts.speak(text);
+    // final FlutterTts flutterTts = FlutterTts();
+    // LogPrint(await flutterTts.getVoices);
+    // await flutterTts.setLanguage('en-US');
+    // await flutterTts.setVoice('en-in-x-ahp-local');
+    // List<String> sentences = [
+    //   'Hello',
+    //   'World',
+    //   'Hello World',
+    //   'How are you?',
+    //   'The',
+    //   'quick'
+    // ];
+    // int i = 0;
+
+    // await flutterTts.speak(sentences[i]);
+
+    // flutterTts.setCompletionHandler(() async {
+    //   if (i < sentences.length - 1) {
+    //     i++;
+    //     await flutterTts.speak(sentences[i]);
+    //   }
+    // });
+
+    // await flutterTts.speak(text);
     // }
 
     // _speak('hey there, how are you guys, welcome to our app');
     // _speak('1234567 plus 3300 minus 21 multiplied by 5 divided by 12312');
-    // _speak('1234567');
+    // _speak('');
 
-    // print(FlutterTts().getVoices);
     // print('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n');
 
     return WillPopScope(
