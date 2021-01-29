@@ -296,6 +296,23 @@ class _SolveAppState extends State<SolveApp> {
     });
   }
 
+  void handleClick(String value) {
+    switch (value) {
+      case 'Reset':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen(user: user)),
+        );
+        break;
+      case 'Finish':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => btnEnd(noOfTimes)),
+        );
+        break;
+    }
+  }
+
   Widget btnEnd(int totalQuestions) {
     // score = finalScore;
     // finalScore = 0;
@@ -344,26 +361,38 @@ class _SolveAppState extends State<SolveApp> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      "Question No:" + noOfTimes.toString(),
-                      textAlign: TextAlign.center,
-                      style: new TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.blue[700],
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      "Score:" + score.toString(),
-                      textAlign: TextAlign.center,
-                      style: new TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.blue[700],
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Score:" + score.toString(),
+                        textAlign: TextAlign.center,
+                        style: new TextStyle(
+                            fontSize: 20.0,
+                            color: Colors.blue[700],
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                            color: Color.fromRGBO(255, 255, 255, 0.7),
+                            shape: BoxShape.circle),
+                        child: PopupMenuButton<String>(
+                          icon: Icon(Icons.more_vert, color: Colors.blue),
+                          onSelected: handleClick,
+                          itemBuilder: (BuildContext context) {
+                            return {'Reset', 'Finish'}.map((String choice) {
+                              return PopupMenuItem<String>(
+                                value: choice,
+                                child: Text(choice),
+                              );
+                            }).toList();
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               new Container(
@@ -387,6 +416,14 @@ class _SolveAppState extends State<SolveApp> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
+                                Text(
+                                  noOfTimes.toString() + ".",
+                                  // textAlign: TextAlign.center,
+                                  style: new TextStyle(
+                                      fontSize: 20.0,
+                                      color: Colors.blue[700],
+                                      fontWeight: FontWeight.bold),
+                                ),
                                 Expanded(
                                   child: Text(
                                     currQuestion,
@@ -567,56 +604,35 @@ class _SolveAppState extends State<SolveApp> {
                       ),
                     ),
                   )),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  RaisedButton(
-                    onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => HomeScreen(user: user)),
-                    ),
-                    child: Text(
-                      'Reset',
-                      style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.white),
-                    ),
-                    color: Theme.of(context).accentColor,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0)),
-                  ),
-                  RaisedButton(
+              Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                  child: RawMaterialButton(
+                    shape: CircleBorder(
+
+                        // borderRadius: BorderRadius.circular(500.0),
+                        // side: BorderSide(color: Colors.red)
+                        ),
                     onPressed: () => btnFunction(score),
-                    child: Text(
-                      btnText(noOfTimes),
-                      style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.white),
+                    elevation: 10,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(Icons.arrow_forward_rounded,
+                          color: Colors.blue, size: 40),
                     ),
-                    color: Theme.of(context).accentColor,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0)),
+                    // Text(
+                    //   btnText(noOfTimes),
+                    //   style: TextStyle(
+                    //       fontSize: 20.0,
+                    //       fontWeight: FontWeight.normal,
+                    //       color: Colors.white),
+                    // ),
+                    fillColor: Color.fromRGBO(255, 255, 255, 0.8),
+                    // shape: RoundedRectangleBorder(
+                    //     borderRadius: BorderRadius.circular(5.0)),
                   ),
-                ],
-              ),
-              RaisedButton(
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => btnEnd(noOfTimes)),
                 ),
-                child: Text(
-                  'End',
-                  style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.white),
-                ),
-                color: Theme.of(context).accentColor,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0)),
               ),
             ],
           ),
