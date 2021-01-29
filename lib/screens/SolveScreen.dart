@@ -233,7 +233,7 @@ class _SolveAppState extends State<SolveApp> {
     _playbackSpeed = double.parse(params['speed']);
     flutterTts.setSpeechRate(_playbackSpeed);
     flutterTts.setVolume(1.0);
-    flutterTts.setVoice('hi-in-x-hia-local');
+    flutterTts.setVoice('en-in-x-ahp-local');
     _enabled = true;
     timerVisibility = timerMap[params['time']] != 1;
     currQuestion = callOper();

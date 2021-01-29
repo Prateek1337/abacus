@@ -11,6 +11,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 import 'LoginScreen.dart';
 import 'SolveScreen.dart';
@@ -190,27 +191,27 @@ addUser(String phNo) {
   }, SetOptions(merge: true));
 }
 
-// void LogPrint(Object object) async {
-//   int defaultPrintLength = 1020;
-//   if (object == null || object.toString().length <= defaultPrintLength) {
-//     print(object);
-//   } else {
-//     String log = object.toString();
-//     int start = 0;
-//     int endIndex = defaultPrintLength;
-//     int logLength = log.length;
-//     int tmpLogLength = log.length;
-//     while (endIndex < logLength) {
-//       print(log.substring(start, endIndex));
-//       endIndex += defaultPrintLength;
-//       start += defaultPrintLength;
-//       tmpLogLength -= defaultPrintLength;
-//     }
-//     if (tmpLogLength > 0) {
-//       print(log.substring(start, logLength));
-//     }
-//   }
-// }
+void LogPrint(Object object) async {
+  int defaultPrintLength = 1020;
+  if (object == null || object.toString().length <= defaultPrintLength) {
+    print(object);
+  } else {
+    String log = object.toString();
+    int start = 0;
+    int endIndex = defaultPrintLength;
+    int logLength = log.length;
+    int tmpLogLength = log.length;
+    while (endIndex < logLength) {
+      print(log.substring(start, endIndex));
+      endIndex += defaultPrintLength;
+      start += defaultPrintLength;
+      tmpLogLength -= defaultPrintLength;
+    }
+    if (tmpLogLength > 0) {
+      print(log.substring(start, logLength));
+    }
+  }
+}
 
 Future _stop() async {
   if (flutterTts != null) await flutterTts.stop();
@@ -479,18 +480,19 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     // Future _speak(String text) async {
     //   final FlutterTts flutterTts = FlutterTts();
-    //   // print(await flutterTts.getVoices);
+    //   print(await flutterTts.getVoices);
     //   LogPrint(await flutterTts.getVoices);
     //   await flutterTts.setLanguage('en-US');
-    //   await flutterTts.setVoice('hi-in-x-hia-local');
+    //   await flutterTts.setVoice('en-in-x-ahp-local');
     //   await flutterTts.speak(text);
     // }
 
     // _speak('hey there, how are you guys, welcome to our app');
     // _speak('1234567 plus 3300 minus 21 multiplied by 5 divided by 12312');
+    // _speak('1234567');
 
-    //  print(FlutterTts().getVoices);
-    // print('\n\n\n\n\n\n\n\n\n\n\n hello\n\n\n\n\n\n\n\n\n');
+    // print(FlutterTts().getVoices);
+    // print('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n');
 
     return WillPopScope(
       onWillPop: () {},
