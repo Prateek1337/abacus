@@ -5,8 +5,23 @@ import 'package:flutter/material.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 // import 'dart:math';
 import 'package:abacus/screens/HomeScreen.dart';
+import 'package:abacus/screens/ad_manager.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 
 import 'SolveScreen.dart';
+
+const String testDevice = 'Abacus';
+
+BannerAd createBannerAd() {
+  return BannerAd(
+    adUnitId: BannerAd.testAdUnitId,
+    size: AdSize.banner,
+    listener: (MobileAdEvent event) {
+      print("BannerAd event $event");
+    },
+  );
+}
 
 Future _stop() async {
   if (flutterTts != null) await flutterTts.stop();
@@ -27,11 +42,33 @@ class _ScoreScreenState extends State<ScoreScreen> {
   final int score, quesCount;
   final String user;
   _ScoreScreenState({@required this.user, this.score, this.quesCount});
-
   @override
   void initState() {
     super.initState();
+    _bannerAd = BannerAd(
+      adUnitId: AdManager.bannerAdUnitId,
+      size: AdSize.banner,
+    );
+    _loadBannerAd();
     _stop();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd?.dispose();
+
+    super.dispose();
+  }
+
+  Future<void> _initAdMob() {
+    return FirebaseAdMob.instance.initialize(appId: AdManager.appId);
+  }
+
+  BannerAd _bannerAd;
+  void _loadBannerAd() {
+    _bannerAd
+      ..load()
+      ..show(anchorType: AnchorType.top);
   }
 
   @override
