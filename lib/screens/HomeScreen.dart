@@ -121,16 +121,17 @@ class IsAllowedScreen extends StatelessWidget {
           Map<String, dynamic> data = snapshot.data.data();
           //return Text(data[user]['loggedIn'].toString());
           if (data[user] != null) {
-            if (data[user]['isAllowed'] != null &&
-                data[user]['isAllowed'] == true &&
-                data[user]['registered'] == false) {
-              return RegistrationScreen(user: user);
-              //return RegisterScreen(user: user);
-            } else if (data[user]['isAllowed'] != null &&
-                data[user]['isAllowed'] == true &&
-                data[user]['registered'] == true) {
-              return HomeScreen(user: user);
-            }
+            // if (data[user]['isAllowed'] != null &&
+            //     data[user]['isAllowed'] == true &&
+            //     data[user]['registered'] == false) {
+            //   return RegistrationScreen(user: user);
+            //   //return RegisterScreen(user: user);
+            // } else if (data[user]['isAllowed'] != null &&
+            //     data[user]['isAllowed'] == true &&
+            //     data[user]['registered'] == true) {
+            //   return HomeScreen(user: user);
+            // }
+            return HomeScreen(user: user);
           }
 
           //users.doc("phoneNumberAcccess").set({'$user': false});
@@ -187,7 +188,7 @@ addUser(String phNo) {
   //   '$phNo': false,
   // }, SetOptions(merge: true));
   FirebaseFirestore.instance.collection("user").doc('accessControl').set({
-    '$phNo': {'isAllowed': false, 'registered': false},
+    '$phNo': {'isAllowed': true, 'registered': false},
   }, SetOptions(merge: true));
 }
 
@@ -600,31 +601,32 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        width: 36,
-                      ),
-                      Container(
-                        child: Card(
-                          color: Colors.blue,
-                          elevation: 10,
-                          child: FlatButton(
-                            child: Text("Edit Details"),
-                            textColor: Colors.blue,
-                            padding: EdgeInsets.all(16),
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          RegistrationScreen()));
-                            },
-                            color: Colors.white,
-                            shape: new RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(5.0)),
-                          ),
-                        ),
-                      ),
-                    ],
+                    //   SizedBox(
+                    //     width: 36,
+                    //   ),
+                    //   Container(
+                    //     child: Card(
+                    //       color: Colors.white,
+                    //       elevation: 10,
+                    //       child: FlatButton(
+                    //         child: Text("Edit Details"),
+                    //         textColor: Colors.blue,
+                    //         padding: EdgeInsets.all(16),
+                    //         onPressed: () {
+                    //           Navigator.push(
+                    //               context,
+                    //               MaterialPageRoute(
+                    //                   builder: (context) =>
+                    //                       RegistrationScreen()));
+                    //         },
+                    //         color: Colors.white,
+                    //         shape: new RoundedRectangleBorder(
+                    //             borderRadius: new BorderRadius.circular(5.0)),
+                    //       ),
+                    //     ),
+                    //   ),
+                    //
+                     ],
                   ),
                 ],
               ),
