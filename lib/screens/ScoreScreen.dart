@@ -45,6 +45,7 @@ class _ScoreScreenState extends State<ScoreScreen> {
   @override
   void initState() {
     super.initState();
+    _initAdMob();
     _bannerAd = BannerAd(
       adUnitId: AdManager.bannerAdUnitId,
       size: AdSize.banner,
@@ -65,10 +66,9 @@ class _ScoreScreenState extends State<ScoreScreen> {
   }
 
   BannerAd _bannerAd;
-  void _loadBannerAd() {
-    _bannerAd
-      ..load()
-      ..show(anchorType: AnchorType.top);
+  void _loadBannerAd() async {
+    await _bannerAd.load();
+    _bannerAd.show(anchorType: AnchorType.top);
   }
 
   @override
