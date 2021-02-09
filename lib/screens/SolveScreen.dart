@@ -316,17 +316,18 @@ class _SolveAppState extends State<SolveApp> {
                     score: score,
                     quesCount: quesCount,
                   ))));
+    } else {
+      setState(() {
+        // print('\n\nSet State1 Called score=$score , finalscore=$finalScore\n\n');
+        finalController.clear();
+        answerController.clear();
+        noOfTimes++;
+        _enabled = true;
+        currQuestion = callOper();
+        _speakList(questionTtsList);
+        score = score;
+      });
     }
-    setState(() {
-      // print('\n\nSet State1 Called score=$score , finalscore=$finalScore\n\n');
-      finalController.clear();
-      answerController.clear();
-      noOfTimes++;
-      _enabled = true;
-      currQuestion = callOper();
-      _speakList(questionTtsList);
-      score = score;
-    });
   }
 
   void handleClick(String value) {
