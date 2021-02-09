@@ -68,7 +68,7 @@ class _ScoreScreenState extends State<ScoreScreen> {
   BannerAd _bannerAd;
   void _loadBannerAd() async {
     await _bannerAd.load();
-    _bannerAd.show(anchorType: AnchorType.top);
+    _bannerAd.show(anchorType: AnchorType.bottom);
   }
 
   @override
