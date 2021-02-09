@@ -135,11 +135,14 @@ class _ScoreScreenState extends State<ScoreScreen> {
                         height: 16,
                       ),
                       RaisedButton(
-                        onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HomeScreen(user: user)),
-                        ),
+                        onPressed: () => {
+                          _bannerAd?.dispose(),
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomeScreen(user: user)),
+                          )
+                        },
                         child: Text(
                           "Done",
                           style: TextStyle(
