@@ -132,40 +132,45 @@ class IsAllowedScreen extends StatelessWidget {
             //   return HomeScreen(user: user);
             // }
             return HomeScreen(user: user);
+          }else{
+            addUser(user);
+            return HomeScreen(user: user);
           }
-
           //users.doc("phoneNumberAcccess").set({'$user': false});
           addUser(user);
-          return Center(
-            child: Wrap(children: <Widget>[
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                  side: BorderSide(
-                    color: Colors.blue,
-                    width: 2.0,
+          return WillPopScope(
+            onWillPop: () {},
+            child: Center(
+              child: Wrap(children: <Widget>[
+                Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    side: BorderSide(
+                      color: Colors.blue,
+                      width: 2.0,
+                    ),
                   ),
-                ),
-                elevation: 10,
-                color: Colors.blue[50],
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: ListTile(
-                    title: Column(
-                      children: [
-                        Text(
-                          "The Phone Number $user is not allowed.\nPlease get your phone number validated. ",
-                          style: new TextStyle(
-                              fontSize: 24.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue),
-                        ),
-                      ],
+                  elevation: 10,
+                  color: Colors.blue[50],
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: ListTile(
+                      title: Column(
+                        children: [
+                          Text(
+                            "The Phone Number $user is not allowed.\nPlease get your phone number validated. ",
+                            style: new TextStyle(
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ]),
+              ]),
+            ),
           );
         }
 
@@ -601,32 +606,32 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
-                    //   SizedBox(
-                    //     width: 36,
-                    //   ),
-                    //   Container(
-                    //     child: Card(
-                    //       color: Colors.white,
-                    //       elevation: 10,
-                    //       child: FlatButton(
-                    //         child: Text("Edit Details"),
-                    //         textColor: Colors.blue,
-                    //         padding: EdgeInsets.all(16),
-                    //         onPressed: () {
-                    //           Navigator.push(
-                    //               context,
-                    //               MaterialPageRoute(
-                    //                   builder: (context) =>
-                    //                       RegistrationScreen()));
-                    //         },
-                    //         color: Colors.white,
-                    //         shape: new RoundedRectangleBorder(
-                    //             borderRadius: new BorderRadius.circular(5.0)),
-                    //       ),
-                    //     ),
-                    //   ),
-                    //
-                     ],
+                      //   SizedBox(
+                      //     width: 36,
+                      //   ),
+                      //   Container(
+                      //     child: Card(
+                      //       color: Colors.white,
+                      //       elevation: 10,
+                      //       child: FlatButton(
+                      //         child: Text("Edit Details"),
+                      //         textColor: Colors.blue,
+                      //         padding: EdgeInsets.all(16),
+                      //         onPressed: () {
+                      //           Navigator.push(
+                      //               context,
+                      //               MaterialPageRoute(
+                      //                   builder: (context) =>
+                      //                       RegistrationScreen()));
+                      //         },
+                      //         color: Colors.white,
+                      //         shape: new RoundedRectangleBorder(
+                      //             borderRadius: new BorderRadius.circular(5.0)),
+                      //       ),
+                      //     ),
+                      //   ),
+                      //
+                    ],
                   ),
                 ],
               ),
