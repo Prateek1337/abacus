@@ -1,32 +1,34 @@
-import 'package:abacus/screens/HomeScreen.dart';
 import 'package:abacus/screens/LoginScreen.dart';
+import 'package:abacus/screens/SplashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:abacus/Variables.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  bool isLoggedIn = prefs.getBool(Variables().isLoggedIn) ?? false;
-  if (isLoggedIn) {
-    await Firebase.initializeApp();
-    String phone = prefs.getString(Variables().phoneNumber);
-    runApp(MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: IsAllowedScreen(
-        user: phone,
-      ),
-    ));
-  } else {
-    runApp(MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: MyApp(),
-    ));
-  }
-  /*runApp(MaterialApp(
-    home: MyApp(),
-  ));*/
+  // WidgetsFlutterBinding.ensureInitialized();
+  // SharedPreferences prefs = await SharedPreferences.getInstance();
+  // bool isLoggedIn = prefs.getBool(Variables().isLoggedIn) ?? false;
+  // if (isLoggedIn) {
+  //   await Firebase.initializeApp();
+  //   String phone = prefs.getString(Variables().phoneNumber);
+  //   runApp(MaterialApp(
+  //     debugShowCheckedModeBanner: false,
+  //     home: IsAllowedScreen(
+  //       user: phone,
+  //     ),
+  //   ));
+  // } else {
+  //   runApp(MaterialApp(
+  //     debugShowCheckedModeBanner: false,
+  //     home: MyApp(),
+  //   ));
+  // }
+  // /*runApp(MaterialApp(
+  //   home: MyApp(),
+  // ));*/
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: SplashScreenWidget(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
