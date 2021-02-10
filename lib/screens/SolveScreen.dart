@@ -7,6 +7,8 @@ import 'package:abacus/Variables.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'HomeScreen.dart';
+import 'package:firebase_admob/firebase_admob.dart';
+import 'package:abacus/screens/ad_manager.dart';
 
 // import 'package:validator/validator.dart';
 
@@ -209,6 +211,9 @@ _speakList(List<String> texts) async {
 }
 
 // ----------------------------------------------------------------------------------
+Future _stop() async {
+  if (flutterTts != null) await flutterTts.stop();
+}
 
 class SolveApp extends StatefulWidget {
   final int numdig, oper, noOfTimes, score;
@@ -268,7 +273,15 @@ class _SolveAppState extends State<SolveApp> {
     _enabled = true;
     timerVisibility = timerMap[params['time']] != 1;
     currQuestion = callOper();
+    // print("\n\n\n\n question: $questionTtsList\n\n");
     _speakList(questionTtsList);
+    _initAdMob();
+    _bannerAd = BannerAd(
+      adUnitId: AdManager.SolveScreenbannerAdUnitId,
+      size: AdSize.banner,
+    );
+    _loadBannerAd();
+    // _stop();
   }
 
 // 9113790187
@@ -307,6 +320,13 @@ class _SolveAppState extends State<SolveApp> {
     if (noOfTimes >= quesCount) {
       // score = finalScore;
       // finalScore = 0;
+      // _bannerAd?.dispose();
+      try {
+        _bannerAd?.dispose();
+        _bannerAd = null;
+      } catch (ex) {
+        print("banner dispose error");
+      }
       flutterTts.stop();
       Navigator.push(
           context,
@@ -318,6 +338,13 @@ class _SolveAppState extends State<SolveApp> {
                   ))));
     } else {
       setState(() {
+        // _bannerAd?.dispose();
+        // try {
+        //   _bannerAd?.dispose();
+        //   _bannerAd = null;
+        // } catch (ex) {
+        //   print("banner dispose error");
+        // }
         // print('\n\nSet State1 Called score=$score , finalscore=$finalScore\n\n');
         finalController.clear();
         answerController.clear();
@@ -333,12 +360,26 @@ class _SolveAppState extends State<SolveApp> {
   void handleClick(String value) {
     switch (value) {
       case 'Reset':
+        // _bannerAd?.dispose();
+        try {
+          _bannerAd?.dispose();
+          _bannerAd = null;
+        } catch (ex) {
+          print("banner dispose error");
+        }
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => HomeScreen(user: user)),
         );
         break;
       case 'Finish':
+        // _bannerAd?.dispose();
+        try {
+          _bannerAd?.dispose();
+          _bannerAd = null;
+        } catch (ex) {
+          print("banner dispose error");
+        }
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => btnEnd(noOfTimes)),
@@ -361,7 +402,25 @@ class _SolveAppState extends State<SolveApp> {
   @override
   void dispose() {
     // score = finalScore;
+    // _bannerAd?.dispose();
+    try {
+      _bannerAd?.dispose();
+      _bannerAd = null;
+    } catch (ex) {
+      print("banner dispose error");
+    }
+
     super.dispose();
+  }
+
+  Future<void> _initAdMob() {
+    return FirebaseAdMob.instance.initialize(appId: AdManager.appId);
+  }
+
+  BannerAd _bannerAd;
+  void _loadBannerAd() async {
+    await _bannerAd.load();
+    _bannerAd.show(anchorType: AnchorType.bottom);
   }
 
   @override

@@ -13,15 +13,15 @@ import 'SolveScreen.dart';
 
 const String testDevice = 'Abacus';
 
-BannerAd createBannerAd() {
-  return BannerAd(
-    adUnitId: BannerAd.testAdUnitId,
-    size: AdSize.banner,
-    listener: (MobileAdEvent event) {
-      print("BannerAd event $event");
-    },
-  );
-}
+// BannerAd createBannerAd() {
+//   return BannerAd(
+//     adUnitId: BannerAd.testAdUnitId,
+//     size: AdSize.banner,
+//     listener: (MobileAdEvent event) {
+//       print("BannerAd event $event");
+//     },
+//   );
+// }
 
 Future _stop() async {
   if (flutterTts != null) await flutterTts.stop();
@@ -47,7 +47,7 @@ class _ScoreScreenState extends State<ScoreScreen> {
     super.initState();
     _initAdMob();
     _bannerAd = BannerAd(
-      adUnitId: AdManager.bannerAdUnitId,
+      adUnitId: AdManager.ScoreScreenbannerAdUnitId,
       size: AdSize.banner,
     );
     _loadBannerAd();
@@ -56,7 +56,12 @@ class _ScoreScreenState extends State<ScoreScreen> {
 
   @override
   void dispose() {
-    _bannerAd?.dispose();
+    try {
+      _bannerAd?.dispose();
+      _bannerAd = null;
+    } catch (ex) {
+      print("banner dispose error");
+    }
 
     super.dispose();
   }

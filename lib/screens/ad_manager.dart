@@ -11,11 +11,21 @@ class AdManager {
     }
   }
 
-  static String get bannerAdUnitId {
+  static String get ScoreScreenbannerAdUnitId {
     if (Platform.isAndroid) {
       return "ca-app-pub-4498151710808459/3419945031";
-      // } else if (Platform.isIOS) {
-      //   return "ca-app-pub-3940256099942544/4339318960";
+    } else if (Platform.isIOS) {
+      return "ca-app-pub-3940256099942544/4339318960";
+    } else {
+      throw new UnsupportedError("Unsupported platform");
+    }
+  }
+
+  static String get SolveScreenbannerAdUnitId {
+    if (Platform.isAndroid) {
+      return "ca-app-pub-4498151710808459/5944980102";
+    } else if (Platform.isIOS) {
+      return "ca-app-pub-3940256099942544/4339318960";
     } else {
       throw new UnsupportedError("Unsupported platform");
     }
