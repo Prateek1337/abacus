@@ -29,7 +29,7 @@ class _SplashScreenState extends State<SplashScreenWidget> {
             fontStyle: FontStyle.italic),
       ),
       image: new Image.asset('launcher/foreground2.png'),
-      photoSize: 200,
+      photoSize: 150,
       backgroundColor: Colors.white,
       //gradientBackground: Gradient(colors: [Colors.blue,Colors.lightBlue]),
       loaderColor: Colors.red,
