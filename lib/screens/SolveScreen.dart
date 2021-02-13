@@ -50,7 +50,7 @@ var maxMap = {
 };
 var minMap = {
   '0': 0,
-  '1': 0,
+  '1': 1,
   '2': 10,
   '3': 100,
   '4': 1000,
@@ -162,19 +162,19 @@ List addString(var params) {
       } else {
         //when result is getting negative but it shouldn't
         res = res + _num;
-        question = question + '\n+ ' + _num.toString();
+        question = question + '\n ' + _num.toString();
         // questionTts += " plus " + _num.toString();
         questionTtsList.addAll([
-          "plus",
+          // "plus",
           _num.toString(),
         ]);
       }
     } else {
       res = res + _num;
-      question = question + '\n+ ' + _num.toString();
+      question = question + '\n ' + _num.toString();
       // questionTts += " plus " + _num.toString();
       questionTtsList.addAll([
-        "plus",
+        // "plus",
         _num.toString(),
       ]);
     }
