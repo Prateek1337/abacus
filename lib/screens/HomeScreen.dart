@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'SolveScreen.dart';
-
+import 'package:abacus/widgets/drawer.dart';
 // class IsAllowedScreen extends StatelessWidget {
 //   final String user;
 
@@ -513,6 +513,8 @@ class _HomeScreenState extends State<HomeScreen> {
       child: new MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
+          appBar: AppBar(title: Text("Abacus")),
+          drawer: AppDrawer(user: user),
           body: Stack(children: <Widget>[
             Container(
                 decoration: BoxDecoration(

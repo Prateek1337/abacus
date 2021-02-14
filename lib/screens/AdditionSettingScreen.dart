@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:abacus/screens/SolveScreen.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:abacus/widgets/drawer.dart';
 
 class AdditionScreen extends StatefulWidget {
   final String user;
@@ -88,6 +89,7 @@ class _AdditionScreenState extends State<AdditionScreen> {
             appBar: AppBar(
               title: Text("Addition & Subraction Setting"),
             ),
+            drawer: AppDrawer(user: user),
             body: Stack(
               children: [
                 Container(

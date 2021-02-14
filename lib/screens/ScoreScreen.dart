@@ -8,6 +8,7 @@ import 'package:abacus/screens/HomeScreen.dart';
 import 'package:abacus/screens/ad_manager.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_admob/firebase_admob.dart';
+import 'package:abacus/widgets/drawer.dart';
 
 import 'SolveScreen.dart';
 
@@ -83,86 +84,88 @@ class _ScoreScreenState extends State<ScoreScreen> {
       child: new MaterialApp(
           debugShowCheckedModeBanner: false,
           home: new Scaffold(
+              drawer: AppDrawer(user: user),
               body: Stack(
-            children: [
-              Container(
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage("images/1.jpg"),
-                          fit: BoxFit.cover))),
-              Container(
-                color: Color.fromRGBO(255, 255, 255, 0.6),
-              ),
-              new Container(
-                  padding: EdgeInsets.all(8.0),
-                  child: new Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          side: BorderSide(
-                            color: Colors.blue,
-                            width: 2.0,
-                          ),
-                        ),
-                        elevation: 10,
-                        color: Color.fromRGBO(235, 235, 252, 0.8),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: ListTile(
-                            title: Column(
-                              children: [
-                                Text(
-                                  'Your Final Score is ' +
-                                      score.toString() +
-                                      '\n' +
-                                      'out of ' +
-                                      quesCount.toString(),
-                                  style: new TextStyle(
-                                      fontSize: 24.0,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.blue),
+                children: [
+                  Container(
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: AssetImage("images/1.jpg"),
+                              fit: BoxFit.cover))),
+                  Container(
+                    color: Color.fromRGBO(255, 255, 255, 0.6),
+                  ),
+                  new Container(
+                      padding: EdgeInsets.all(8.0),
+                      child: new Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              side: BorderSide(
+                                color: Colors.blue,
+                                width: 2.0,
+                              ),
+                            ),
+                            elevation: 10,
+                            color: Color.fromRGBO(235, 235, 252, 0.8),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: ListTile(
+                                title: Column(
+                                  children: [
+                                    Text(
+                                      'Your Final Score is ' +
+                                          score.toString() +
+                                          '\n' +
+                                          'out of ' +
+                                          quesCount.toString(),
+                                      style: new TextStyle(
+                                          fontSize: 24.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.blue),
+                                    ),
+                                    Text(
+                                      "${getEmoji(score, quesCount)}",
+                                      style: new TextStyle(
+                                          fontSize: 24.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.blue),
+                                    ),
+                                  ],
                                 ),
-                                Text(
-                                  "${getEmoji(score, quesCount)}",
-                                  style: new TextStyle(
-                                      fontSize: 24.0,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.blue),
-                                ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 16,
-                      ),
-                      RaisedButton(
-                        onPressed: () => {
-                          _bannerAd?.dispose(),
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => HomeScreen(user: user)),
-                          )
-                        },
-                        child: Text(
-                          "Done",
-                          style: TextStyle(
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.white),
-                        ),
-                        color: Theme.of(context).accentColor,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5.0)),
-                      ),
-                    ],
-                  )),
-            ],
-          ))),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          RaisedButton(
+                            onPressed: () => {
+                              _bannerAd?.dispose(),
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        HomeScreen(user: user)),
+                              )
+                            },
+                            child: Text(
+                              "Done",
+                              style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.white),
+                            ),
+                            color: Theme.of(context).accentColor,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0)),
+                          ),
+                        ],
+                      )),
+                ],
+              ))),
     );
   }
 }

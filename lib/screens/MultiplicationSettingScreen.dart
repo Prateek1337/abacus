@@ -11,6 +11,7 @@ import 'package:abacus/screens/SolveScreen.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:math';
+import 'package:abacus/widgets/drawer.dart';
 
 class MultiplicationScreen extends StatefulWidget {
   final String user;
@@ -83,6 +84,7 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
             appBar: AppBar(
               title: Text("Multiplication & Division Setting"),
             ),
+            drawer: AppDrawer(user: user),
             body: Stack(
               children: [
                 Container(
