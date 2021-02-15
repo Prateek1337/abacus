@@ -11,7 +11,68 @@ class GlobalSettings extends StatelessWidget {
     return new Scaffold(
       appBar: AppBar(title: Text("Settings")),
       drawer: AppDrawer(user: user),
-      body: Text("Global Settings Page"),
+      body: SettingWidget(),
+    );
+  }
+}
+
+class SettingWidget extends StatefulWidget {
+  @override
+  _SettingWidgetState createState() => new _SettingWidgetState();
+}
+
+class _SettingWidgetState extends State<SettingWidget> {
+  double _speedValue = 1;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  fit: FlexFit.tight,
+                  flex: 1,
+                  child: Text("SPEED"),
+                ),
+                Flexible(
+                  fit: FlexFit.tight,
+                  flex: 5,
+                  child: Slider(
+                    value: _speedValue,
+                    min: 0.25,
+                    max: 2,
+                    divisions: 7,
+                    label: _speedValue.toString(),
+                    onChanged: (double value) {
+                      setState(() {
+                        _speedValue = value;
+                      });
+                    },
+                  ),
+                ),
+                Flexible(
+                  fit: FlexFit.tight,
+                  flex: 1,
+                  child: Text(
+                    "$_speedValue",
+                  ),
+                )
+              ],
+            ),
+            Spacer(),
+            Container(
+              child: ElevatedButton(
+                onPressed: () {},
+                child: Text("SAVE"),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

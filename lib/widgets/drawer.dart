@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:abacus/screens/HomeScreen.dart';
 import 'package:abacus/screens/GlobalSettings.dart';
 import 'package:abacus/screens/AboutUsScreen.dart';
+import 'package:share/share.dart';
 
 class AppDrawer extends StatelessWidget {
   final String user;
@@ -30,13 +31,13 @@ class AppDrawer extends StatelessWidget {
                         builder: (context) => GlobalSettings(user: user)),
                   )),
           _createDrawerItem(
-              icon: Icons.share,
-              text: 'Share',
-              onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => GlobalSettings(user: user)),
-                  )),
+            icon: Icons.share,
+            text: 'Share',
+            onTap: () => {
+              Share.share(
+                  'Check out this wonderful app https://play.google.com/store/apps/details?id=com.abacus.abacus')
+            },
+          ),
           // Navigator.pushReplacementNamed(context, Routes.notes)),
           Divider(),
           _createDrawerItem(
