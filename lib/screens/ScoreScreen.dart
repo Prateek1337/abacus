@@ -6,10 +6,9 @@ import 'package:flutter/material.dart';
 // import 'dart:math';
 import 'package:abacus/screens/HomeScreen.dart';
 import 'package:abacus/screens/ad_manager.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:abacus/widgets/drawer.dart';
-
+import 'package:virtual_keyboard/virtual_keyboard.dart';
 import 'SolveScreen.dart';
 
 const String testDevice = 'Abacus';

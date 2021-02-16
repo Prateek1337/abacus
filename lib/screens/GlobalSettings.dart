@@ -79,7 +79,7 @@ class _SettingWidgetState extends State<SettingWidget> {
           children: <Widget>[
             Container(
               child: ListTile(
-                leading: Icon(Icons.speed, color: Colors.blue),
+                leading: Icon(Icons.record_voice_over, color: Colors.blue),
                 title: Text('Speaking Speed'),
                 trailing: Container(
                   alignment: Alignment.bottomRight,

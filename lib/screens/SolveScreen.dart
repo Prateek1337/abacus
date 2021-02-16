@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math';
@@ -10,13 +12,13 @@ import 'HomeScreen.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:abacus/screens/ad_manager.dart';
 import 'package:abacus/widgets/drawer.dart';
+import 'package:virtual_keyboard/virtual_keyboard.dart';
 
 // import 'package:validator/validator.dart';
 
 // ----------------------------------------------------------------------------------
 String currAns;
 int finalScore = 0;
-TextEditingController finalController;
 int quesCount = 0;
 // String questionTts;
 List<String> questionTtsList;
@@ -243,6 +245,8 @@ class _SolveAppState extends State<SolveApp> {
 // class SolveApp extends StatelessWidget {
   int numdig, oper, noOfTimes, score;
   final String user;
+  final _finalController = TextEditingController();
+
   var params;
   double _playbackSpeed;
   bool _enabled;
@@ -250,7 +254,6 @@ class _SolveAppState extends State<SolveApp> {
   String currQuestion;
 
   // _isbutton
-  TextEditingController answerController = TextEditingController();
   _SolveAppState({
     @required this.user,
     this.numdig,
@@ -266,7 +269,7 @@ class _SolveAppState extends State<SolveApp> {
     super.initState();
     // questionTtsList = [];
     // score = finalScore;
-    finalController = answerController;
+    _finalController.clear();
     _playbackSpeed = double.parse(params['speed']);
     flutterTts.setSpeechRate(_playbackSpeed);
     flutterTts.setVolume(1.0);
@@ -347,8 +350,7 @@ class _SolveAppState extends State<SolveApp> {
         //   print("banner dispose error");
         // }
         // print('\n\nSet State1 Called score=$score , finalscore=$finalScore\n\n');
-        finalController.clear();
-        answerController.clear();
+        _finalController.clear();
         noOfTimes++;
         _enabled = true;
         currQuestion = callOper();
@@ -422,6 +424,44 @@ class _SolveAppState extends State<SolveApp> {
   void _loadBannerAd() async {
     await _bannerAd.load();
     _bannerAd.show(anchorType: AnchorType.bottom);
+  }
+
+  Widget _builder(BuildContext context, VirtualKeyboardKey key) {
+    Widget keyWidget;
+    print("key pressed");
+    switch (key.keyType) {
+      case VirtualKeyboardKeyType.String:
+        // Draw String key.
+        keyWidget = _keyWidget(key);
+        break;
+      case VirtualKeyboardKeyType.Action:
+        // Draw action key.
+        keyWidget = _keyWidget(key);
+        break;
+    }
+    setState(() {});
+
+    return null;
+  }
+
+  Widget _keyWidget(key) {
+    print("key pressed");
+    return Card(
+      child: Text(key.text),
+      elevation: 20,
+      color: Colors.red,
+    );
+  }
+
+  _onKeyPress(VirtualKeyboardKey key) {
+    if (key.keyType == VirtualKeyboardKeyType.String) {
+      _finalController.text += key.text;
+      setState(() {});
+    } else if (VirtualKeyboardKeyAction.Backspace == key.action) {
+      if (_finalController.text.length == 0) return;
+      _finalController.text =
+          _finalController.text.substring(0, _finalController.text.length - 1);
+    }
   }
 
   @override
@@ -657,12 +697,13 @@ class _SolveAppState extends State<SolveApp> {
                                       color: Colors.white,
                                       child: TextField(
                                           keyboardType: TextInputType.number,
+                                          readOnly: true,
                                           // inputFormatters: [
                                           //   FilteringTextInputFormatter.allow(
                                           //       RegExp(r'[0-9-]')),
                                           //   //LengthLimitingTextInputFormatter(1),
                                           // ],
-                                          controller: answerController,
+                                          controller: _finalController,
                                           decoration: InputDecoration(
                                             labelText: "Enter Your Answer",
                                             border: OutlineInputBorder(),
@@ -670,37 +711,31 @@ class _SolveAppState extends State<SolveApp> {
                                     ),
                                     SizedBox(height: 24),
                                     RaisedButton(
-                                      onPressed: !_enabled
-                                          ? null
-                                          : () {
-                                              if (_enabled) {
-                                                String toMatchRes =
-                                                    finalController.text;
-                                                if (isNumeric(toMatchRes)) {
-                                                  if (toMatchRes == currAns) {
-                                                    score++;
-                                                    showtoast('Correct Answer');
-                                                    //_isButtonDisabled = true;
-                                                  } else {
-                                                    showtoast(
-                                                        'Wrong Answer \n Correct Answer is ' +
-                                                            currAns);
-                                                    //_isButtonDisabled = true;
-                                                  }
-                                                  setState(() {
-                                                    print(
-                                                        '\n\nsetState2 called\n\n');
-                                                    _enabled = !_enabled;
-                                                  });
-                                                } else {
-                                                  showtoast(
-                                                      'Enter a Valid Number');
-                                                }
-                                              } else {
-                                                showtoast("disabled");
-                                                return null;
-                                              }
-                                            },
+                                      onPressed: () {
+                                        String toMatchRes =
+                                            _finalController.text;
+                                        if (isNumeric(toMatchRes)) {
+                                          if (toMatchRes == currAns) {
+                                            score++;
+                                            showtoast('Correct Answer');
+                                            Timer(Duration(seconds: 1), () {
+                                              btnFunction(score);
+                                            });
+
+                                            //_isButtonDisabled = true;
+                                          } else {
+                                            showtoast(
+                                                'Wrong Answer \n Correct Answer is ' +
+                                                    currAns);
+                                            Timer(Duration(seconds: 1), () {
+                                              btnFunction(score);
+                                            });
+                                            //_isButtonDisabled = true;
+                                          }
+                                        } else {
+                                          showtoast('Enter a Valid Number');
+                                        }
+                                      },
                                       child: Text(
                                         'Check Answer',
                                         style: TextStyle(
@@ -714,13 +749,24 @@ class _SolveAppState extends State<SolveApp> {
                                               BorderRadius.circular(5.0)),
                                     ),
                                     SizedBox(height: 16),
+                                    Container(
+                                      // Keyboard is transparent
+                                      child: VirtualKeyboard(
+                                          // [0-9] + .
+                                          fontSize: 30,
+                                          builder: _builder,
+                                          textColor: Colors.blue,
+                                          type: VirtualKeyboardType.Numeric,
+                                          // Callback for key press event
+                                          onKeyPress: _onKeyPress),
+                                    )
                                   ],
                                 ),
                               ),
                             ),
                           )),
                       Align(
-                        alignment: Alignment.centerRight,
+                        alignment: Alignment.center,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 18.0),
                           child: RawMaterialButton(
@@ -729,11 +775,11 @@ class _SolveAppState extends State<SolveApp> {
                                 // borderRadius: BorderRadius.circular(500.0),
                                 // side: BorderSide(color: Colors.red)
                                 ),
-                            onPressed: () => btnFunction(score),
+                            onPressed: () => {},
                             elevation: 10,
                             child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(Icons.arrow_forward_rounded,
+                              padding: const EdgeInsets.all(15.0),
+                              child: Icon(Icons.mic_rounded,
                                   color: Colors.blue, size: 40),
                             ),
                             // Text(
@@ -756,65 +802,3 @@ class _SolveAppState extends State<SolveApp> {
     );
   }
 }
-
-// class ButtonWidget extends StatefulWidget  {
-//   @override
-//   _OneClickDisabledButton createState() => _OneClickDisabledButton();
-// }
-
-// class _OneClickDisabledButton extends State<ButtonWidget> {
-//   bool _enabled = true;
-//   void showtoast(String text, bool isGreen) {
-//     Fluttertoast.showToast(
-//         msg: text,
-//         toastLength: Toast.LENGTH_SHORT,
-//         gravity: ToastGravity.TOP,
-//         timeInSecForIosWeb: 1,
-//         backgroundColor: isGreen ? Colors.green : Colors.red,
-//         textColor: Colors.white,
-//         fontSize: 16.0);
-//   }
-
-//   Function checkAnswer(String toMatchRes) {
-//     if (isNumeric(toMatchRes)) {
-//       if (toMatchRes == currAns) {
-//         finalScore++;
-//         showtoast('Correct Answer', true);
-//         //_isButtonDisabled = true;
-//       } else {
-//         showtoast('Wrong Answer \n Correct Answer is ' + currAns, false);
-//         //_isButtonDisabled = true;
-//       }
-//       setState(() => {_enabled = !_enabled});
-//     } else {
-//       showtoast('Enter a Valid Number', false);
-//     }
-
-//     // print('button value is  ' + _isButtonDisabled.toString());
-//     // setState(() {});
-//     return null;
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return RaisedButton(
-//       onPressed: !_enabled
-//           ? null
-//           : () {
-//               if (_enabled) {
-//                 checkAnswer(finalController.text);
-//               } else {
-//                 showtoast("disabled", false);
-//                 return null;
-//               }
-//             },
-//       child: Text(
-//         'Check Answer',
-//         style: TextStyle(
-//             fontSize: 20.0, fontWeight: FontWeight.normal, color: Colors.white),
-//       ),
-//       color: Theme.of(context).accentColor,
-//       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-//     );
-//   }
-// }
