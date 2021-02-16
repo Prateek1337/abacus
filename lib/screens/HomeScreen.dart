@@ -528,51 +528,181 @@ class _HomeScreenState extends State<HomeScreen> {
               child: new Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  // Card(
+                  //   elevation: 15,
+                  //   color: Colors.blue,
+                  //   child: ListTile(
+                  //     leading: Icon(Icons.add),
+                  //     title: Text("Add & Subtract",
+                  //         style: TextStyle(color: Colors.white)),
+                  //     onTap: () => {
+                  //       Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //             builder: (context) => AdditionScreen(
+                  //                   user: user,
+                  //                 )),
+                  //       ),
+                  //       // runApp(AdditionScreen(
+                  //       //   user: user,
+                  //       // ))
+                  //     },
+                  //   ),
+                  // ),
+                  // Card(
+                  //   elevation: 15,
+                  //   color: Colors.blue,
+                  //   child: ListTile(
+                  //     leading: Icon(Icons.star),
+                  //     title: Text("Multiply & Divide",
+                  //         style: TextStyle(color: Colors.white)),
+                  //     onTap: () => {
+                  //       Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //             builder: (context) => MultiplicationScreen(
+                  //                   user: user,
+                  //                 )),
+                  //       ),
+                  //     },
+                  //   ),
+                  // ),
                   Card(
-                    elevation: 15,
-                    color: Colors.blue,
-                    child: ListTile(
-                      leading: Icon(Icons.add),
-                      title: Text("Add & Subtract",
-                          style: TextStyle(color: Colors.white)),
-                      onTap: () => {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AdditionScreen(
-                                    user: user,
-                                  )),
+                    elevation: 8.0,
+                    margin: new EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 6.0),
+                    child: Container(
+                      decoration: BoxDecoration(color: Colors.blue),
+                      child: ListTile(
+                        contentPadding: EdgeInsets.symmetric(
+                            horizontal: 20.0, vertical: 10.0),
+                        leading: Container(
+                          padding: EdgeInsets.only(right: 12.0),
+                          decoration: new BoxDecoration(
+                              border: new Border(
+                                  right: new BorderSide(
+                                      width: 1.0, color: Colors.white24))),
+                          child: Icon(Icons.add, color: Colors.white),
                         ),
-                        // runApp(AdditionScreen(
-                        //   user: user,
-                        // ))
-                      },
+                        title: Text(
+                          "Add & Subtract",
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                        trailing: Icon(Icons.keyboard_arrow_right,
+                            color: Colors.white, size: 30.0),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AdditionScreen()));
+                        },
+                      ),
                     ),
                   ),
-                  SizedBox(
-                    height: 16,
-                  ),
                   Card(
-                    elevation: 15,
-                    color: Colors.blue,
-                    child: ListTile(
-                      leading: Icon(Icons.star),
-                      title: Text("Multiply & Divide",
-                          style: TextStyle(color: Colors.white)),
-                      onTap: () => {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MultiplicationScreen(
-                                    user: user,
-                                  )),
+                    elevation: 8.0,
+                    margin: new EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 6.0),
+                    child: Container(
+                      decoration: BoxDecoration(color: Colors.blue),
+                      child: ListTile(
+                        contentPadding: EdgeInsets.symmetric(
+                            horizontal: 20.0, vertical: 10.0),
+                        leading: Container(
+                          padding: EdgeInsets.only(right: 12.0),
+                          decoration: new BoxDecoration(
+                              border: new Border(
+                                  right: new BorderSide(
+                                      width: 1.0, color: Colors.white24))),
+                          child: Icon(Icons.star_outline, color: Colors.white),
                         ),
-                      },
+                        title: Text(
+                          "Multiply",
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                        trailing: Icon(Icons.keyboard_arrow_right,
+                            color: Colors.white, size: 30.0),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      MultiplicationScreen()));
+                        },
+                      ),
                     ),
                   ),
-                  SizedBox(
-                    height: 36,
+                  Card(
+                    elevation: 8.0,
+                    margin: new EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 6.0),
+                    child: Container(
+                      decoration: BoxDecoration(color: Colors.blue),
+                      child: ListTile(
+                        contentPadding: EdgeInsets.symmetric(
+                            horizontal: 20.0, vertical: 10.0),
+                        leading: Container(
+                          padding: EdgeInsets.only(right: 12.0),
+                          decoration: new BoxDecoration(
+                              border: new Border(
+                                  right: new BorderSide(
+                                      width: 1.0, color: Colors.white24))),
+                          child: Icon(Icons.remove, color: Colors.white),
+                        ),
+                        title: Text(
+                          "Division",
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                        trailing: Icon(Icons.keyboard_arrow_right,
+                            color: Colors.white, size: 30.0),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      MultiplicationScreen()));
+                        },
+                      ),
+                    ),
                   ),
+                  Card(
+                    elevation: 8.0,
+                    margin: new EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 6.0),
+                    child: Container(
+                      decoration: BoxDecoration(color: Colors.blue),
+                      child: ListTile(
+                        contentPadding: EdgeInsets.symmetric(
+                            horizontal: 20.0, vertical: 10.0),
+                        leading: Container(
+                          padding: EdgeInsets.only(right: 12.0),
+                          decoration: new BoxDecoration(
+                              border: new Border(
+                                  right: new BorderSide(
+                                      width: 1.0, color: Colors.white24))),
+                          child: Icon(Icons.speed, color: Colors.white),
+                        ),
+                        title: Text(
+                          "Speed Run",
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                        trailing: Icon(Icons.keyboard_arrow_right,
+                            color: Colors.white, size: 30.0),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      MultiplicationScreen()));
+                        },
+                      ),
+                    ),
+                  )
+
                   //   Row(
                   //     mainAxisAlignment: MainAxisAlignment.center,
                   //     children: [

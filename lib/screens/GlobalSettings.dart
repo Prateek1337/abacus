@@ -2,7 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:abacus/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../Variables.dart';
 
 class GlobalSettings extends StatelessWidget {
   final String user;
@@ -27,6 +31,28 @@ class _SettingWidgetState extends State<SettingWidget> {
   double _speedValue = 1;
   bool _alwaysPositive = false, _onlyPositive = false;
   int _time = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    _setVariables();
+  }
+
+  void _setVariables() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _speedValue =
+          prefs.getDouble("speed") != null ? prefs.getDouble("speed") : 1.0;
+      _alwaysPositive = prefs.getBool("alwaysPositive") != null
+          ? prefs.getBool("alwaysPositive")
+          : false;
+      _onlyPositive = prefs.getBool("onlyPositive") != null
+          ? prefs.getBool("onlyPositive")
+          : false;
+      _time = prefs.getInt("time") != null ? prefs.getInt("time") : 1;
+    });
+  }
+
   void _showDialog() {
     showDialog<int>(
         context: context,
@@ -57,7 +83,7 @@ class _SettingWidgetState extends State<SettingWidget> {
                 title: Text('Speaking Speed'),
                 trailing: Container(
                   alignment: Alignment.bottomRight,
-                  width: MediaQuery.of(context).size.width / 3,
+                  width: MediaQuery.of(context).size.width / 2.5,
                   height: 100,
                   child: Slider(
                     value: _speedValue,
@@ -87,7 +113,7 @@ class _SettingWidgetState extends State<SettingWidget> {
               title: Text('Use Positives values'),
               trailing: Container(
                 alignment: Alignment.center,
-                width: MediaQuery.of(context).size.width / 7,
+                width: MediaQuery.of(context).size.width / 5,
                 height: 100,
                 padding: EdgeInsets.all(8),
                 child: FlutterSwitch(
@@ -120,7 +146,7 @@ class _SettingWidgetState extends State<SettingWidget> {
                 ),
                 trailing: Container(
                   alignment: Alignment.center,
-                  width: MediaQuery.of(context).size.width / 7,
+                  width: MediaQuery.of(context).size.width / 5,
                   height: 100,
                   padding: EdgeInsets.all(8),
                   child: FlutterSwitch(
@@ -152,7 +178,7 @@ class _SettingWidgetState extends State<SettingWidget> {
                 title: Text('Timer'),
                 onTap: _showDialog,
                 trailing: Container(
-                    width: MediaQuery.of(context).size.width / 7,
+                    width: MediaQuery.of(context).size.width / 5,
                     alignment: Alignment.center,
                     child: Text(
                       "$_time",
@@ -171,7 +197,7 @@ class _SettingWidgetState extends State<SettingWidget> {
             Spacer(),
             Container(
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: _saveSettings,
                 child: Text("SAVE"),
               ),
             )
@@ -179,5 +205,21 @@ class _SettingWidgetState extends State<SettingWidget> {
         ),
       ),
     );
+  }
+
+  void _saveSettings() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.setBool("alwaysPositive", _alwaysPositive);
+    pref.setBool("onlyPositive", _onlyPositive);
+    pref.setInt("time", _time);
+    pref.setDouble("speed", _speedValue);
+    Fluttertoast.showToast(
+        msg: "SAVED",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.blue,
+        textColor: Colors.white,
+        fontSize: 16.0);
   }
 }
