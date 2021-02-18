@@ -453,9 +453,13 @@ class _SolveAppState extends State<SolveApp> {
     );
   }
 
-  _onKeyPress(VirtualKeyboardKey key) {
+  void addKey(String key) {
+    _finalController.text += key;
+  }
+
+  void _onKeyPress(VirtualKeyboardKey key) {
     if (key.keyType == VirtualKeyboardKeyType.String) {
-      _finalController.text += key.text;
+      addKey(key.text);
       setState(() {});
     } else if (VirtualKeyboardKeyAction.Backspace == key.action) {
       if (_finalController.text.length == 0) return;
@@ -493,309 +497,331 @@ class _SolveAppState extends State<SolveApp> {
                   Container(
                     color: Color.fromRGBO(255, 255, 255, 0.6),
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Container(
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Score:" + score.toString(),
-                                textAlign: TextAlign.center,
-                                style: new TextStyle(
-                                    fontSize: 20.0,
-                                    color: Colors.blue[700],
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                    color: Color.fromRGBO(255, 255, 255, 0.7),
-                                    shape: BoxShape.circle),
-                                child: PopupMenuButton<String>(
-                                  icon:
-                                      Icon(Icons.more_vert, color: Colors.blue),
-                                  onSelected: handleClick,
-                                  itemBuilder: (BuildContext context) {
-                                    return {'Reset', 'Finish'}
-                                        .map((String choice) {
-                                      return PopupMenuItem<String>(
-                                        value: choice,
-                                        child: Text(choice),
-                                      );
-                                    }).toList();
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                  SingleChildScrollView(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: MediaQuery.of(context).size.height,
                       ),
-                      new Container(
-                          padding: EdgeInsets.all(8.0),
-                          child: Center(
-                            child: Card(
-                              elevation: 10,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                side: BorderSide(
-                                  color: Colors.blue,
-                                  width: 2.0,
-                                ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Container(
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 30.0, left: 12, right: 12),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Score:" + score.toString(),
+                                    textAlign: TextAlign.center,
+                                    style: new TextStyle(
+                                        fontSize: 20.0,
+                                        color: Colors.blue[700],
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        color:
+                                            Color.fromRGBO(255, 255, 255, 0.7),
+                                        shape: BoxShape.circle),
+                                    child: PopupMenuButton<String>(
+                                      icon: Icon(Icons.more_vert,
+                                          color: Colors.blue),
+                                      onSelected: handleClick,
+                                      itemBuilder: (BuildContext context) {
+                                        return {'Reset', 'Finish'}
+                                            .map((String choice) {
+                                          return PopupMenuItem<String>(
+                                            value: choice,
+                                            child: Text(choice),
+                                          );
+                                        }).toList();
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
-                              color: Color.fromRGBO(235, 235, 252, 0.8),
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: new Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: <Widget>[
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          noOfTimes.toString() + ".",
-                                          // textAlign: TextAlign.center,
-                                          style: new TextStyle(
-                                              fontSize: 20.0,
-                                              color: Colors.blue[700],
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Expanded(
-                                          child: Text(
-                                            currQuestion,
-                                            textAlign: TextAlign.center,
-                                            style:
-                                                new TextStyle(fontSize: 16.0),
-                                          ),
-                                        ),
-                                        IconButton(
-                                          padding: EdgeInsets.only(right: 10),
-                                          onPressed: () {
-                                            _speakList(questionTtsList);
-                                          },
-                                          icon: Icon(Icons.replay),
-                                        ),
-                                        Visibility(
-                                          visible: timerVisibility,
-                                          child: CircularCountDownTimer(
-                                            // Countdown duration in Seconds
-                                            duration: timerMap[params['time']],
-                                            // Controller to control (i.e Pause, Resume, Restart) the Countdown
-                                            controller: CountDownController(),
+                            ),
+                          ),
+                          new Container(
+                              padding: EdgeInsets.all(8.0),
+                              child: Center(
+                                child: Card(
+                                  elevation: 10,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    side: BorderSide(
+                                      color: Colors.blue,
+                                      width: 2.0,
+                                    ),
+                                  ),
+                                  color: Color.fromRGBO(235, 235, 252, 0.8),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: new Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: <Widget>[
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              noOfTimes.toString() + ".",
+                                              // textAlign: TextAlign.center,
+                                              style: new TextStyle(
+                                                  fontSize: 20.0,
+                                                  color: Colors.blue[700],
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(
+                                                currQuestion,
+                                                textAlign: TextAlign.center,
+                                                style: new TextStyle(
+                                                    fontSize: 16.0),
+                                              ),
+                                            ),
+                                            IconButton(
+                                              padding:
+                                                  EdgeInsets.only(right: 10),
+                                              onPressed: () {
+                                                _speakList(questionTtsList);
+                                              },
+                                              icon: Icon(Icons.replay),
+                                            ),
+                                            Visibility(
+                                              visible: timerVisibility,
+                                              child: CircularCountDownTimer(
+                                                // Countdown duration in Seconds
+                                                duration:
+                                                    timerMap[params['time']],
+                                                // Controller to control (i.e Pause, Resume, Restart) the Countdown
+                                                controller:
+                                                    CountDownController(),
 
-                                            // Width of the Countdown Widget
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                7,
+                                                // Width of the Countdown Widget
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    7,
 
-                                            // Height of the Countdown Widget
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height /
-                                                7,
+                                                // Height of the Countdown Widget
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height /
+                                                    7,
 
-                                            // Default Color for Countdown Timer
-                                            color: Color.fromRGBO(
-                                                235, 235, 252, 0.8),
+                                                // Default Color for Countdown Timer
+                                                color: Color.fromRGBO(
+                                                    235, 235, 252, 0.8),
 
-                                            // Filling Color for Countdown Timer
-                                            fillColor: Colors.blue[200],
+                                                // Filling Color for Countdown Timer
+                                                fillColor: Colors.blue[200],
 
-                                            // Background Color for Countdown Widget
-                                            backgroundColor: Colors.blue[500],
+                                                // Background Color for Countdown Widget
+                                                backgroundColor:
+                                                    Colors.blue[500],
 
-                                            // Border Thickness of the Countdown Circle
-                                            strokeWidth: 10.0,
+                                                // Border Thickness of the Countdown Circle
+                                                strokeWidth: 10.0,
 
-                                            // Begin and end contours with a flat edge and no extension
-                                            strokeCap: StrokeCap.round,
+                                                // Begin and end contours with a flat edge and no extension
+                                                strokeCap: StrokeCap.round,
 
-                                            // Text Style for Countdown Text
-                                            textStyle: TextStyle(
-                                                fontSize: 10.0,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold),
+                                                // Text Style for Countdown Text
+                                                textStyle: TextStyle(
+                                                    fontSize: 10.0,
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.bold),
 
-                                            // true for reverse countdown (max to 0), false for forward countdown (0 to max)
-                                            isReverse: true,
+                                                // true for reverse countdown (max to 0), false for forward countdown (0 to max)
+                                                isReverse: true,
 
-                                            // true for reverse animation, false for forward animation
-                                            isReverseAnimation: true,
+                                                // true for reverse animation, false for forward animation
+                                                isReverseAnimation: true,
 
-                                            // Optional [bool] to hide the [Text] in this widget.
-                                            isTimerTextShown: true,
+                                                // Optional [bool] to hide the [Text] in this widget.
+                                                isTimerTextShown: true,
 
-                                            // Function which will execute when the Countdown Ends
-                                            onComplete: () {
-                                              // Here, do whatever you wan
-                                              print('\n\nCountdown Ended\n\n');
-                                              if (timerVisibility) {
-                                                // score = finalScore;
-                                                // finalScore = 0;
-                                                flutterTts.stop();
-                                                showDialog<void>(
-                                                  context: context,
-                                                  barrierDismissible:
-                                                      false, // user must tap button!
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return WillPopScope(
-                                                      onWillPop: () async =>
-                                                          false,
-                                                      child: AlertDialog(
-                                                        title:
-                                                            Text('Times Up!'),
-                                                        content:
-                                                            SingleChildScrollView(
-                                                          child: ListBody(
-                                                            children: <Widget>[
-                                                              Text(
-                                                                  'Press continue to see your score.'),
+                                                // Function which will execute when the Countdown Ends
+                                                onComplete: () {
+                                                  // Here, do whatever you wan
+                                                  print(
+                                                      '\n\nCountdown Ended\n\n');
+                                                  if (timerVisibility) {
+                                                    // score = finalScore;
+                                                    // finalScore = 0;
+                                                    flutterTts.stop();
+                                                    showDialog<void>(
+                                                      context: context,
+                                                      barrierDismissible:
+                                                          false, // user must tap button!
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return WillPopScope(
+                                                          onWillPop: () async =>
+                                                              false,
+                                                          child: AlertDialog(
+                                                            title: Text(
+                                                                'Times Up!'),
+                                                            content:
+                                                                SingleChildScrollView(
+                                                              child: ListBody(
+                                                                children: <
+                                                                    Widget>[
+                                                                  Text(
+                                                                      'Press continue to see your score.'),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            actions: <Widget>[
+                                                              TextButton(
+                                                                child: Text(
+                                                                    'Continue'),
+                                                                onPressed: () {
+                                                                  Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                          builder: (context) => (ScoreScreen(
+                                                                                user: user,
+                                                                                score: score,
+                                                                                quesCount: quesCount,
+                                                                              ))));
+                                                                },
+                                                              ),
                                                             ],
                                                           ),
-                                                        ),
-                                                        actions: <Widget>[
-                                                          TextButton(
-                                                            child: Text(
-                                                                'Continue'),
-                                                            onPressed: () {
-                                                              Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                      builder: (context) =>
-                                                                          (ScoreScreen(
-                                                                            user:
-                                                                                user,
-                                                                            score:
-                                                                                score,
-                                                                            quesCount:
-                                                                                quesCount,
-                                                                          ))));
-                                                            },
-                                                          ),
-                                                        ],
-                                                      ),
+                                                        );
+                                                      },
                                                     );
-                                                  },
-                                                );
-                                              }
-                                            },
-                                          ),
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                          ],
                                         ),
+                                        SizedBox(
+                                          height: 16,
+                                        ),
+                                        Container(
+                                          width: 300,
+                                          color: Colors.white,
+                                          child: TextField(
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              readOnly: true,
+                                              // inputFormatters: [
+                                              //   FilteringTextInputFormatter.allow(
+                                              //       RegExp(r'[0-9-]')),
+                                              //   //LengthLimitingTextInputFormatter(1),
+                                              // ],
+                                              controller: _finalController,
+                                              decoration: InputDecoration(
+                                                labelText: "Enter Your Answer",
+                                                border: OutlineInputBorder(),
+                                              )),
+                                        ),
+                                        SizedBox(height: 24),
+                                        RaisedButton(
+                                          onPressed: () {
+                                            String toMatchRes =
+                                                _finalController.text;
+                                            if (isNumeric(toMatchRes)) {
+                                              if (toMatchRes == currAns) {
+                                                score++;
+                                                showtoast('Correct Answer');
+                                                Timer(Duration(seconds: 1), () {
+                                                  btnFunction(score);
+                                                });
+
+                                                //_isButtonDisabled = true;
+                                              } else {
+                                                showtoast(
+                                                    'Wrong Answer \n Correct Answer is ' +
+                                                        currAns);
+                                                Timer(Duration(seconds: 1), () {
+                                                  btnFunction(score);
+                                                });
+                                                //_isButtonDisabled = true;
+                                              }
+                                            } else {
+                                              showtoast('Enter a Valid Number');
+                                            }
+                                          },
+                                          child: Text(
+                                            'Check Answer',
+                                            style: TextStyle(
+                                                fontSize: 20.0,
+                                                fontWeight: FontWeight.normal,
+                                                color: Colors.white),
+                                          ),
+                                          color: Theme.of(context).accentColor,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5.0)),
+                                        ),
+                                        SizedBox(height: 16),
+                                        Container(
+                                          // Keyboard is transparent
+                                          child: VirtualKeyboard(
+                                              // [0-9] + .
+                                              fontSize: 30,
+                                              builder: _builder,
+                                              textColor: Colors.blue,
+                                              type: VirtualKeyboardType.Numeric,
+                                              height: 220,
+                                              // Callback for key press event
+                                              onKeyPress: _onKeyPress),
+                                        ),
+                                        TextButton(
+                                            onPressed: () => {addKey('-')},
+                                            style: TextButton.styleFrom(
+                                                primary: Colors.blue),
+                                            child: Text('-',
+                                                style: TextStyle(fontSize: 25)))
                                       ],
                                     ),
-                                    SizedBox(
-                                      height: 16,
-                                    ),
-                                    Container(
-                                      width: 300,
-                                      color: Colors.white,
-                                      child: TextField(
-                                          keyboardType: TextInputType.number,
-                                          readOnly: true,
-                                          // inputFormatters: [
-                                          //   FilteringTextInputFormatter.allow(
-                                          //       RegExp(r'[0-9-]')),
-                                          //   //LengthLimitingTextInputFormatter(1),
-                                          // ],
-                                          controller: _finalController,
-                                          decoration: InputDecoration(
-                                            labelText: "Enter Your Answer",
-                                            border: OutlineInputBorder(),
-                                          )),
-                                    ),
-                                    SizedBox(height: 24),
-                                    RaisedButton(
-                                      onPressed: () {
-                                        String toMatchRes =
-                                            _finalController.text;
-                                        if (isNumeric(toMatchRes)) {
-                                          if (toMatchRes == currAns) {
-                                            score++;
-                                            showtoast('Correct Answer');
-                                            Timer(Duration(seconds: 1), () {
-                                              btnFunction(score);
-                                            });
-
-                                            //_isButtonDisabled = true;
-                                          } else {
-                                            showtoast(
-                                                'Wrong Answer \n Correct Answer is ' +
-                                                    currAns);
-                                            Timer(Duration(seconds: 1), () {
-                                              btnFunction(score);
-                                            });
-                                            //_isButtonDisabled = true;
-                                          }
-                                        } else {
-                                          showtoast('Enter a Valid Number');
-                                        }
-                                      },
-                                      child: Text(
-                                        'Check Answer',
-                                        style: TextStyle(
-                                            fontSize: 20.0,
-                                            fontWeight: FontWeight.normal,
-                                            color: Colors.white),
-                                      ),
-                                      color: Theme.of(context).accentColor,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5.0)),
-                                    ),
-                                    SizedBox(height: 16),
-                                    Container(
-                                      // Keyboard is transparent
-                                      child: VirtualKeyboard(
-                                          // [0-9] + .
-                                          fontSize: 30,
-                                          builder: _builder,
-                                          textColor: Colors.blue,
-                                          type: VirtualKeyboardType.Numeric,
-                                          // Callback for key press event
-                                          onKeyPress: _onKeyPress),
-                                    )
-                                  ],
+                                  ),
                                 ),
+                              )),
+                          Align(
+                            alignment: Alignment.center,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 18.0),
+                              child: RawMaterialButton(
+                                shape: CircleBorder(
+
+                                    // borderRadius: BorderRadius.circular(500.0),
+                                    // side: BorderSide(color: Colors.red)
+                                    ),
+                                onPressed: () => {},
+                                elevation: 10,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: Icon(Icons.mic_rounded,
+                                      color: Colors.blue, size: 40),
+                                ),
+                                // Text(
+                                //   btnText(noOfTimes),
+                                //   style: TextStyle(
+                                //       fontSize: 20.0,
+                                //       fontWeight: FontWeight.normal,
+                                //       color: Colors.white),
+                                // ),
+                                fillColor: Color.fromRGBO(255, 255, 255, 0.8),
+                                // shape: RoundedRectangleBorder(
+                                //     borderRadius: BorderRadius.circular(5.0)),
                               ),
                             ),
-                          )),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 18.0),
-                          child: RawMaterialButton(
-                            shape: CircleBorder(
-
-                                // borderRadius: BorderRadius.circular(500.0),
-                                // side: BorderSide(color: Colors.red)
-                                ),
-                            onPressed: () => {},
-                            elevation: 10,
-                            child: Padding(
-                              padding: const EdgeInsets.all(15.0),
-                              child: Icon(Icons.mic_rounded,
-                                  color: Colors.blue, size: 40),
-                            ),
-                            // Text(
-                            //   btnText(noOfTimes),
-                            //   style: TextStyle(
-                            //       fontSize: 20.0,
-                            //       fontWeight: FontWeight.normal,
-                            //       color: Colors.white),
-                            // ),
-                            fillColor: Color.fromRGBO(255, 255, 255, 0.8),
-                            // shape: RoundedRectangleBorder(
-                            //     borderRadius: BorderRadius.circular(5.0)),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ],
               ))),

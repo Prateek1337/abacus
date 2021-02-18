@@ -2,6 +2,7 @@
 // import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:abacus/screens/AdditionSettingScreen.dart';
+import 'package:abacus/screens/LevelScreen.dart';
 import 'package:abacus/screens/MultiplicationSettingScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -595,7 +596,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => AdditionScreen()));
+                                  builder: (context) => LevelScreen()));
                         },
                       ),
                     ),
