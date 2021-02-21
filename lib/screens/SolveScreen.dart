@@ -15,6 +15,12 @@ import 'package:abacus/widgets/drawer.dart';
 import 'package:virtual_keyboard/virtual_keyboard.dart';
 
 // import 'package:validator/validator.dart';
+// import 'package:speech_to_text/speech_recognition_error.dart';
+// import 'package:speech_to_text/speech_recognition_result.dart';
+// import 'package:speech_to_text/speech_to_text.dart';
+
+import 'package:avatar_glow/avatar_glow.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 // ----------------------------------------------------------------------------------
 String currAns;
@@ -203,7 +209,7 @@ _speak(String text) async {
 _speakList(List<String> texts) async {
   int i = 0;
   await flutterTts.speak(texts[i]);
-  print("\n\n\n\n\n\n" + texts.length.toString());
+  // print("\n\n\n\n\n\n" + texts.length.toString());
   flutterTts.setCompletionHandler(() async {
     if (i < texts.length - 1) {
       i++;
@@ -214,6 +220,7 @@ _speakList(List<String> texts) async {
 }
 
 // ----------------------------------------------------------------------------------
+
 Future _stop() async {
   if (flutterTts != null) await flutterTts.stop();
 }
@@ -264,6 +271,175 @@ class _SolveAppState extends State<SolveApp> {
   });
   String sumtext = '';
 
+  /*
+  CODE FOR SPEECH TO TEXT
+  --------------------------------------------------------------------------------------------------------
+  */
+  // Color MicBtnBorderColor = Colors.blue;
+  // bool _hasSpeech = false;
+  // double level = 0.0;
+  // double minSoundLevel = 50000;
+  // double maxSoundLevel = -50000;
+  // String lastWords = '';
+  // String lastError = '';
+  // String lastStatus = '';
+  // String _currentLocaleId = '';
+  // List<LocaleName> _localeNames = [];
+
+  // final SpeechToText speech = SpeechToText();
+  // Future<void> initSpeechState() async {
+  //   var hasSpeech = await speech.initialize(
+  //       onError: errorListener, onStatus: statusListener, debugLogging: true);
+  //   if (hasSpeech) {
+  //     _localeNames = await speech.locales();
+
+  //     var systemLocale = await speech.systemLocale();
+  //     _currentLocaleId = systemLocale.localeId;
+  //   }
+
+  //   if (!mounted) return;
+
+  //   setState(() {
+  //     _hasSpeech = hasSpeech;
+  //   });
+  // }
+
+  // void STTButton() {
+  //   if (_hasSpeech == true) {
+  //     if (speech.isListening == false) {
+  //       startListening();
+  //     } else {
+  //       stopListening();
+  //     }
+  //   }
+  // }
+
+  // void startListening() {
+  //   lastWords = '';
+  //   lastError = '';
+
+  //   speech.listen(
+  //       onResult: resultListener,
+  //       listenFor: Duration(seconds: 5),
+  //       pauseFor: Duration(seconds: 5),
+  //       partialResults: true,
+  //       localeId: _currentLocaleId,
+  //       onSoundLevelChange: soundLevelListener,
+  //       cancelOnError: true,
+  //       listenMode: ListenMode.confirmation);
+  //   setState(() {});
+  // }
+
+  // void stopListening() {
+  //   speech.stop();
+  //   setState(() {
+  //     level = 0.0;
+  //   });
+  // }
+
+  // void resultListener(SpeechRecognitionResult result) {
+  //   setState(() {
+  //     lastWords = result.recognizedWords;
+  //     lastWords = lastWords.replaceAll(new RegExp(r"\s+"), "");
+  //     if (isNumeric(lastWords) == false) {
+  //       showtoast('Please speak numbers only');
+  //     } else {
+  //       _finalController.text = lastWords;
+  //       MicBtnBorderColor = Colors.grey;
+  //     }
+  //     // print(lastWords);
+  //   });
+  // }
+
+  // void soundLevelListener(double level) {
+  //   minSoundLevel = min(minSoundLevel, level);
+  //   maxSoundLevel = max(maxSoundLevel, level);
+  //   // print("sound level $level: $minSoundLevel - $maxSoundLevel ");
+  //   setState(() {
+  //     this.level = level;
+  //   });
+  // }
+
+  // void errorListener(SpeechRecognitionError error) {
+  //   // print("Received error status: $error, listening: ${speech.isListening}");
+  //   setState(() {
+  //     lastError = '${error.errorMsg} - ${error.permanent}';
+  //   });
+  // }
+
+  // void statusListener(String status) {
+  //   // print(
+  //   // 'Received listener status: $status, listening: ${speech.isListening}');
+  //   setState(() {
+  //     lastStatus = '$status';
+  //   });
+  // }
+
+  // void _switchLang(selectedVal) {
+  //   setState(() {
+  //     _currentLocaleId = selectedVal;
+  //   });
+  //   print(selectedVal);
+  // }
+  stt.SpeechToText _speech;
+  bool _isListening = false;
+  String _text = 'Press the button and start speaking';
+  void changebtnspeech() {}
+
+  // double _confidence = 1.0;
+  bool speakingBoolBtnGlow = false;
+  IconData speakingBtnIcon = Icons.mic_none;
+  void _listen() async {
+    if (_isListening == false) {
+      bool available = await _speech.initialize(
+        onStatus: (val) => {
+          if (val == "notListening")
+            {
+              print('yes it getting called'),
+              setState(() {
+                _isListening = false;
+                speakingBoolBtnGlow = false;
+                speakingBtnIcon = Icons.mic_none;
+              }),
+            },
+          // print('onStatus: $val'),
+        },
+        onError: (val) => print('onError: $val'),
+      );
+      if (available) {
+        setState(() => _isListening = true);
+        _speech.listen(
+          listenFor: Duration(seconds: 10),
+          onResult: (val) => setState(() {
+            _text = val.recognizedWords;
+            _text = _text.replaceAll(new RegExp(r"\s+"), "");
+            _finalController.text = _text;
+          }),
+        );
+      }
+    } else {
+      // print('this is called when listining ends');
+      setState(() {
+        _isListening = false;
+        speakingBoolBtnGlow = false;
+        speakingBtnIcon = Icons.mic_none;
+      });
+      // setState(() =>{
+
+      //  _isListening = false;
+      // speakingBoolBtnGlow = false;
+      // speakingBtnIcon = Icons.mic_none;
+      // }
+      //  );
+      _speech.stop();
+    }
+  }
+
+  /*
+  CODE FOR SPEECH TO TEXT END
+  --------------------------------------------------------------------------------------------------------
+  */
+
   @override
   void initState() {
     super.initState();
@@ -286,9 +462,10 @@ class _SolveAppState extends State<SolveApp> {
     );
     _loadBannerAd();
     // _stop();
+    // if (!_hasSpeech) initSpeechState();
+    _speech = stt.SpeechToText();
   }
 
-// 9113790187
   //function to do generate the sum
   String callOper() {
     List finalres;
@@ -793,30 +970,50 @@ class _SolveAppState extends State<SolveApp> {
                             child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 18.0),
-                              child: RawMaterialButton(
-                                shape: CircleBorder(
-
-                                    // borderRadius: BorderRadius.circular(500.0),
-                                    // side: BorderSide(color: Colors.red)
-                                    ),
-                                onPressed: () => {},
-                                elevation: 10,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: Icon(Icons.mic_rounded,
-                                      color: Colors.blue, size: 40),
+                              // floatingActionButtonLocation:
+                              //     FloatingActionButtonLocation.centerFloat,
+                              child: AvatarGlow(
+                                animate: _isListening,
+                                glowColor: Theme.of(context).primaryColor,
+                                endRadius: 75.0,
+                                duration: const Duration(milliseconds: 2000),
+                                repeatPauseDuration:
+                                    const Duration(milliseconds: 100),
+                                repeat: speakingBoolBtnGlow,
+                                child: FloatingActionButton(
+                                  onPressed: () => {
+                                    setState(() {
+                                      speakingBoolBtnGlow = true;
+                                      speakingBtnIcon = Icons.mic;
+                                    }),
+                                    _listen(),
+                                  },
+                                  child: Icon(speakingBtnIcon),
                                 ),
-                                // Text(
-                                //   btnText(noOfTimes),
-                                //   style: TextStyle(
-                                //       fontSize: 20.0,
-                                //       fontWeight: FontWeight.normal,
-                                //       color: Colors.white),
-                                // ),
-                                fillColor: Color.fromRGBO(255, 255, 255, 0.8),
-                                // shape: RoundedRectangleBorder(
-                                //     borderRadius: BorderRadius.circular(5.0)),
                               ),
+                              // child: RawMaterialButton(
+                              //   shape: CircleBorder(
+
+                              //       // borderRadius: BorderRadius.circular(500.0),
+                              //       side: BorderSide(color: MicBtnBorderColor)),
+                              //   onPressed: () => {
+                              //     setState(() {
+                              //       MicBtnBorderColor = Colors.red;
+                              //     }),
+                              //     STTButton(),
+                              //   },
+                              //   // onPressed: STTButton,
+
+                              //   elevation: 10,
+                              //   child: Padding(
+                              //     padding: const EdgeInsets.all(15.0),
+                              //     child: Icon(Icons.mic_rounded,
+                              //         color: Colors.blue, size: 40),
+                              //   ),
+
+                              //   fillColor: Color.fromRGBO(255, 255, 255, 0.8),
+
+                              // ),
                             ),
                           ),
                         ],
