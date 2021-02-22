@@ -13,6 +13,8 @@ import 'package:firebase_admob/firebase_admob.dart';
 import 'package:abacus/screens/ad_manager.dart';
 import 'package:abacus/widgets/drawer.dart';
 import 'package:virtual_keyboard/virtual_keyboard.dart';
+import 'package:abacus/screens/LevelsLogic.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // import 'package:validator/validator.dart';
 // import 'package:speech_to_text/speech_recognition_error.dart';
@@ -25,7 +27,7 @@ import 'package:speech_to_text/speech_to_text.dart' as stt;
 // ----------------------------------------------------------------------------------
 String currAns;
 int finalScore = 0;
-int quesCount = 0;
+int quesCount = 10;
 // String questionTts;
 List<String> questionTtsList;
 final FlutterTts flutterTts = FlutterTts();
@@ -134,63 +136,63 @@ _range2 = max number of digits in the sum
 _valueIsPos = each number will be positive if it is 1
 _ansIsPos = intermediate and final result will be positive if 1
 */
-List addString(var params) {
-  // questionTts = '';
-  int _numberOfValues = params['numberOfValues'],
-      _numberOfQuestions = params['numberOfQuestions'],
-      _range1 = params['range1'],
-      _range2 = params['range2'];
-  quesCount = _numberOfQuestions;
-  bool _valueIsPos = params['valIsPos'], _ansIsPos = params['ansIsPos'];
-  int _lowerNum = minMap[_range1.toString()];
-  int _upperNum = maxMap[_range2.toString()];
+// List addString(var params) {
+//   // questionTts = '';
+//   int _numberOfValues = params['numberOfValues'],
+//       _numberOfQuestions = params['numberOfQuestions'],
+//       _range1 = params['range1'],
+//       _range2 = params['range2'];
+//   quesCount = _numberOfQuestions;
+//   bool _valueIsPos = params['valIsPos'], _ansIsPos = params['ansIsPos'];
+//   int _lowerNum = minMap[_range1.toString()];
+//   int _upperNum = maxMap[_range2.toString()];
 
-  int res = rng.nextInt(_upperNum - _lowerNum + 1) + _lowerNum;
-  String question = res.toString();
-  // questionTts += res.toString();
-  questionTtsList.add(res.toString());
-  for (int i = 0; i < _numberOfValues - 1; i++) {
-    int _num = rng.nextInt(_upperNum - _lowerNum + 1) + _lowerNum;
-    int sign = rng.nextInt(2);
-    // 0 for sub and 1 for add
-    if (_valueIsPos == false && sign == 0) {
-      //when subtraction is allowed
-      if ((_ansIsPos == true && res - _num >= 0) || _ansIsPos == false) {
-        //when result is positive or negative result is allowed
-        res = res - _num;
-        question = question +
-            '\n' +
-            Variables().minusCharacter +
-            ' ' +
-            _num.toString();
-        // questionTts += " minus " + _num.toString();
-        questionTtsList.addAll([
-          "minus",
-          _num.toString(),
-        ]);
-      } else {
-        //when result is getting negative but it shouldn't
-        res = res + _num;
-        question = question + '\n ' + _num.toString();
-        // questionTts += " plus " + _num.toString();
-        questionTtsList.addAll([
-          // "plus",
-          _num.toString(),
-        ]);
-      }
-    } else {
-      res = res + _num;
-      question = question + '\n ' + _num.toString();
-      // questionTts += " plus " + _num.toString();
-      questionTtsList.addAll([
-        // "plus",
-        _num.toString(),
-      ]);
-    }
-  }
+//   int res = rng.nextInt(_upperNum - _lowerNum + 1) + _lowerNum;
+//   String question = res.toString();
+//   // questionTts += res.toString();
+//   questionTtsList.add(res.toString());
+//   for (int i = 0; i < _numberOfValues - 1; i++) {
+//     int _num = rng.nextInt(_upperNum - _lowerNum + 1) + _lowerNum;
+//     int sign = rng.nextInt(2);
+//     // 0 for sub and 1 for add
+//     if (_valueIsPos == false && sign == 0) {
+//       //when subtraction is allowed
+//       if ((_ansIsPos == true && res - _num >= 0) || _ansIsPos == false) {
+//         //when result is positive or negative result is allowed
+//         res = res - _num;
+//         question = question +
+//             '\n' +
+//             Variables().minusCharacter +
+//             ' ' +
+//             _num.toString();
+//         // questionTts += " minus " + _num.toString();
+//         questionTtsList.addAll([
+//           "minus",
+//           _num.toString(),
+//         ]);
+//       } else {
+//         //when result is getting negative but it shouldn't
+//         res = res + _num;
+//         question = question + '\n ' + _num.toString();
+//         // questionTts += " plus " + _num.toString();
+//         questionTtsList.addAll([
+//           // "plus",
+//           _num.toString(),
+//         ]);
+//       }
+//     } else {
+//       res = res + _num;
+//       question = question + '\n ' + _num.toString();
+//       // questionTts += " plus " + _num.toString();
+//       questionTtsList.addAll([
+//         // "plus",
+//         _num.toString(),
+//       ]);
+//     }
+//   }
 
-  return [res.toString(), question];
-}
+//   return [res.toString(), question];
+// }
 
 bool isNumeric(String s) {
   if (s == null) {
@@ -226,7 +228,7 @@ Future _stop() async {
 }
 
 class SolveApp extends StatefulWidget {
-  final int numdig, oper, noOfTimes, score;
+  final int numdig, oper, noOfTimes, score, level;
   final String user;
   var params;
 
@@ -237,6 +239,7 @@ class SolveApp extends StatefulWidget {
     this.noOfTimes,
     this.score,
     this.params,
+    this.level,
   });
   @override
   _SolveAppState createState() => new _SolveAppState(
@@ -245,20 +248,21 @@ class SolveApp extends StatefulWidget {
       oper: oper,
       noOfTimes: noOfTimes,
       score: score,
+      level: level,
       params: params);
 }
 
 class _SolveAppState extends State<SolveApp> {
 // class SolveApp extends StatelessWidget {
-  int numdig, oper, noOfTimes, score;
+  int numdig, oper, noOfTimes, score, level;
   final String user;
   final _finalController = TextEditingController();
 
   var params;
   double _playbackSpeed;
-  bool _enabled;
+  bool _enabled, _valueIsPos;
   bool timerVisibility;
-  String currQuestion;
+  String currQuestion, _time;
 
   // _isbutton
   _SolveAppState({
@@ -267,6 +271,7 @@ class _SolveAppState extends State<SolveApp> {
     this.oper,
     this.noOfTimes,
     this.score,
+    this.level,
     this.params,
   });
   String sumtext = '';
@@ -321,24 +326,42 @@ class _SolveAppState extends State<SolveApp> {
   void stopListening() {
     _speech.stop();
   }
+
   /*
   CODE FOR SPEECH TO TEXT END
   --------------------------------------------------------------------------------------------------------
   */
+  Future _loadShared() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _playbackSpeed = (prefs.getDouble("speed") ?? 1.0);
+      _time = (prefs.getString("time") ?? "1");
+      _valueIsPos = (prefs.getBool("onlyPositive") ?? false);
+      print("\n\n\n Shared : $_playbackSpeed,$_time,$_valueIsPos\n\n\n");
+    });
+    print("Shared loaded");
+  }
 
   @override
   void initState() {
     super.initState();
+    _loadShared();
+    // _playbackSpeed = 1.0;
+    // _time = "1";
+    // _valueIsPos = true;
     // questionTtsList = [];
     // score = finalScore;
     _finalController.clear();
-    _playbackSpeed = double.parse(params['speed']);
+    if (params != null) {
+      quesCount = params['numberOfQuestions'];
+    }
+    // _playbackSpeed = double.parse(params['speed']);
     flutterTts.setSpeechRate(_playbackSpeed);
     flutterTts.setVolume(1.0);
     flutterTts.setVoice('en-in-x-ahp-local');
     _enabled = true;
-    timerVisibility = timerMap[params['time']] != 1;
-    currQuestion = callOper();
+    timerVisibility = timerMap[_time] != 1;
+    currQuestion = callOper(_valueIsPos);
     // print("\n\n\n\n question: $questionTtsList\n\n");
     _speakList(questionTtsList);
     _initAdMob();
@@ -353,18 +376,37 @@ class _SolveAppState extends State<SolveApp> {
   }
 
   //function to do generate the sum
-  String callOper() {
+  String callOper(bool _valueIsPos) {
     List finalres;
     questionTtsList = [];
+    LevelsLogic levelinfo = LevelsLogic(_valueIsPos);
     if (oper == 0) {
-      finalres = addString(params);
+      if (level != null) {
+        finalres = levelinfo.addStringLevel(level);
+      } else {
+        finalres = levelinfo.addStringCustom(params);
+      }
+      // finalres = addString(params);
+      questionTtsList = finalres[2];
       // _speak(finalres[1]);
       // questionTts = finalres[1];
     } else if (oper == 1) {
-      finalres = multiplyString(params);
+      if (level != null) {
+        finalres = levelinfo.multiplyStringLevel(level);
+      } else {
+        finalres = levelinfo.multiplyStringCustom(params);
+      }
+      // finalres = multiplyString(params);
+      questionTtsList = finalres[2];
       // _speak(questionTts);
     } else {
-      finalres = divideString(params);
+      if (level != null) {
+        finalres = levelinfo.divideStringLevel(level);
+      } else {
+        finalres = levelinfo.divideStringCustom(params);
+      }
+      // finalres = multiplyString(params);
+      questionTtsList = finalres[2];
       // _speak(questionTts);
     }
 
@@ -416,7 +458,7 @@ class _SolveAppState extends State<SolveApp> {
         _finalController.clear();
         noOfTimes++;
         _enabled = true;
-        currQuestion = callOper();
+        currQuestion = callOper(_valueIsPos);
         _speakList(questionTtsList);
         score = score;
       });
@@ -659,8 +701,7 @@ class _SolveAppState extends State<SolveApp> {
                                               visible: timerVisibility,
                                               child: CircularCountDownTimer(
                                                 // Countdown duration in Seconds
-                                                duration:
-                                                    timerMap[params['time']],
+                                                duration: timerMap[_time],
                                                 // Controller to control (i.e Pause, Resume, Restart) the Countdown
                                                 controller:
                                                     CountDownController(),

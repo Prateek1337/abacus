@@ -191,7 +191,7 @@ class _AdditionScreenState extends State<AdditionScreen> {
                                 controller: _numberOfValues,
                                 textAlign: TextAlign.center,
                                 decoration: InputDecoration(
-                                    labelText: "Enter number of values",
+                                    labelText: "Enter number of rows",
                                     hintText: "should be between 1-20",
                                     border: OutlineInputBorder()),
                               ),
@@ -243,70 +243,70 @@ class _AdditionScreenState extends State<AdditionScreen> {
                                 },
                               ),
                             ),
-                            Container(
-                              width: 300,
-                              child: new CheckboxListTile(
-                                title: const Text(
-                                  "Use positive values",
-                                  style: TextStyle(color: (Colors.blue)),
-                                ),
-                                secondary: const Icon(Icons.check),
-                                value: _valueIsPos,
-                                onChanged: (bool value) {
-                                  setState(() {
-                                    _valueIsPos = value ? true : false;
-                                  });
-                                },
-                              ),
-                            ),
+                            // Container(
+                            //   width: 300,
+                            //   child: new CheckboxListTile(
+                            //     title: const Text(
+                            //       "Use positive values",
+                            //       style: TextStyle(color: (Colors.blue)),
+                            //     ),
+                            //     secondary: const Icon(Icons.check),
+                            //     value: _valueIsPos,
+                            //     onChanged: (bool value) {
+                            //       setState(() {
+                            //         _valueIsPos = value ? true : false;
+                            //       });
+                            //     },
+                            //   ),
+                            // ),
 
-                            Row(
-                              children: [
-                                Text('Speed',
-                                    style: TextStyle(
-                                        fontSize: 18, color: (Colors.blue))),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                DropdownButton(
-                                  value: _selectedSpeed,
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      _selectedSpeed = newValue;
-                                    });
-                                  },
-                                  items: _speed.map((speed) {
-                                    return DropdownMenuItem(
-                                      child: new Text(speed),
-                                      value: speed,
-                                    );
-                                  }).toList(),
-                                ),
-                                SizedBox(
-                                  width: 25,
-                                ),
-                                Text('Timer',
-                                    style: TextStyle(
-                                        fontSize: 18, color: (Colors.blue))),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                DropdownButton(
-                                  value: _selectedTime,
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      _selectedTime = newValue;
-                                    });
-                                  },
-                                  items: _time.map((time) {
-                                    return DropdownMenuItem(
-                                      child: new Text(time),
-                                      value: time,
-                                    );
-                                  }).toList(),
-                                ),
-                              ],
-                            ),
+                            // Row(
+                            //   children: [
+                            //     Text('Speed',
+                            //         style: TextStyle(
+                            //             fontSize: 18, color: (Colors.blue))),
+                            //     SizedBox(
+                            //       width: 5,
+                            //     ),
+                            //     DropdownButton(
+                            //       value: _selectedSpeed,
+                            //       onChanged: (newValue) {
+                            //         setState(() {
+                            //           _selectedSpeed = newValue;
+                            //         });
+                            //       },
+                            //       items: _speed.map((speed) {
+                            //         return DropdownMenuItem(
+                            //           child: new Text(speed),
+                            //           value: speed,
+                            //         );
+                            //       }).toList(),
+                            //     ),
+                            //     SizedBox(
+                            //       width: 25,
+                            //     ),
+                            //     Text('Timer',
+                            //         style: TextStyle(
+                            //             fontSize: 18, color: (Colors.blue))),
+                            //     SizedBox(
+                            //       width: 5,
+                            //     ),
+                            //     DropdownButton(
+                            //       value: _selectedTime,
+                            //       onChanged: (newValue) {
+                            //         setState(() {
+                            //           _selectedTime = newValue;
+                            //         });
+                            //       },
+                            //       items: _time.map((time) {
+                            //         return DropdownMenuItem(
+                            //           child: new Text(time),
+                            //           value: time,
+                            //         );
+                            //       }).toList(),
+                            //     ),
+                            //   ],
+                            // ),
 
                             new RaisedButton(
                               onPressed: () => {
@@ -346,10 +346,10 @@ class _AdditionScreenState extends State<AdditionScreen> {
                                                 'range2': max(
                                                     int.parse(_range1.text),
                                                     int.parse(_range2.text)),
-                                                'valIsPos': _valueIsPos,
+                                                // 'valIsPos': _valueIsPos,
                                                 'ansIsPos': _ansIsPos,
-                                                'speed': _selectedSpeed,
-                                                'time': _selectedTime,
+                                                // 'speed': _selectedSpeed,
+                                                // 'time': _selectedTime,
                                               })),
                                         ),
                                         (r) => false),

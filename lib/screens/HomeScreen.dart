@@ -596,7 +596,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => LevelScreen()));
+                                  builder: (context) => LevelScreen(
+                                        user: user,
+                                        isoper: 0,
+                                      )));
                         },
                       ),
                     ),
@@ -629,8 +632,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      MultiplicationScreen()));
+                                  builder: (context) => LevelScreen(
+                                        user: user,
+                                        isoper: 1,
+                                      )));
                         },
                       ),
                     ),
@@ -663,8 +668,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      MultiplicationScreen()));
+                                  builder: (context) => LevelScreen(
+                                        user: user,
+                                        isoper: 2,
+                                      )));
                         },
                       ),
                     ),

@@ -248,7 +248,7 @@ class _SettingWidgetState extends State<SettingWidget> {
     pref.setBool("alwaysPositive", _alwaysPositive);
     pref.setBool("onlyPositive", _onlyPositive);
     pref.setBool("isMute", _isMute);
-    pref.setInt("time", _time);
+    pref.setString("time", _time.toString());
     pref.setDouble("speed", _speedValue);
     Fluttertoast.showToast(
         msg: "SAVED",

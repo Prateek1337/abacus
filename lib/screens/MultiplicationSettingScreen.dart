@@ -15,51 +15,52 @@ import 'package:abacus/widgets/drawer.dart';
 
 class MultiplicationScreen extends StatefulWidget {
   final String user;
-
-  MultiplicationScreen({this.user});
+  int isoper;
+  MultiplicationScreen({this.user, this.isoper});
 
   @override
   _MultiplicationScreenState createState() =>
-      new _MultiplicationScreenState(user: user);
+      new _MultiplicationScreenState(user: user, isoper: isoper);
 }
 
 class _MultiplicationScreenState extends State<MultiplicationScreen> {
-  List<String> _speed = [
-    '0.25',
-    '0.5',
-    '0.75',
-    '1.0',
-    '1.25',
-    '1.5',
-    '1.75',
-    '2.0',
-  ];
-  List<String> _time = [
-    'Free',
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
-    '9',
-    '10',
-    '12',
-    '15',
-    '20',
-    '25',
-    '30'
-  ];
-  String _selectedSpeed = '1.0';
-  String _selectedTime = 'Free';
+  // List<String> _speed = [
+  //   '0.25',
+  //   '0.5',
+  //   '0.75',
+  //   '1.0',
+  //   '1.25',
+  //   '1.5',
+  //   '1.75',
+  //   '2.0',
+  // ];
+  // List<String> _time = [
+  //   'Free',
+  //   '1',
+  //   '2',
+  //   '3',
+  //   '4',
+  //   '5',
+  //   '6',
+  //   '7',
+  //   '8',
+  //   '9',
+  //   '10',
+  //   '12',
+  //   '15',
+  //   '20',
+  //   '25',
+  //   '30'
+  // ];
+  // String _selectedSpeed = '1.0';
+  // String _selectedTime = 'Free';
   TextEditingController _range1, _range2, _numberOfQuestions;
   int tempzero = 0;
-  int _isOperation = 1;
+  int isoper = 1;
   final String user;
   _MultiplicationScreenState({
     @required this.user,
+    this.isoper,
   });
 
   void initState() {
@@ -192,88 +193,88 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
                               height: 16,
                             ),
 
-                            Row(
-                              children: [
-                                Text('Speed',
-                                    style: TextStyle(
-                                        fontSize: 18, color: (Colors.blue))),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                DropdownButton(
-                                  value: _selectedSpeed,
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      _selectedSpeed = newValue;
-                                    });
-                                  },
-                                  items: _speed.map((speed) {
-                                    return DropdownMenuItem(
-                                      child: new Text(speed),
-                                      value: speed,
-                                    );
-                                  }).toList(),
-                                ),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                Text('Timer',
-                                    style: TextStyle(
-                                        fontSize: 18, color: (Colors.blue))),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                DropdownButton(
-                                  value: _selectedTime,
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      _selectedTime = newValue;
-                                    });
-                                  },
-                                  items: _time.map((time) {
-                                    return DropdownMenuItem(
-                                      child: new Text(time),
-                                      value: time,
-                                    );
-                                  }).toList(),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 16,
-                            ),
-                            new Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                new Radio(
-                                  value: 1,
-                                  groupValue: _isOperation,
-                                  onChanged: (int value) {
-                                    setState(() {
-                                      _isOperation = value;
-                                      // print(_isOperation);
-                                    });
-                                  },
-                                ),
-                                new Text(
-                                  'Multiplication',
-                                  style: new TextStyle(fontSize: 16.0),
-                                ),
-                                new Radio(
-                                    value: 2,
-                                    groupValue: _isOperation,
-                                    onChanged: (int value) {
-                                      setState(() {
-                                        _isOperation = value;
-                                        // print(_isOperation);
-                                      });
-                                    }),
-                                new Text(
-                                  'Division',
-                                  style: new TextStyle(fontSize: 16.0),
-                                ),
-                              ],
-                            ),
+                            // Row(
+                            //   children: [
+                            //     Text('Speed',
+                            //         style: TextStyle(
+                            //             fontSize: 18, color: (Colors.blue))),
+                            //     SizedBox(
+                            //       width: 5,
+                            //     ),
+                            //     DropdownButton(
+                            //       value: _selectedSpeed,
+                            //       onChanged: (newValue) {
+                            //         setState(() {
+                            //           _selectedSpeed = newValue;
+                            //         });
+                            //       },
+                            //       items: _speed.map((speed) {
+                            //         return DropdownMenuItem(
+                            //           child: new Text(speed),
+                            //           value: speed,
+                            //         );
+                            //       }).toList(),
+                            //     ),
+                            //     SizedBox(
+                            //       width: 20,
+                            //     ),
+                            //     Text('Timer',
+                            //         style: TextStyle(
+                            //             fontSize: 18, color: (Colors.blue))),
+                            //     SizedBox(
+                            //       width: 5,
+                            //     ),
+                            //     DropdownButton(
+                            //       value: _selectedTime,
+                            //       onChanged: (newValue) {
+                            //         setState(() {
+                            //           _selectedTime = newValue;
+                            //         });
+                            //       },
+                            //       items: _time.map((time) {
+                            //         return DropdownMenuItem(
+                            //           child: new Text(time),
+                            //           value: time,
+                            //         );
+                            //       }).toList(),
+                            //     ),
+                            //   ],
+                            // ),
+                            // SizedBox(
+                            //   height: 16,
+                            // ),
+                            // new Row(
+                            //   mainAxisAlignment: MainAxisAlignment.center,
+                            //   children: <Widget>[
+                            //     new Radio(
+                            //       value: 1,
+                            //       groupValue: _isOperation,
+                            //       onChanged: (int value) {
+                            //         setState(() {
+                            //           _isOperation = value;
+                            //           // print(_isOperation);
+                            //         });
+                            //       },
+                            //     ),
+                            //     new Text(
+                            //       'Multiplication',
+                            //       style: new TextStyle(fontSize: 16.0),
+                            //     ),
+                            //     new Radio(
+                            //         value: 2,
+                            //         groupValue: _isOperation,
+                            //         onChanged: (int value) {
+                            //           setState(() {
+                            //             _isOperation = value;
+                            //             // print(_isOperation);
+                            //           });
+                            //         }),
+                            //     new Text(
+                            //       'Division',
+                            //       style: new TextStyle(fontSize: 16.0),
+                            //     ),
+                            //   ],
+                            // ),
                             SizedBox(
                               height: 16,
                             ),
@@ -301,7 +302,7 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
                                           builder: (context) => (SolveApp(
                                             user: user,
                                             //numdig: _radioValue1,
-                                            oper: _isOperation,
+                                            oper: isoper,
                                             noOfTimes: 1,
                                             score: 0,
                                             params: {
@@ -313,9 +314,9 @@ class _MultiplicationScreenState extends State<MultiplicationScreen> {
                                                   int.parse(_range2.text)),
                                               'numberOfQuestions': int.parse(
                                                   _numberOfQuestions.text),
-                                              'isOpertaion': _isOperation,
-                                              'speed': _selectedSpeed,
-                                              'time': _selectedTime,
+                                              // 'isOpertaion': _isOperation,
+                                              // 'speed': _selectedSpeed,
+                                              // 'time': _selectedTime,
                                             },
                                           )),
                                         ),
