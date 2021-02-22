@@ -87,14 +87,14 @@ class _ScoreScreenState extends State<ScoreScreen> {
               drawer: AppDrawer(user: user),
               body: Stack(
                 children: [
-                  Container(
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage("images/1.jpg"),
-                              fit: BoxFit.cover))),
-                  Container(
-                    color: Color.fromRGBO(255, 255, 255, 0.6),
-                  ),
+                  // Container(
+                  //     decoration: BoxDecoration(
+                  //         image: DecorationImage(
+                  //             image: AssetImage("images/1.jpg"),
+                  //             fit: BoxFit.cover))),
+                  // Container(
+                  //   color: Color.fromRGBO(255, 255, 255, 0.6),
+                  // ),
                   new Container(
                       padding: EdgeInsets.all(8.0),
                       child: new Column(
@@ -149,12 +149,12 @@ class _ScoreScreenState extends State<ScoreScreen> {
                           RaisedButton(
                             onPressed: () => {
                               _bannerAd?.dispose(),
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        HomeScreen(user: user)),
-                              )
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          HomeScreen(user: user)),
+                                  (r) => false)
                             },
                             child: Text(
                               "Done",

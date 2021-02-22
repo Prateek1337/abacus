@@ -38,14 +38,14 @@ class _LevelScreenState extends State<LevelScreen> {
             appBar: AppBar(title: Text("Abacus")),
             drawer: AppDrawer(user: user),
             body: Stack(children: <Widget>[
-              Container(
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage("images/1.jpg"),
-                          fit: BoxFit.cover))),
-              Container(
-                color: Color.fromRGBO(255, 255, 255, 0.6),
-              ),
+              // Container(
+              //     decoration: BoxDecoration(
+              //         image: DecorationImage(
+              //             image: AssetImage("images/1.jpg"),
+              //             fit: BoxFit.cover))),
+              // Container(
+              //   color: Color.fromRGBO(255, 255, 255, 0.6),
+              // ),
               Container(
                 padding: EdgeInsets.all(8.0),
                 child: GridView.count(

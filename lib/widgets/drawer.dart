@@ -3,10 +3,15 @@ import 'package:abacus/screens/HomeScreen.dart';
 import 'package:abacus/screens/GlobalSettings.dart';
 import 'package:abacus/screens/AboutUsScreen.dart';
 import 'package:share/share.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AppDrawer extends StatelessWidget {
   final String user;
   AppDrawer({Key key, @required this.user}) : super(key: key);
+  final Uri _emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: 'sdewangan021@gmail.com',
+      queryParameters: {'subject': 'PracticeAbacusBugReport'});
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -25,11 +30,11 @@ class AppDrawer extends StatelessWidget {
           _createDrawerItem(
               icon: Icons.settings,
               text: 'Settings',
-              onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => GlobalSettings(user: user)),
-                  )),
+              onTap: () => Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => GlobalSettings(user: user)),
+                  (r) => false)),
           _createDrawerItem(
             icon: Icons.share,
             text: 'Share',
@@ -53,7 +58,11 @@ class AppDrawer extends StatelessWidget {
           //     icon: Icons.account_box, text: 'Flutter Documentation'),
           // _createDrawerItem(icon: Icons.stars, text: 'Useful Links'),
           Divider(),
-          _createDrawerItem(icon: Icons.bug_report, text: 'Report an issue'),
+          _createDrawerItem(
+            icon: Icons.bug_report,
+            text: 'Report an issue',
+            onTap: () => {launch(_emailLaunchUri.toString())},
+          ),
           // ListTile(
           //   title: Text('0.0.1'),
           //   onTap: () {},

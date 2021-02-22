@@ -92,14 +92,14 @@ class _AdditionScreenState extends State<AdditionScreen> {
             drawer: AppDrawer(user: user),
             body: Stack(
               children: [
-                Container(
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage("images/1.jpg"),
-                            fit: BoxFit.cover))),
-                Container(
-                  color: Color.fromRGBO(255, 255, 255, 0.6),
-                ),
+                // Container(
+                //     decoration: BoxDecoration(
+                //         image: DecorationImage(
+                //             image: AssetImage("images/1.jpg"),
+                //             fit: BoxFit.cover))),
+                // Container(
+                //   color: Color.fromRGBO(255, 255, 255, 0.6),
+                // ),
                 new Center(
                     child: SingleChildScrollView(
                   child: Card(
