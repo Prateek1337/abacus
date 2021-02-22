@@ -275,132 +275,26 @@ class _SolveAppState extends State<SolveApp> {
   CODE FOR SPEECH TO TEXT
   --------------------------------------------------------------------------------------------------------
   */
-  // Color MicBtnBorderColor = Colors.blue;
-  // bool _hasSpeech = false;
-  // double level = 0.0;
-  // double minSoundLevel = 50000;
-  // double maxSoundLevel = -50000;
-  // String lastWords = '';
-  // String lastError = '';
-  // String lastStatus = '';
-  // String _currentLocaleId = '';
-  // List<LocaleName> _localeNames = [];
-
-  // final SpeechToText speech = SpeechToText();
-  // Future<void> initSpeechState() async {
-  //   var hasSpeech = await speech.initialize(
-  //       onError: errorListener, onStatus: statusListener, debugLogging: true);
-  //   if (hasSpeech) {
-  //     _localeNames = await speech.locales();
-
-  //     var systemLocale = await speech.systemLocale();
-  //     _currentLocaleId = systemLocale.localeId;
-  //   }
-
-  //   if (!mounted) return;
-
-  //   setState(() {
-  //     _hasSpeech = hasSpeech;
-  //   });
-  // }
-
-  // void STTButton() {
-  //   if (_hasSpeech == true) {
-  //     if (speech.isListening == false) {
-  //       startListening();
-  //     } else {
-  //       stopListening();
-  //     }
-  //   }
-  // }
-
-  // void startListening() {
-  //   lastWords = '';
-  //   lastError = '';
-
-  //   speech.listen(
-  //       onResult: resultListener,
-  //       listenFor: Duration(seconds: 5),
-  //       pauseFor: Duration(seconds: 5),
-  //       partialResults: true,
-  //       localeId: _currentLocaleId,
-  //       onSoundLevelChange: soundLevelListener,
-  //       cancelOnError: true,
-  //       listenMode: ListenMode.confirmation);
-  //   setState(() {});
-  // }
-
-  // void stopListening() {
-  //   speech.stop();
-  //   setState(() {
-  //     level = 0.0;
-  //   });
-  // }
-
-  // void resultListener(SpeechRecognitionResult result) {
-  //   setState(() {
-  //     lastWords = result.recognizedWords;
-  //     lastWords = lastWords.replaceAll(new RegExp(r"\s+"), "");
-  //     if (isNumeric(lastWords) == false) {
-  //       showtoast('Please speak numbers only');
-  //     } else {
-  //       _finalController.text = lastWords;
-  //       MicBtnBorderColor = Colors.grey;
-  //     }
-  //     // print(lastWords);
-  //   });
-  // }
-
-  // void soundLevelListener(double level) {
-  //   minSoundLevel = min(minSoundLevel, level);
-  //   maxSoundLevel = max(maxSoundLevel, level);
-  //   // print("sound level $level: $minSoundLevel - $maxSoundLevel ");
-  //   setState(() {
-  //     this.level = level;
-  //   });
-  // }
-
-  // void errorListener(SpeechRecognitionError error) {
-  //   // print("Received error status: $error, listening: ${speech.isListening}");
-  //   setState(() {
-  //     lastError = '${error.errorMsg} - ${error.permanent}';
-  //   });
-  // }
-
-  // void statusListener(String status) {
-  //   // print(
-  //   // 'Received listener status: $status, listening: ${speech.isListening}');
-  //   setState(() {
-  //     lastStatus = '$status';
-  //   });
-  // }
-
-  // void _switchLang(selectedVal) {
-  //   setState(() {
-  //     _currentLocaleId = selectedVal;
-  //   });
-  //   print(selectedVal);
-  // }
   stt.SpeechToText _speech;
   bool _isListening = false;
   String _text = 'Press the button and start speaking';
-  void changebtnspeech() {}
-
-  // double _confidence = 1.0;
   bool speakingBoolBtnGlow = false;
   IconData speakingBtnIcon = Icons.mic_none;
+  void setMicButtonState() {
+    setState(() {
+      _isListening = false;
+      speakingBoolBtnGlow = false;
+      speakingBtnIcon = Icons.mic_none;
+    });
+  }
+
   void _listen() async {
     if (_isListening == false) {
       bool available = await _speech.initialize(
         onStatus: (val) => {
           if (val == "notListening")
             {
-              print('yes it getting called'),
-              setState(() {
-                _isListening = false;
-                speakingBoolBtnGlow = false;
-                speakingBtnIcon = Icons.mic_none;
-              }),
+              setMicButtonState(),
             },
           // print('onStatus: $val'),
         },
@@ -418,23 +312,15 @@ class _SolveAppState extends State<SolveApp> {
         );
       }
     } else {
-      // print('this is called when listining ends');
-      setState(() {
-        _isListening = false;
-        speakingBoolBtnGlow = false;
-        speakingBtnIcon = Icons.mic_none;
-      });
-      // setState(() =>{
-
-      //  _isListening = false;
-      // speakingBoolBtnGlow = false;
-      // speakingBtnIcon = Icons.mic_none;
-      // }
-      //  );
+      setState(() => _isListening = false);
       _speech.stop();
+      setMicButtonState();
     }
   }
 
+  void stopListening() {
+    _speech.stop();
+  }
   /*
   CODE FOR SPEECH TO TEXT END
   --------------------------------------------------------------------------------------------------------
@@ -884,27 +770,71 @@ class _SolveAppState extends State<SolveApp> {
                                         SizedBox(
                                           height: 16,
                                         ),
-                                        Container(
-                                          width: 300,
-                                          color: Colors.white,
-                                          child: TextField(
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              readOnly: true,
-                                              // inputFormatters: [
-                                              //   FilteringTextInputFormatter.allow(
-                                              //       RegExp(r'[0-9-]')),
-                                              //   //LengthLimitingTextInputFormatter(1),
-                                              // ],
-                                              controller: _finalController,
-                                              decoration: InputDecoration(
-                                                labelText: "Enter Your Answer",
-                                                border: OutlineInputBorder(),
-                                              )),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              flex: 5,
+                                              child: Container(
+                                                // width: 400,
+                                                height: 50,
+                                                color: Colors.white,
+                                                child: TextField(
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    readOnly: true,
+                                                    // inputFormatters: [
+                                                    //   FilteringTextInp utFormatter.allow(
+                                                    //       RegExp(r'[0-9-]')),
+                                                    //   //LengthLimitingTextInputFormatter(1),
+                                                    // ],
+                                                    controller:
+                                                        _finalController,
+                                                    decoration: InputDecoration(
+                                                      labelText:
+                                                          "Enter Your Answer",
+                                                      border:
+                                                          OutlineInputBorder(),
+                                                    )),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 2,
+                                              child: Container(
+                                                width: 50,
+                                                height: 50,
+                                                child: AvatarGlow(
+                                                  animate: _isListening,
+                                                  glowColor: Theme.of(context)
+                                                      .primaryColor,
+                                                  endRadius: 75.0,
+                                                  duration: const Duration(
+                                                      milliseconds: 2000),
+                                                  repeatPauseDuration:
+                                                      const Duration(
+                                                          milliseconds: 100),
+                                                  repeat: speakingBoolBtnGlow,
+                                                  child: FloatingActionButton(
+                                                    onPressed: () => {
+                                                      setState(() {
+                                                        speakingBoolBtnGlow =
+                                                            true;
+                                                        speakingBtnIcon =
+                                                            Icons.mic;
+                                                      }),
+                                                      _listen(),
+                                                    },
+                                                    child:
+                                                        Icon(speakingBtnIcon),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                         SizedBox(height: 24),
                                         RaisedButton(
                                           onPressed: () {
+                                            stopListening();
                                             String toMatchRes =
                                                 _finalController.text;
                                             if (isNumeric(toMatchRes)) {
@@ -965,57 +895,6 @@ class _SolveAppState extends State<SolveApp> {
                                   ),
                                 ),
                               )),
-                          Align(
-                            alignment: Alignment.center,
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 18.0),
-                              // floatingActionButtonLocation:
-                              //     FloatingActionButtonLocation.centerFloat,
-                              child: AvatarGlow(
-                                animate: _isListening,
-                                glowColor: Theme.of(context).primaryColor,
-                                endRadius: 75.0,
-                                duration: const Duration(milliseconds: 2000),
-                                repeatPauseDuration:
-                                    const Duration(milliseconds: 100),
-                                repeat: speakingBoolBtnGlow,
-                                child: FloatingActionButton(
-                                  onPressed: () => {
-                                    setState(() {
-                                      speakingBoolBtnGlow = true;
-                                      speakingBtnIcon = Icons.mic;
-                                    }),
-                                    _listen(),
-                                  },
-                                  child: Icon(speakingBtnIcon),
-                                ),
-                              ),
-                              // child: RawMaterialButton(
-                              //   shape: CircleBorder(
-
-                              //       // borderRadius: BorderRadius.circular(500.0),
-                              //       side: BorderSide(color: MicBtnBorderColor)),
-                              //   onPressed: () => {
-                              //     setState(() {
-                              //       MicBtnBorderColor = Colors.red;
-                              //     }),
-                              //     STTButton(),
-                              //   },
-                              //   // onPressed: STTButton,
-
-                              //   elevation: 10,
-                              //   child: Padding(
-                              //     padding: const EdgeInsets.all(15.0),
-                              //     child: Icon(Icons.mic_rounded,
-                              //         color: Colors.blue, size: 40),
-                              //   ),
-
-                              //   fillColor: Color.fromRGBO(255, 255, 255, 0.8),
-
-                              // ),
-                            ),
-                          ),
                         ],
                       ),
                     ),
