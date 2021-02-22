@@ -126,12 +126,17 @@ class _ScoreScreenState extends State<ScoreScreen> {
                                           fontWeight: FontWeight.bold,
                                           color: Colors.blue),
                                     ),
-                                    Text(
-                                      "${getEmoji(score, quesCount)}",
-                                      style: new TextStyle(
-                                          fontSize: 24.0,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.blue),
+                                    // Text(
+                                    //   "${getEmoji(score, quesCount)}",
+                                    //   style: new TextStyle(
+                                    //       fontSize: 24.0,
+                                    //       fontWeight: FontWeight.bold,
+                                    //       color: Colors.blue),
+                                    // ),
+                                    Image.asset(
+                                      "images/${getEmoji(score, quesCount)}",
+                                      height: 125.0,
+                                      width: 125.0,
                                     ),
                                   ],
                                 ),
@@ -250,15 +255,15 @@ class _ScoreScreenState extends State<ScoreScreen> {
 getEmoji(int score, int maxScore) {
   double percentage = (score.toDouble() / maxScore) * 100;
   if (percentage < 20) {
-    return Variables().score0;
+    return '1.webp';
   } else if (percentage < 40) {
-    return Variables().score1;
+    return '2.webp';
   } else if (percentage < 60) {
-    return Variables().score2;
+    return '3.webp';
   } else if (percentage < 80) {
-    return Variables().score3;
+    return '4.webp';
   } else {
-    return Variables().score4;
+    return '5.webp';
   }
 }
 
