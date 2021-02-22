@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math';
@@ -882,6 +883,7 @@ class _SolveAppState extends State<SolveApp> {
                                               if (toMatchRes == currAns) {
                                                 score++;
                                                 showtoast('Correct Answer');
+                                                playSound(1);
                                                 Timer(Duration(seconds: 1), () {
                                                   btnFunction(score);
                                                 });
@@ -891,6 +893,7 @@ class _SolveAppState extends State<SolveApp> {
                                                 showtoast(
                                                     'Wrong Answer \n Correct Answer is ' +
                                                         currAns);
+                                                playSound(0);
                                                 Timer(Duration(seconds: 1), () {
                                                   btnFunction(score);
                                                 });
@@ -943,5 +946,20 @@ class _SolveAppState extends State<SolveApp> {
                 ],
               ))),
     );
+  }
+
+  void playSound(int i) {
+    //create a new player
+    var assetsAudioPlayer = AssetsAudioPlayer();
+    if (i == 1) {
+      assetsAudioPlayer.open(
+        Audio("audios/rightAnswer.mp3"),
+      );
+    } else {
+      assetsAudioPlayer.open(
+        Audio("audios/wrongAnswer.mp3"),
+      );
+    }
+    assetsAudioPlayer.play();
   }
 }

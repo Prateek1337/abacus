@@ -232,9 +232,12 @@ class _SettingWidgetState extends State<SettingWidget> {
             ),
             Spacer(),
             Container(
-              child: ElevatedButton(
+              child: FloatingActionButton.extended(
                 onPressed: _saveSettings,
-                child: Text("SAVE"),
+                label: Container(
+
+                    width: MediaQuery.of(context).size.width - 20,
+                    child: Text("SAVE",textAlign: TextAlign.center,)),
               ),
             )
           ],
