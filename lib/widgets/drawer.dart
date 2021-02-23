@@ -45,6 +45,7 @@ class AppDrawer extends StatelessWidget {
           ),
           // Navigator.pushReplacementNamed(context, Routes.notes)),
           Divider(),
+
           _createDrawerItem(
               icon: Icons.collections_bookmark,
               text: 'About Us',
@@ -79,7 +80,7 @@ class AppDrawer extends StatelessWidget {
         decoration: BoxDecoration(
             image: DecorationImage(
                 fit: BoxFit.fill,
-                image: AssetImage('images/drawer_header_background.jpg'))),
+                image: AssetImage('images/nav_drawer_background.jpg'))),
         child: Stack(children: <Widget>[
           Positioned(
               bottom: 12.0,

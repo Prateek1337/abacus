@@ -26,7 +26,7 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 // ----------------------------------------------------------------------------------
-String currAns;
+double currAns;
 int finalScore = 0;
 int quesCount = 10;
 // String questionTts;
@@ -411,7 +411,7 @@ class _SolveAppState extends State<SolveApp> {
       // _speak(questionTts);
     }
 
-    String result = finalres[0];
+    double result = finalres[0];
     currAns = result;
 
     return finalres[1];
@@ -880,7 +880,8 @@ class _SolveAppState extends State<SolveApp> {
                                             String toMatchRes =
                                                 _finalController.text;
                                             if (isNumeric(toMatchRes)) {
-                                              if (toMatchRes == currAns) {
+                                              if (double.parse(toMatchRes) ==
+                                                  currAns) {
                                                 score++;
                                                 showtoast('Correct Answer');
                                                 playSound(1);
@@ -892,7 +893,7 @@ class _SolveAppState extends State<SolveApp> {
                                               } else {
                                                 showtoast(
                                                     'Wrong Answer \n Correct Answer is ' +
-                                                        currAns);
+                                                        currAns.toString());
                                                 playSound(0);
                                                 Timer(Duration(seconds: 1), () {
                                                   btnFunction(score);

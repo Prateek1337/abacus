@@ -148,7 +148,7 @@ class LevelsLogic {
       }
     }
 
-    return [res.toString(), question, questionTtsList];
+    return [res.toDouble(), question, questionTtsList];
   }
 
   List addStringLevel(int lev) {
@@ -205,7 +205,7 @@ class LevelsLogic {
       }
     }
 
-    return [res.toString(), question, questionTtsList];
+    return [res.toDouble(), question, questionTtsList];
   }
 
   List multiplyStringLevel(int lev) {
@@ -225,7 +225,7 @@ class LevelsLogic {
     questionTtsList.addAll([num1.toString(), 'multiplied by', num2.toString()]);
 
     return [
-      res.toString(),
+      res.toDouble(),
       num1.toString() + Variables().multiplyCharacter + num2.toString(),
       questionTtsList
     ];
@@ -246,7 +246,7 @@ class LevelsLogic {
     questionTtsList.addAll([num1.toString(), 'multiplied by', num2.toString()]);
 
     return [
-      res.toString(),
+      res.toDouble(),
       num1.toString() + Variables().multiplyCharacter + num2.toString(),
       questionTtsList
     ];
@@ -269,7 +269,7 @@ class LevelsLogic {
     // questionTts = num1.toString() + ' divided by ' + num2.toString();
     questionTtsList.addAll([num1.toString(), 'divided by', num2.toString()]);
     return [
-      res.toString(),
+      res.toDouble(),
       num1.toString() + Variables().divideCharacter + num2.toString(),
       questionTtsList
     ];
@@ -293,7 +293,7 @@ class LevelsLogic {
     // questionTts = num1.toString() + ' divided by ' + num2.toString();
     questionTtsList.addAll([num1.toString(), 'divided by', num2.toString()]);
     return [
-      res.toString(),
+      res.toDouble(),
       num1.toString() + Variables().divideCharacter + num2.toString(),
       questionTtsList
     ];
