@@ -29,7 +29,7 @@ class _LevelScreenState extends State<LevelScreen> {
     [0, 6],
     [1, 5],
     [2, 4],
-    [3, 3]
+    [0, 3]
   ];
   Map<int, String> difficulty = {0: 'Easy', 1: 'Medium', 2: 'Hard'};
   @override
@@ -64,7 +64,13 @@ class _LevelScreenState extends State<LevelScreen> {
                             margin: new EdgeInsets.symmetric(
                                 horizontal: 10.0, vertical: 6.0),
                             child: Container(
-                              decoration: isoper == 3?BoxDecoration(color: Colors.blue[200*(index+1) +100 ]) :BoxDecoration(color: Colors.blue[100*(index+1) + 200]),
+                              decoration: isoper == 3
+                                  ? BoxDecoration(
+                                      color:
+                                          Colors.blue[200 * (index + 1) + 100])
+                                  : BoxDecoration(
+                                      color:
+                                          Colors.blue[100 * (index + 1) + 200]),
                               child: ListTile(
                                 contentPadding: EdgeInsets.symmetric(
                                     horizontal: 20.0, vertical: 10.0),
@@ -143,46 +149,47 @@ class _LevelScreenState extends State<LevelScreen> {
                         );
                       }) +
                       [
-                        if(isoper !=3) GestureDetector(
-                          onTap: () => {
-                            if (isoper == 0)
-                              {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => AdditionScreen(
-                                            user: user,
-                                          )),
+                        if (isoper != 3)
+                          GestureDetector(
+                            onTap: () => {
+                              if (isoper == 0)
+                                {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => AdditionScreen(
+                                              user: user,
+                                            )),
+                                  ),
+                                }
+                              else
+                                {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            MultiplicationScreen(
+                                              user: user,
+                                              isoper: isoper,
+                                            )),
+                                  ),
+                                }
+                            },
+                            child: Card(
+                                elevation: 8.0,
+                                margin: new EdgeInsets.symmetric(
+                                    horizontal: 10.0, vertical: 6.0),
+                                child: Center(
+                                  child: Container(
+                                      decoration:
+                                          BoxDecoration(color: Colors.blue),
+                                      child: Text('Custom Options ',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20))),
                                 ),
-                              }
-                            else
-                              {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          MultiplicationScreen(
-                                            user: user,
-                                            isoper: isoper,
-                                          )),
-                                ),
-                              }
-                          },
-                          child: Card(
-                              elevation: 8.0,
-                              margin: new EdgeInsets.symmetric(
-                                  horizontal: 10.0, vertical: 6.0),
-                              child: Center(
-                                child: Container(
-                                    decoration:
-                                        BoxDecoration(color: Colors.blue),
-                                    child: Text('Custom Options ',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20))),
-                              ),
-                              color: Colors.blue),
-                        ),
+                                color: Colors.blue),
+                          ),
                       ],
                 ),
               )

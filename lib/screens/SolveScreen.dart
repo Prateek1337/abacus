@@ -400,7 +400,7 @@ class _SolveAppState extends State<SolveApp> {
       // finalres = multiplyString(params);
       questionTtsList = finalres[2];
       // _speak(questionTts);
-    } else {
+    } else if (oper == 2) {
       if (level != null) {
         finalres = levelinfo.divideStringLevel(level);
       } else {
@@ -409,6 +409,9 @@ class _SolveAppState extends State<SolveApp> {
       // finalres = multiplyString(params);
       questionTtsList = finalres[2];
       // _speak(questionTts);
+    } else {
+      finalres = levelinfo.speedRunLevel(level);
+      questionTtsList = finalres[2];
     }
 
     double result = finalres[0];

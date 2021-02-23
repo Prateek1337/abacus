@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import '../Variables.dart';
 
 class AdditionLevelUtils {
@@ -28,17 +27,18 @@ class DivisionLevelUtils {
 
 class LevelsLogic {
   // bool _valueIsPos;
-  List AdditionLevelInfo, MultiplicationLevelInfo, DivisionLevelInfo;
+  List additionLevelInfo, multiplicationLevelInfo, divisionLevelInfo;
+  List<List<List<int>>> speedRunInfo;
   LevelsLogic(_valueIsPos) {
-    AdditionLevelInfo = [
-      AdditionLevelUtils(1, 1, 10, true, _valueIsPos),
-      AdditionLevelUtils(1, 2, 10, true, _valueIsPos),
-      AdditionLevelUtils(1, 3, 10, true, _valueIsPos),
-      AdditionLevelUtils(1, 3, 10, false, _valueIsPos),
-      AdditionLevelUtils(1, 4, 10, false, _valueIsPos),
-      AdditionLevelUtils(1, 5, 10, false, _valueIsPos),
+    additionLevelInfo = [
+      AdditionLevelUtils(1, 1, 5, true, _valueIsPos),
+      AdditionLevelUtils(1, 2, 5, true, _valueIsPos),
+      AdditionLevelUtils(1, 3, 3, true, _valueIsPos),
+      AdditionLevelUtils(1, 3, 4, false, _valueIsPos),
+      AdditionLevelUtils(1, 4, 4, false, _valueIsPos),
+      AdditionLevelUtils(1, 5, 4, false, _valueIsPos),
     ];
-    MultiplicationLevelInfo = [
+    multiplicationLevelInfo = [
       MultiplicationLevelUtils([
         [1, 1]
       ]),
@@ -57,7 +57,7 @@ class LevelsLogic {
         [4, 2],
       ]),
     ];
-    DivisionLevelInfo = [
+    divisionLevelInfo = [
       DivisionLevelUtils([
         [1, 1]
       ]),
@@ -70,6 +70,24 @@ class LevelsLogic {
       DivisionLevelUtils([
         [5, 3],
       ]),
+    ];
+    speedRunInfo = [
+      [
+        [1, 2],
+        [
+          2,
+        ]
+      ],
+      [
+        [3, 4],
+        [3, 4],
+        [3, 4]
+      ],
+      [
+        [5, 6],
+        [5, 6],
+        [5, 6]
+      ]
     ];
   }
   var maxMap = {
@@ -95,7 +113,6 @@ class LevelsLogic {
   var rng = new Random();
   List addStringCustom(var params) {
     int _numberOfValues = params['numberOfValues'],
-        _numberOfQuestions = params['numberOfQuestions'],
         _range1 = params['range1'],
         _range2 = params['range2'];
     List<String> questionTtsList = [];
@@ -152,7 +169,7 @@ class LevelsLogic {
   }
 
   List addStringLevel(int lev) {
-    AdditionLevelUtils level = AdditionLevelInfo[lev - 1];
+    AdditionLevelUtils level = additionLevelInfo[lev - 1];
     int _numberOfValues = level.numberOfValues,
         _range1 = level._range1,
         _range2 = level._range2;
@@ -209,7 +226,7 @@ class LevelsLogic {
   }
 
   List multiplyStringLevel(int lev) {
-    List<List<int>> multiplycomb = MultiplicationLevelInfo[lev - 2].numbers;
+    List<List<int>> multiplycomb = multiplicationLevelInfo[lev - 2].numbers;
     int num = rng.nextInt(multiplycomb.length);
     int _range1 = multiplycomb[num][0], _range2 = multiplycomb[num][1];
     int _lowerNumMin = minMap[_range1.toString()];
@@ -277,7 +294,7 @@ class LevelsLogic {
 
   List divideStringLevel(int lev) {
     List<String> questionTtsList = [];
-    List<List<int>> dividecomb = DivisionLevelInfo[lev - 3].numbers;
+    List<List<int>> dividecomb = divisionLevelInfo[lev - 3].numbers;
     int num = rng.nextInt(dividecomb.length);
     int _range1 = dividecomb[num][0], _range2 = dividecomb[num][1];
 
@@ -297,5 +314,18 @@ class LevelsLogic {
       num1.toString() + Variables().divideCharacter + num2.toString(),
       questionTtsList
     ];
+  }
+
+  List speedRunLevel(int lev) {
+    List<List<int>> levInfo = speedRunInfo[lev - 1];
+    int rndOper = rng.nextInt(levInfo.length);
+    int rndlev = rng.nextInt(levInfo[rndOper].length);
+    if (rndOper == 0) {
+      return addStringLevel(levInfo[rndOper][rndlev]);
+    } else if (rndOper == 1) {
+      return multiplyStringLevel(levInfo[rndOper][rndlev]);
+    } else {
+      return divideStringLevel(levInfo[rndOper][rndlev]);
+    }
   }
 }
