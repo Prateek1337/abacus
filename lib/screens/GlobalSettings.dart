@@ -5,6 +5,7 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 import '../Variables.dart';
 
@@ -29,29 +30,39 @@ class SettingWidget extends StatefulWidget {
 
 class _SettingWidgetState extends State<SettingWidget> {
   double _speedValue = 1;
-  bool _alwaysPositive = false, _onlyPositive = false, _isMute = false;
+  bool _onlyPositive = false, _isMute = false;
   int _time = 1;
+  final FlutterTts flutterTts = FlutterTts();
+
+  _speak(String text) async {
+    flutterTts.stop();
+    await flutterTts.speak(text);
+    // await flutterTts.speak("1234567 plus 2837");
+  }
 
   @override
   void initState() {
     super.initState();
     _setVariables();
+    // _loadShared();
+    print("after call");
+    flutterTts.setVolume(1.0);
+    flutterTts.setVoice('en-in-x-ahp-local');
   }
 
-  void _setVariables() async {
+  Future _setVariables() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _speedValue =
           prefs.getDouble("speed") != null ? prefs.getDouble("speed") : 1.0;
-      _alwaysPositive = prefs.getBool("alwaysPositive") != null
-          ? prefs.getBool("alwaysPositive")
-          : false;
       _onlyPositive = prefs.getBool("onlyPositive") != null
           ? prefs.getBool("onlyPositive")
           : false;
       _isMute =
           prefs.getBool("isMute") != null ? prefs.getBool("isMute") : false;
       _time = prefs.getInt("time") != null ? prefs.getInt("time") : 1;
+
+      print("global shared loaded");
     });
   }
 
@@ -60,7 +71,7 @@ class _SettingWidgetState extends State<SettingWidget> {
         context: context,
         builder: (BuildContext context) {
           return new NumberPickerDialog.integer(
-            minValue: 1,
+            minValue: 0,
             maxValue: 30,
             title: new Text("Select Timer"),
             initialIntegerValue: _time,
@@ -87,17 +98,34 @@ class _SettingWidgetState extends State<SettingWidget> {
                   alignment: Alignment.bottomRight,
                   width: MediaQuery.of(context).size.width / 2.5,
                   height: 100,
-                  child: Slider(
-                    value: _speedValue,
-                    min: 0.25,
-                    max: 2,
-                    divisions: 7,
-                    label: _speedValue.toString(),
-                    onChanged: (double value) {
-                      setState(() {
-                        _speedValue = value;
-                      });
-                    },
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 8,
+                        child: Slider(
+                          value: _speedValue,
+                          min: 0.25,
+                          max: 2,
+                          divisions: 7,
+                          label: _speedValue.toString(),
+                          onChanged: (double value) {
+                            setState(() {
+                              _speedValue = value;
+                              flutterTts.setSpeechRate(_speedValue);
+                            });
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: IconButton(
+                            icon: Icon(
+                              Icons.play_arrow,
+                              color: Colors.blue,
+                            ),
+                            onPressed: () => {_speak("79 multiply 179")}),
+                      )
+                    ],
                   ),
                 ),
               ),
@@ -140,40 +168,40 @@ class _SettingWidgetState extends State<SettingWidget> {
               indent: 10,
               endIndent: 0,
             ),
-            Container(
-              child: ListTile(
-                leading: Icon(Icons.add, color: Colors.blue),
-                title: Text(
-                  'Always Positive',
-                ),
-                trailing: Container(
-                  alignment: Alignment.center,
-                  width: MediaQuery.of(context).size.width / 5,
-                  height: 100,
-                  padding: EdgeInsets.all(8),
-                  child: FlutterSwitch(
-                    valueFontSize: 10.0,
-                    toggleSize: 20.0,
-                    value: _alwaysPositive,
-                    borderRadius: 30.0,
-                    padding: 5.0,
-                    showOnOff: true,
-                    onToggle: (val) {
-                      setState(() {
-                        _alwaysPositive = val;
-                      });
-                    },
-                  ),
-                ),
-              ),
-            ),
-            const Divider(
-              color: Colors.black,
-              height: 20,
-              thickness: 0.3,
-              indent: 10,
-              endIndent: 0,
-            ),
+            // Container(
+            //   child: ListTile(
+            //     leading: Icon(Icons.add, color: Colors.blue),
+            //     title: Text(
+            //       'Always Positive',
+            //     ),
+            //     trailing: Container(
+            //       alignment: Alignment.center,
+            //       width: MediaQuery.of(context).size.width / 5,
+            //       height: 100,
+            //       padding: EdgeInsets.all(8),
+            //       child: FlutterSwitch(
+            //         valueFontSize: 10.0,
+            //         toggleSize: 20.0,
+            //         value: _alwaysPositive,
+            //         borderRadius: 30.0,
+            //         padding: 5.0,
+            //         showOnOff: true,
+            //         onToggle: (val) {
+            //           setState(() {
+            //             _alwaysPositive = val;
+            //           });
+            //         },
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            // const Divider(
+            //   color: Colors.black,
+            //   height: 20,
+            //   thickness: 0.3,
+            //   indent: 10,
+            //   endIndent: 0,
+            // ),
             Container(
               child: ListTile(
                 leading: Icon(Icons.volume_off, color: Colors.blue),
@@ -235,9 +263,11 @@ class _SettingWidgetState extends State<SettingWidget> {
               child: FloatingActionButton.extended(
                 onPressed: _saveSettings,
                 label: Container(
-
                     width: MediaQuery.of(context).size.width - 20,
-                    child: Text("SAVE",textAlign: TextAlign.center,)),
+                    child: Text(
+                      "SAVE",
+                      textAlign: TextAlign.center,
+                    )),
               ),
             )
           ],
@@ -248,10 +278,11 @@ class _SettingWidgetState extends State<SettingWidget> {
 
   void _saveSettings() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    pref.setBool("alwaysPositive", _alwaysPositive);
+    // pref.setBool("alwaysPositive", _alwaysPositive);
     pref.setBool("onlyPositive", _onlyPositive);
     pref.setBool("isMute", _isMute);
-    pref.setString("time", _time.toString());
+    pref.setInt("time", _time);
+    print('global saved time: $_time');
     pref.setDouble("speed", _speedValue);
     Fluttertoast.showToast(
         msg: "SAVED",

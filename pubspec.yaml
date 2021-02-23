@@ -57,6 +57,7 @@ dependencies:
   url_launcher: ^5.7.10
 
   assets_audio_player: ^2.0.13+8
+  loading: ^1.0.2
 
 flutter_icons:
   ios: true
