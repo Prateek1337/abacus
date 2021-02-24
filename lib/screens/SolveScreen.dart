@@ -28,7 +28,7 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 // ----------------------------------------------------------------------------------
-double currAns;
+String currAns;
 int finalScore = 0;
 int quesCount = 10;
 // String questionTts;
@@ -263,7 +263,7 @@ class _SolveAppState extends State<SolveApp> {
 
   var params;
   double _playbackSpeed;
-  bool _enabled, _valueIsPos;
+  bool _enabled, _valueIsPos, _isautoCorrect;
   bool timerVisibility, isDataLoaded = false;
   String currQuestion, _time;
 
@@ -340,6 +340,7 @@ class _SolveAppState extends State<SolveApp> {
       _playbackSpeed = (prefs.getDouble("speed") ?? 1.0);
       _time = (prefs.getInt("time") ?? 1).toString();
       _valueIsPos = (prefs.getBool("onlyPositive") ?? false);
+      _isautoCorrect = (prefs.getBool("autoCorrect") ?? false);
       print("\n\n\n Shared : $_playbackSpeed,$_time,$_valueIsPos\n\n\n");
     });
     print(" solve screen Shared loaded");
@@ -348,16 +349,56 @@ class _SolveAppState extends State<SolveApp> {
     isDataLoaded = true;
   }
 
+  void checkAnswer() {
+    stopListening();
+    String toMatchRes = _finalController.text;
+    if (isNumeric(toMatchRes)) {
+      if (double.parse(toMatchRes) == double.parse(currAns)) {
+        score++;
+        showtoast('Correct Answer');
+        // playSound(1);
+        Timer(Duration(milliseconds: 300), () {
+          btnFunction(score);
+        });
+
+        //_isButtonDisabled = true;
+      } else {
+        showtoast('Wrong Answer \n Correct Answer is ' + currAns.toString());
+        // playSound(0);
+        Timer(Duration(milliseconds: 300), () {
+          btnFunction(score);
+        });
+        //_isButtonDisabled = true;
+      }
+    } else {
+      showtoast('Enter a Valid Number');
+      _finalController.clear();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _loadShared();
+
     // _playbackSpeed = 1.0;
     // _time = "1";
     // _valueIsPos = true;
     // questionTtsList = [];
     // score = finalScore;
     _finalController.clear();
+    _finalController.addListener(() {
+      String text = _finalController.text;
+      if (text.isNotEmpty && isNumeric(text) && _isautoCorrect) {
+        print("Text=$text");
+        if (text.length == currAns.length) {
+          checkAnswer();
+        }
+      } else if (text.isNotEmpty && _isautoCorrect) {
+        showtoast('Enter a Valid Number');
+        _finalController.clear();
+      }
+    });
     if (params != null) {
       quesCount = params['numberOfQuestions'];
     }
@@ -419,8 +460,7 @@ class _SolveAppState extends State<SolveApp> {
       questionTtsList = finalres[2];
     }
 
-    double result = finalres[0];
-    currAns = result;
+    currAns = finalres[0];
 
     return finalres[1];
   }
@@ -465,6 +505,7 @@ class _SolveAppState extends State<SolveApp> {
         // }
         // print('\n\nSet State1 Called score=$score , finalscore=$finalScore\n\n');
         _finalController.clear();
+        _finalController.removeListener(() {});
         noOfTimes++;
         _enabled = true;
         currQuestion = callOper(_valueIsPos);
@@ -621,7 +662,7 @@ class _SolveAppState extends State<SolveApp> {
                 child: Loading(
                     indicator: BallPulseIndicator(),
                     size: 100.0,
-                    color: Colors.pink),
+                    color: Colors.black),
               ),
             ),
           )),
@@ -863,6 +904,15 @@ class _SolveAppState extends State<SolveApp> {
                                                   height: 50,
                                                   color: Colors.white,
                                                   child: TextField(
+                                                      onChanged: (text) {
+                                                        print("Text=$text");
+                                                        if (text.length ==
+                                                            currAns
+                                                                .toString()
+                                                                .length) {
+                                                          checkAnswer();
+                                                        }
+                                                      },
                                                       keyboardType:
                                                           TextInputType.number,
                                                       readOnly: true,
@@ -919,36 +969,7 @@ class _SolveAppState extends State<SolveApp> {
                                           SizedBox(height: 24),
                                           RaisedButton(
                                             onPressed: () {
-                                              stopListening();
-                                              String toMatchRes =
-                                                  _finalController.text;
-                                              if (isNumeric(toMatchRes)) {
-                                                if (double.parse(toMatchRes) ==
-                                                    currAns) {
-                                                  score++;
-                                                  showtoast('Correct Answer');
-                                                  playSound(1);
-                                                  Timer(Duration(seconds: 1),
-                                                      () {
-                                                    btnFunction(score);
-                                                  });
-
-                                                  //_isButtonDisabled = true;
-                                                } else {
-                                                  showtoast(
-                                                      'Wrong Answer \n Correct Answer is ' +
-                                                          currAns.toString());
-                                                  playSound(0);
-                                                  Timer(Duration(seconds: 1),
-                                                      () {
-                                                    btnFunction(score);
-                                                  });
-                                                  //_isButtonDisabled = true;
-                                                }
-                                              } else {
-                                                showtoast(
-                                                    'Enter a Valid Number');
-                                              }
+                                              checkAnswer();
                                             },
                                             child: Text(
                                               'Check Answer',

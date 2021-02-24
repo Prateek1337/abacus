@@ -165,7 +165,7 @@ class LevelsLogic {
       }
     }
 
-    return [res.toDouble(), question, questionTtsList];
+    return [res.toString(), question, questionTtsList];
   }
 
   List addStringLevel(int lev) {
@@ -222,7 +222,7 @@ class LevelsLogic {
       }
     }
 
-    return [res.toDouble(), question, questionTtsList];
+    return [res.toString(), question, questionTtsList];
   }
 
   List multiplyStringLevel(int lev) {
@@ -242,7 +242,7 @@ class LevelsLogic {
     questionTtsList.addAll([num1.toString(), 'multiplied by', num2.toString()]);
 
     return [
-      res.toDouble(),
+      res.toString(),
       num1.toString() + Variables().multiplyCharacter + num2.toString(),
       questionTtsList
     ];
@@ -263,7 +263,7 @@ class LevelsLogic {
     questionTtsList.addAll([num1.toString(), 'multiplied by', num2.toString()]);
 
     return [
-      res.toDouble(),
+      res.toString(),
       num1.toString() + Variables().multiplyCharacter + num2.toString(),
       questionTtsList
     ];
@@ -285,8 +285,15 @@ class LevelsLogic {
     //this string is for speaking
     // questionTts = num1.toString() + ' divided by ' + num2.toString();
     questionTtsList.addAll([num1.toString(), 'divided by', num2.toString()]);
+    if (res.ceil() == res.floor()) {
+      return [
+        res.toInt().toString(),
+        num1.toString() + Variables().divideCharacter + num2.toString(),
+        questionTtsList
+      ];
+    }
     return [
-      res.toDouble(),
+      res.toString(),
       num1.toString() + Variables().divideCharacter + num2.toString(),
       questionTtsList
     ];
@@ -306,11 +313,19 @@ class LevelsLogic {
     int num2 =
         max(rng.nextInt(_upperNumMax - _upperNumMin + 1) + _upperNumMin, 2);
     double res = double.parse((num1 / num2).toStringAsFixed(2));
+
     //this string is for speaking
     // questionTts = num1.toString() + ' divided by ' + num2.toString();
     questionTtsList.addAll([num1.toString(), 'divided by', num2.toString()]);
+    if (res.ceil() == res.floor()) {
+      return [
+        res.toInt().toString(),
+        num1.toString() + Variables().divideCharacter + num2.toString(),
+        questionTtsList
+      ];
+    }
     return [
-      res.toDouble(),
+      res.toString(),
       num1.toString() + Variables().divideCharacter + num2.toString(),
       questionTtsList
     ];

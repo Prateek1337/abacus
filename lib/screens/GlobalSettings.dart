@@ -30,7 +30,7 @@ class SettingWidget extends StatefulWidget {
 
 class _SettingWidgetState extends State<SettingWidget> {
   double _speedValue = 1;
-  bool _onlyPositive = false, _isMute = false;
+  bool _onlyPositive = false, _isMute = false, _isAutoCorrect = false;
   int _time = 1;
   final FlutterTts flutterTts = FlutterTts();
 
@@ -61,6 +61,9 @@ class _SettingWidgetState extends State<SettingWidget> {
       _isMute =
           prefs.getBool("isMute") != null ? prefs.getBool("isMute") : false;
       _time = prefs.getInt("time") != null ? prefs.getInt("time") : 1;
+      _isAutoCorrect = prefs.getBool("autoCorrect") != null
+          ? prefs.getBool("autoCorrect")
+          : false;
 
       print("global shared loaded");
     });
@@ -258,6 +261,40 @@ class _SettingWidgetState extends State<SettingWidget> {
               indent: 10,
               endIndent: 0,
             ),
+            Container(
+              child: ListTile(
+                leading: Icon(Icons.check, color: Colors.blue),
+                title: Text(
+                  'Auto Correct Answer',
+                ),
+                trailing: Container(
+                  alignment: Alignment.center,
+                  width: MediaQuery.of(context).size.width / 5,
+                  height: 100,
+                  padding: EdgeInsets.all(8),
+                  child: FlutterSwitch(
+                    valueFontSize: 10.0,
+                    toggleSize: 20.0,
+                    value: _isAutoCorrect,
+                    borderRadius: 30.0,
+                    padding: 5.0,
+                    showOnOff: true,
+                    onToggle: (val) {
+                      setState(() {
+                        _isAutoCorrect = val;
+                      });
+                    },
+                  ),
+                ),
+              ),
+            ),
+            const Divider(
+              color: Colors.black,
+              height: 20,
+              thickness: 0.3,
+              indent: 10,
+              endIndent: 0,
+            ),
             Spacer(),
             Container(
               child: FloatingActionButton.extended(
@@ -281,6 +318,7 @@ class _SettingWidgetState extends State<SettingWidget> {
     // pref.setBool("alwaysPositive", _alwaysPositive);
     pref.setBool("onlyPositive", _onlyPositive);
     pref.setBool("isMute", _isMute);
+    pref.setBool("autoCorrect", _isAutoCorrect);
     pref.setInt("time", _time);
     print('global saved time: $_time');
     pref.setDouble("speed", _speedValue);
