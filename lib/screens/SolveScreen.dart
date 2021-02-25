@@ -20,12 +20,10 @@ import 'package:loading/loading.dart';
 import 'package:loading/indicator/ball_pulse_indicator.dart';
 
 // import 'package:validator/validator.dart';
-// import 'package:speech_to_text/speech_recognition_error.dart';
-// import 'package:speech_to_text/speech_recognition_result.dart';
-// import 'package:speech_to_text/speech_to_text.dart';
-
+import 'package:speech_to_text/speech_recognition_error.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:avatar_glow/avatar_glow.dart';
-import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:speech_to_text/speech_to_text.dart';
 
 // ----------------------------------------------------------------------------------
 String currAns;
@@ -283,51 +281,161 @@ class _SolveAppState extends State<SolveApp> {
   CODE FOR SPEECH TO TEXT
   --------------------------------------------------------------------------------------------------------
   */
-  stt.SpeechToText _speech;
-  bool _isListening = false;
-  String _text = 'Press the button and start speaking';
-  bool speakingBoolBtnGlow = false;
+
+  // stt.SpeechToText _speech;
+  // bool _isListening = false;
+  // String _text = 'Press the button and start speaking';
+  // bool speakingBoolBtnGlow = false;
   IconData speakingBtnIcon = Icons.mic_none;
-  void setMicButtonState() {
+  // void setMicButtonState() {
+  //   setState(() {
+  //     _isListening = false;
+  //     speakingBoolBtnGlow = false;
+  //     speakingBtnIcon = Icons.mic_none;
+  //   });
+  // }
+
+  // void _listen() async {
+  //   if (_isListening == false) {
+  //     bool available = await _speech.initialize(
+  //       onStatus: (val) => {
+  //         if (val == "notListening")
+  //           {
+  //             setMicButtonState(),
+  //           },
+  //         // print('onStatus: $val'),
+  //       },
+  //       onError: (val) => print('onError: $val'),
+  //     );
+  //     if (available) {
+  //       setState(() => _isListening = true);
+  //       _speech.listen(
+  //         listenFor: Duration(seconds: 10),
+  //         onResult: (val) => setState(() {
+  //           _text = val.recognizedWords;
+  //           _text = _text.replaceAll(new RegExp(r"\s+"), "");
+  //           _finalController.text = _text;
+  //         }),
+  //       );
+  //     }
+  //   } else {
+  //     setState(() => _isListening = false);
+  //     _speech.stop();
+  //     setMicButtonState();
+  //   }
+  // }
+
+  // void stopListening() {
+  //   _speech.stop();
+  // }
+  bool _hasSpeech = false;
+  double levelSpeech = 0.0;
+  double minSoundLevel = 50000;
+  double maxSoundLevel = -50000;
+  String lastWords = '';
+  String lastError = '';
+  String lastStatus = '';
+  String _currentLocaleId = '';
+  // int resultListened = 0;
+  List<LocaleName> _localeNames = [];
+  final SpeechToText speech = SpeechToText();
+
+  Future<void> initSpeechState() async {
+    // print('init state getting called');
+    var hasSpeech = await speech.initialize(
+        onError: errorListener, onStatus: statusListener, debugLogging: true);
+    // if (hasSpeech) {
+    //   _localeNames = await speech.locales();
+    //   var systemLocale = await speech.systemLocale();
+    //   _currentLocaleId = systemLocale.localeId;
+    // }
+    // print('value of haspeech after initilization' + hasSpeech.toString());
+    if (!mounted) return;
+
     setState(() {
-      _isListening = false;
-      speakingBoolBtnGlow = false;
-      speakingBtnIcon = Icons.mic_none;
+      _hasSpeech = hasSpeech;
     });
   }
 
-  void _listen() async {
-    if (_isListening == false) {
-      bool available = await _speech.initialize(
-        onStatus: (val) => {
-          if (val == "notListening")
-            {
-              setMicButtonState(),
-            },
-          // print('onStatus: $val'),
-        },
-        onError: (val) => print('onError: $val'),
-      );
-      if (available) {
-        setState(() => _isListening = true);
-        _speech.listen(
-          listenFor: Duration(seconds: 10),
-          onResult: (val) => setState(() {
-            _text = val.recognizedWords;
-            _text = _text.replaceAll(new RegExp(r"\s+"), "");
-            _finalController.text = _text;
-          }),
-        );
-      }
-    } else {
-      setState(() => _isListening = false);
-      _speech.stop();
-      setMicButtonState();
-    }
+  void errorListener(SpeechRecognitionError error) {
+    // print("Received error status: $error, listening: ${speech.isListening}");
+    cancelListening();
+    setState(() {
+      lastError = '${error.errorMsg} - ${error.permanent}';
+    });
+  }
+
+  void statusListener(String status) {
+    // print(
+    //     'Received listener status: $status, listening: ${speech.isListening}');
+    setState(() {
+      lastStatus = '$status';
+    });
+
+    // print('calling status listener');
+    // if (speech.isListening == false || lastStatus == "notListening") {
+    //   setState(() {
+    //     speakingBtnIcon = Icons.mic_none;
+    //   });
+    // }
+    // if (lastStatus == "notListening" && speech.isListening) {
+    //   print('stopping');
+    //   stopListening();
+    // }
+  }
+
+  void cancelListening() {
+    speech.cancel();
+    setState(() {
+      levelSpeech = 0.0;
+    });
   }
 
   void stopListening() {
-    _speech.stop();
+    speech.stop();
+    setState(() {
+      levelSpeech = 0.0;
+    });
+  }
+
+  void startListening() {
+    // print('this is being called');
+    lastWords = '';
+    lastError = '';
+    speech.listen(
+        onResult: resultListener,
+        listenFor: Duration(seconds: 5),
+        // pauseFor: Duration(seconds: 5),
+        partialResults: false,
+        // localeId: _currentLocaleId,
+        onSoundLevelChange: soundLevelListener,
+        cancelOnError: true,
+        listenMode: ListenMode.confirmation);
+    setState(() {});
+  }
+
+  void resultListener(SpeechRecognitionResult result) {
+    // ++resultListened;
+    // print('Result listener $resultListened');
+    // print('long statement resultlistener');
+    setState(() {
+      lastWords = '${result.recognizedWords}';
+      lastWords = lastWords.replaceAll(new RegExp(r"\s+"), "");
+      _finalController.text = lastWords;
+      // print('last words are ' + lastWords);
+      if (speech.isListening == false) {
+        speakingBtnIcon = Icons.mic_none;
+      }
+    });
+  }
+
+  void soundLevelListener(double levelSpeech) {
+    minSoundLevel = min(minSoundLevel, levelSpeech);
+    maxSoundLevel = max(maxSoundLevel, levelSpeech);
+    // print("sound level $level: $minSoundLevel - $maxSoundLevel ");
+    setState(() {
+      this.levelSpeech = levelSpeech;
+    });
   }
 
   /*
@@ -350,7 +458,7 @@ class _SolveAppState extends State<SolveApp> {
   }
 
   void checkAnswer() {
-    stopListening();
+    // stopListening();
     String toMatchRes = _finalController.text;
     if (isNumeric(toMatchRes)) {
       if (double.parse(toMatchRes) == double.parse(currAns)) {
@@ -419,7 +527,8 @@ class _SolveAppState extends State<SolveApp> {
     _loadBannerAd();
     // _stop();
     // if (!_hasSpeech) initSpeechState();
-    _speech = stt.SpeechToText();
+    // speech = new SpeechToText();
+    if (_hasSpeech == false) initSpeechState();
   }
 
   //function to do generate the sum
@@ -938,7 +1047,7 @@ class _SolveAppState extends State<SolveApp> {
                                                   width: 50,
                                                   height: 50,
                                                   child: AvatarGlow(
-                                                    animate: _isListening,
+                                                    // animate: _isListening,
                                                     glowColor: Theme.of(context)
                                                         .primaryColor,
                                                     endRadius: 75.0,
@@ -947,17 +1056,36 @@ class _SolveAppState extends State<SolveApp> {
                                                     repeatPauseDuration:
                                                         const Duration(
                                                             milliseconds: 100),
-                                                    repeat: speakingBoolBtnGlow,
+                                                    // repeat: speakingBoolBtnGlow,
                                                     child: FloatingActionButton(
-                                                      onPressed: () => {
-                                                        setState(() {
-                                                          speakingBoolBtnGlow =
-                                                              true;
-                                                          speakingBtnIcon =
-                                                              Icons.mic;
-                                                        }),
-                                                        _listen(),
-                                                      },
+                                                      onPressed: !_hasSpeech ||
+                                                              speech.isListening
+                                                          ? () => {
+                                                                print('THIS SHOULD NOT HAVE PRINTED, IT MEANS WE FUCKED UP andhasspeech is ' +
+                                                                    _hasSpeech
+                                                                        .toString() +
+                                                                    'and speech.islistining is ' +
+                                                                    (speech.isListening)
+                                                                        .toString()),
+                                                                setState(() {
+                                                                  // speakingBoolBtnGlow =
+                                                                  //     true;
+                                                                  speakingBtnIcon =
+                                                                      Icons
+                                                                          .mic_none;
+                                                                  speech
+                                                                      .cancel();
+                                                                }),
+                                                              }
+                                                          : () => {
+                                                                setState(() {
+                                                                  // speakingBoolBtnGlow =
+                                                                  //     true;
+                                                                  speakingBtnIcon =
+                                                                      Icons.mic;
+                                                                }),
+                                                                startListening(),
+                                                              },
                                                       child:
                                                           Icon(speakingBtnIcon),
                                                     ),
