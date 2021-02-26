@@ -195,33 +195,6 @@ _ansIsPos = intermediate and final result will be positive if 1
 //   return [res.toString(), question];
 // }
 
-bool isNumeric(String s) {
-  if (s == null) {
-    return false;
-  }
-  return double.tryParse(s) != null;
-}
-
-_speak(String text) async {
-  flutterTts.stop();
-  await flutterTts.speak(text);
-  // await flutterTts.speak("1234567 plus 2837");
-}
-
-// speaks each word sequentially
-_speakList(List<String> texts) async {
-  int i = 0;
-  await flutterTts.speak(texts[i]);
-  // print("\n\n\n\n\n\n" + texts.length.toString());
-  flutterTts.setCompletionHandler(() async {
-    if (i < texts.length - 1) {
-      i++;
-
-      await flutterTts.speak(texts[i]);
-    }
-  });
-}
-
 // ----------------------------------------------------------------------------------
 
 Future _stop() async {
@@ -258,12 +231,24 @@ class _SolveAppState extends State<SolveApp> {
   int numdig, oper, noOfTimes, score, level;
   final String user;
   final _finalController = TextEditingController();
-
+  final _speechController = TextEditingController();
+  BuildContext bottomSheetContext;
   var params;
   double _playbackSpeed;
-  bool _enabled, _valueIsPos, _isautoCorrect;
+  bool _enabled, _valueIsPos, _isautoCorrect, _isSpeech;
   bool timerVisibility, isDataLoaded = false;
   String currQuestion, _time;
+  bool _hasSpeech = false;
+  double levelSpeech = 0.0;
+  double minSoundLevel = 50000;
+  double maxSoundLevel = -50000;
+  String lastWords = '';
+  String lastError = '';
+  String lastStatus = '';
+  String _currentLocaleId = '';
+  // int resultListened = 0;
+  List<LocaleName> _localeNames = [];
+  final SpeechToText speech = SpeechToText();
 
   // _isbutton
   _SolveAppState({
@@ -328,17 +313,6 @@ class _SolveAppState extends State<SolveApp> {
   // void stopListening() {
   //   _speech.stop();
   // }
-  bool _hasSpeech = false;
-  double levelSpeech = 0.0;
-  double minSoundLevel = 50000;
-  double maxSoundLevel = -50000;
-  String lastWords = '';
-  String lastError = '';
-  String lastStatus = '';
-  String _currentLocaleId = '';
-  // int resultListened = 0;
-  List<LocaleName> _localeNames = [];
-  final SpeechToText speech = SpeechToText();
 
   Future<void> initSpeechState() async {
     // print('init state getting called');
@@ -398,20 +372,36 @@ class _SolveAppState extends State<SolveApp> {
     });
   }
 
-  void startListening() {
+  void startListening() async {
     // print('this is being called');
     lastWords = '';
     lastError = '';
     speech.listen(
         onResult: resultListener,
-        listenFor: Duration(seconds: 5),
-        // pauseFor: Duration(seconds: 5),
+        listenFor: Duration(seconds: 10),
+        pauseFor: Duration(seconds: 3),
         partialResults: false,
         // localeId: _currentLocaleId,
         onSoundLevelChange: soundLevelListener,
         cancelOnError: true,
         listenMode: ListenMode.confirmation);
+    // if (speech.isListening == false) {
+    //   Navigator.pop(context);
+    // }
     setState(() {});
+  }
+
+  final ms = Duration(milliseconds: 1);
+
+  Timer startTimeout([int milliseconds]) {
+    var duration = ms * milliseconds;
+    return Timer(duration, handleTimeout);
+  }
+
+  void handleTimeout() {
+    // callback function
+    Navigator.pop(bottomSheetContext);
+    checkAnswer(true);
   }
 
   void resultListener(SpeechRecognitionResult result) {
@@ -421,10 +411,11 @@ class _SolveAppState extends State<SolveApp> {
     setState(() {
       lastWords = '${result.recognizedWords}';
       lastWords = lastWords.replaceAll(new RegExp(r"\s+"), "");
-      _finalController.text = lastWords;
-      // print('last words are ' + lastWords);
+      _speechController.text = lastWords;
+      print('last words are ' + lastWords);
       if (speech.isListening == false) {
         speakingBtnIcon = Icons.mic_none;
+        startTimeout(1000);
       }
     });
   }
@@ -435,6 +426,86 @@ class _SolveAppState extends State<SolveApp> {
     // print("sound level $level: $minSoundLevel - $maxSoundLevel ");
     setState(() {
       this.levelSpeech = levelSpeech;
+    });
+  }
+
+  void onPressedMic() {
+    if (!_hasSpeech || speech.isListening) {
+      print(
+          'THIS SHOULD NOT HAVE PRINTED, IT MEANS WE FUCKED UP andhasspeech is ' +
+              _hasSpeech.toString() +
+              'and speech.islistining is ' +
+              (speech.isListening).toString());
+      setState(() {
+        // speakingBoolBtnGlow =
+        //     true;
+        speakingBtnIcon = Icons.mic_none;
+        speech.cancel();
+      });
+    } else {
+      setState(() {
+        // speakingBoolBtnGlow =
+        //     true;
+        speakingBtnIcon = Icons.mic;
+      });
+      print("outside bottom sheet");
+      showModalBottomSheet<void>(
+        context: context,
+        builder: (BuildContext context) {
+          bottomSheetContext = context;
+          startListening();
+
+          print("in bottom sheet");
+          return Container(
+            height: 200,
+            color: Colors.white,
+            child: Center(
+              child: Container(
+                decoration: new BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: new BorderRadius.only(
+                        topLeft: const Radius.circular(10.0),
+                        topRight: const Radius.circular(10.0))),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    TextField(controller: _speechController),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    }
+  }
+
+  bool isNumeric(String s) {
+    if (s == null) {
+      return false;
+    }
+    return double.tryParse(s) != null;
+  }
+
+  _speak(String text) async {
+    flutterTts.stop();
+    await flutterTts.speak(text);
+    // await flutterTts.speak("1234567 plus 2837");
+  }
+
+// speaks each word sequentially
+  _speakList(List<String> texts) async {
+    int i = 0;
+    await flutterTts.speak(texts[i]);
+    // print("\n\n\n\n\n\n" + texts.length.toString());
+    flutterTts.setCompletionHandler(() async {
+      if (i < texts.length - 1) {
+        i++;
+        await flutterTts.speak(texts[i]);
+      } else {
+        if (_isSpeech) onPressedMic();
+      }
     });
   }
 
@@ -449,6 +520,7 @@ class _SolveAppState extends State<SolveApp> {
       _time = (prefs.getInt("time") ?? 1).toString();
       _valueIsPos = (prefs.getBool("onlyPositive") ?? false);
       _isautoCorrect = (prefs.getBool("autoCorrect") ?? false);
+      _isSpeech = (prefs.getBool("isSpeech") ?? false);
       print("\n\n\n Shared : $_playbackSpeed,$_time,$_valueIsPos\n\n\n");
     });
     print(" solve screen Shared loaded");
@@ -457,9 +529,10 @@ class _SolveAppState extends State<SolveApp> {
     isDataLoaded = true;
   }
 
-  void checkAnswer() {
+  void checkAnswer(bool isSpeechInput) {
     // stopListening();
-    String toMatchRes = _finalController.text;
+    String toMatchRes =
+        isSpeechInput ? _speechController.text : _finalController.text;
     if (isNumeric(toMatchRes)) {
       if (double.parse(toMatchRes) == double.parse(currAns)) {
         score++;
@@ -500,7 +573,7 @@ class _SolveAppState extends State<SolveApp> {
       if (text.isNotEmpty && isNumeric(text) && _isautoCorrect) {
         print("Text=$text");
         if (text.length == currAns.length) {
-          checkAnswer();
+          checkAnswer(false);
         }
       } else if (text.isNotEmpty && _isautoCorrect) {
         showtoast('Enter a Valid Number');
@@ -614,6 +687,7 @@ class _SolveAppState extends State<SolveApp> {
         // }
         // print('\n\nSet State1 Called score=$score , finalscore=$finalScore\n\n');
         _finalController.clear();
+        _speechController.clear();
         _finalController.removeListener(() {});
         noOfTimes++;
         _enabled = true;
@@ -1019,7 +1093,7 @@ class _SolveAppState extends State<SolveApp> {
                                                             currAns
                                                                 .toString()
                                                                 .length) {
-                                                          checkAnswer();
+                                                          checkAnswer(false);
                                                         }
                                                       },
                                                       keyboardType:
@@ -1084,7 +1158,43 @@ class _SolveAppState extends State<SolveApp> {
                                                                   speakingBtnIcon =
                                                                       Icons.mic;
                                                                 }),
-                                                                startListening(),
+                                                                print(
+                                                                    "outside bottom sheet"),
+                                                                showModalBottomSheet<
+                                                                    void>(
+                                                                  context:
+                                                                      context,
+                                                                  builder:
+                                                                      (BuildContext
+                                                                          context) {
+                                                                    bottomSheetContext =
+                                                                        context;
+                                                                    startListening();
+
+                                                                    print(
+                                                                        "in bottom sheet");
+                                                                    return Container(
+                                                                      height:
+                                                                          200,
+                                                                      color: Colors
+                                                                          .amber,
+                                                                      child:
+                                                                          Center(
+                                                                        child:
+                                                                            Column(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.center,
+                                                                          mainAxisSize:
+                                                                              MainAxisSize.min,
+                                                                          children: <
+                                                                              Widget>[
+                                                                            TextField(controller: _speechController),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    );
+                                                                  },
+                                                                ),
                                                               },
                                                       child:
                                                           Icon(speakingBtnIcon),
@@ -1097,7 +1207,7 @@ class _SolveAppState extends State<SolveApp> {
                                           SizedBox(height: 24),
                                           RaisedButton(
                                             onPressed: () {
-                                              checkAnswer();
+                                              checkAnswer(false);
                                             },
                                             child: Text(
                                               'Check Answer',
