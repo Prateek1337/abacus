@@ -71,6 +71,7 @@ var minMap = {
   '6': 100000,
   '7': 1000000
 };
+FToast ftoast;
 var rng = new Random();
 void showtoast(String text) {
   Fluttertoast.showToast(
@@ -452,28 +453,29 @@ class _SolveAppState extends State<SolveApp> {
       print("outside bottom sheet");
       showModalBottomSheet<void>(
         context: context,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(50.0))),
         builder: (BuildContext context) {
           bottomSheetContext = context;
           startListening();
 
           print("in bottom sheet");
           return Container(
-            height: 200,
+            height: 100,
             color: Colors.white,
             child: Center(
               child: Container(
-                decoration: new BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: new BorderRadius.only(
-                        topLeft: const Radius.circular(10.0),
-                        topRight: const Radius.circular(10.0))),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    TextField(controller: _speechController),
-                  ],
-                ),
+                // padding: const EdgeInsets.all(12.0),
+                child: TextFormField(
+                    readOnly: true,
+                    controller: _speechController,
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        contentPadding: EdgeInsets.all(12.0)),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 30, color: Colors.blue)),
               ),
             ),
           );
@@ -526,7 +528,7 @@ class _SolveAppState extends State<SolveApp> {
   Future _loadShared() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      // _playbackSpeed = (prefs.getDouble("speed") ?? 1.0);
+      _playbackSpeed = (prefs.getDouble("speed") ?? 1.0);
       _time = (prefs.getInt("time") ?? 1).toString();
       _valueIsPos = (prefs.getBool("onlyPositive") ?? false);
       _isautoCorrect = (prefs.getBool("autoCorrect") ?? false);
@@ -572,7 +574,7 @@ class _SolveAppState extends State<SolveApp> {
     super.initState();
     _loadShared();
     flutterTts = FlutterTts();
-
+    ftoast = FToast();
     // _playbackSpeed = 1.0;
     // _time = "1";
     // _valueIsPos = true;
@@ -679,6 +681,7 @@ class _SolveAppState extends State<SolveApp> {
         print("banner dispose error");
       }
       flutterTts.stop();
+      Fluttertoast.cancel();
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -1072,7 +1075,7 @@ class _SolveAppState extends State<SolveApp> {
                                                                             builder: (context) => (ScoreScreen(
                                                                                   user: user,
                                                                                   score: score,
-                                                                                  quesCount: quesCount,
+                                                                                  quesCount: noOfTimes,
                                                                                 ))));
                                                                   },
                                                                 ),
@@ -1127,93 +1130,93 @@ class _SolveAppState extends State<SolveApp> {
                                                       )),
                                                 ),
                                               ),
-                                              Expanded(
-                                                flex: 2,
-                                                child: Container(
-                                                  width: 50,
-                                                  height: 50,
-                                                  child: AvatarGlow(
-                                                    // animate: _isListening,
-                                                    glowColor: Theme.of(context)
-                                                        .primaryColor,
-                                                    endRadius: 75.0,
-                                                    duration: const Duration(
-                                                        milliseconds: 2000),
-                                                    repeatPauseDuration:
-                                                        const Duration(
-                                                            milliseconds: 100),
-                                                    // repeat: speakingBoolBtnGlow,
-                                                    child: FloatingActionButton(
-                                                      onPressed: !_hasSpeech ||
-                                                              speech.isListening
-                                                          ? () => {
-                                                                print('THIS SHOULD NOT HAVE PRINTED, IT MEANS WE FUCKED UP andhasspeech is ' +
-                                                                    _hasSpeech
-                                                                        .toString() +
-                                                                    'and speech.islistining is ' +
-                                                                    (speech.isListening)
-                                                                        .toString()),
-                                                                setState(() {
-                                                                  // speakingBoolBtnGlow =
-                                                                  //     true;
-                                                                  speakingBtnIcon =
-                                                                      Icons
-                                                                          .mic_none;
-                                                                  speech
-                                                                      .cancel();
-                                                                }),
-                                                              }
-                                                          : () => {
-                                                                setState(() {
-                                                                  // speakingBoolBtnGlow =
-                                                                  //     true;
-                                                                  speakingBtnIcon =
-                                                                      Icons.mic;
-                                                                }),
-                                                                print(
-                                                                    "outside bottom sheet"),
-                                                                showModalBottomSheet<
-                                                                    void>(
-                                                                  context:
-                                                                      context,
-                                                                  builder:
-                                                                      (BuildContext
-                                                                          context) {
-                                                                    bottomSheetContext =
-                                                                        context;
-                                                                    startListening();
+                                              // Expanded(
+                                              //   flex: 2,
+                                              //   child: Container(
+                                              //     width: 50,
+                                              //     height: 50,
+                                              //     child: AvatarGlow(
+                                              //       // animate: _isListening,
+                                              //       glowColor: Theme.of(context)
+                                              //           .primaryColor,
+                                              //       endRadius: 75.0,
+                                              //       duration: const Duration(
+                                              //           milliseconds: 2000),
+                                              //       repeatPauseDuration:
+                                              //           const Duration(
+                                              //               milliseconds: 100),
+                                              //       // repeat: speakingBoolBtnGlow,
+                                              //       child: FloatingActionButton(
+                                              //         onPressed: !_hasSpeech ||
+                                              //                 speech.isListening
+                                              //             ? () => {
+                                              //                   print('THIS SHOULD NOT HAVE PRINTED, IT MEANS WE FUCKED UP andhasspeech is ' +
+                                              //                       _hasSpeech
+                                              //                           .toString() +
+                                              //                       'and speech.islistining is ' +
+                                              //                       (speech.isListening)
+                                              //                           .toString()),
+                                              //                   setState(() {
+                                              //                     // speakingBoolBtnGlow =
+                                              //                     //     true;
+                                              //                     speakingBtnIcon =
+                                              //                         Icons
+                                              //                             .mic_none;
+                                              //                     speech
+                                              //                         .cancel();
+                                              //                   }),
+                                              //                 }
+                                              //             : () => {
+                                              //                   setState(() {
+                                              //                     // speakingBoolBtnGlow =
+                                              //                     //     true;
+                                              //                     speakingBtnIcon =
+                                              //                         Icons.mic;
+                                              //                   }),
+                                              //                   print(
+                                              //                       "outside bottom sheet"),
+                                              //                   showModalBottomSheet<
+                                              //                       void>(
+                                              //                     context:
+                                              //                         context,
+                                              //                     builder:
+                                              //                         (BuildContext
+                                              //                             context) {
+                                              //                       bottomSheetContext =
+                                              //                           context;
+                                              //                       startListening();
 
-                                                                    print(
-                                                                        "in bottom sheet");
-                                                                    return Container(
-                                                                      height:
-                                                                          200,
-                                                                      color: Colors
-                                                                          .amber,
-                                                                      child:
-                                                                          Center(
-                                                                        child:
-                                                                            Column(
-                                                                          mainAxisAlignment:
-                                                                              MainAxisAlignment.center,
-                                                                          mainAxisSize:
-                                                                              MainAxisSize.min,
-                                                                          children: <
-                                                                              Widget>[
-                                                                            TextField(controller: _speechController),
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    );
-                                                                  },
-                                                                ),
-                                                              },
-                                                      child:
-                                                          Icon(speakingBtnIcon),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
+                                              //                       print(
+                                              //                           "in bottom sheet");
+                                              //                       return Container(
+                                              //                         height:
+                                              //                             200,
+                                              //                         color: Colors
+                                              //                             .amber,
+                                              //                         child:
+                                              //                             Center(
+                                              //                           child:
+                                              //                               Column(
+                                              //                             mainAxisAlignment:
+                                              //                                 MainAxisAlignment.center,
+                                              //                             mainAxisSize:
+                                              //                                 MainAxisSize.min,
+                                              //                             children: <
+                                              //                                 Widget>[
+                                              //                               TextField(controller: _speechController),
+                                              //                             ],
+                                              //                           ),
+                                              //                         ),
+                                              //                       );
+                                              //                     },
+                                              //                   ),
+                                              //                 },
+                                              //         child:
+                                              //             Icon(speakingBtnIcon),
+                                              //       ),
+                                              //     ),
+                                              //   ),
+                                              // ),
                                             ],
                                           ),
                                           SizedBox(height: 24),
