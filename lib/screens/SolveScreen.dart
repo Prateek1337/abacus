@@ -31,7 +31,8 @@ int finalScore = 0;
 int quesCount = 10;
 // String questionTts;
 List<String> questionTtsList;
-final FlutterTts flutterTts = FlutterTts();
+FlutterTts flutterTts;
+
 var timerMap = {
   '0': 1,
   '1': 60,
@@ -234,7 +235,7 @@ class _SolveAppState extends State<SolveApp> {
   final _speechController = TextEditingController();
   BuildContext bottomSheetContext;
   var params;
-  double _playbackSpeed;
+  double _playbackSpeed = 1;
   bool _enabled, _valueIsPos, _isautoCorrect, _isSpeech;
   bool timerVisibility, isDataLoaded = false;
   String currQuestion, _time;
@@ -494,19 +495,28 @@ class _SolveAppState extends State<SolveApp> {
     // await flutterTts.speak("1234567 plus 2837");
   }
 
+  void speakText(String text) async {
+    await flutterTts.speak(text);
+  }
+
 // speaks each word sequentially
   _speakList(List<String> texts) async {
     int i = 0;
-    await flutterTts.speak(texts[i]);
-    // print("\n\n\n\n\n\n" + texts.length.toString());
     flutterTts.setCompletionHandler(() async {
       if (i < texts.length - 1) {
-        i++;
-        await flutterTts.speak(texts[i]);
+        setState(() {
+          print("texts inside handler:$texts");
+          i++;
+          flutterTts.speak(texts[i]);
+        });
       } else {
         if (_isSpeech) onPressedMic();
       }
     });
+    flutterTts.speak(texts[i]);
+    // flutterTts.speak(texts[i + 1]);
+    print("texts:$texts");
+    // print("\n\n\n\n\n\n" + texts.length.toString());
   }
 
   /*
@@ -516,7 +526,7 @@ class _SolveAppState extends State<SolveApp> {
   Future _loadShared() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _playbackSpeed = (prefs.getDouble("speed") ?? 1.0);
+      // _playbackSpeed = (prefs.getDouble("speed") ?? 1.0);
       _time = (prefs.getInt("time") ?? 1).toString();
       _valueIsPos = (prefs.getBool("onlyPositive") ?? false);
       _isautoCorrect = (prefs.getBool("autoCorrect") ?? false);
@@ -561,6 +571,7 @@ class _SolveAppState extends State<SolveApp> {
   void initState() {
     super.initState();
     _loadShared();
+    flutterTts = FlutterTts();
 
     // _playbackSpeed = 1.0;
     // _time = "1";
@@ -744,6 +755,7 @@ class _SolveAppState extends State<SolveApp> {
   void dispose() {
     // score = finalScore;
     // _bannerAd?.dispose();
+    print('dispose called');
     try {
       _bannerAd?.dispose();
       _bannerAd = null;

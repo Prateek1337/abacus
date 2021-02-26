@@ -1,3 +1,4 @@
+import 'package:abacus/Variables.dart';
 import 'package:abacus/screens/LevelScreen.dart';
 import 'package:abacus/screens/MultiplicationSettingScreen.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'SolveScreen.dart';
 import 'package:abacus/widgets/drawer.dart';
+import 'package:abacus/Variables.dart';
 
 void LogPrint(Object object) async {
   int defaultPrintLength = 1020;

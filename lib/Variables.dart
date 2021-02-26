@@ -1,4 +1,5 @@
 import 'package:flutter_emoji/flutter_emoji.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 class Variables {
   final String isLoggedIn = "isLoggedIn";
