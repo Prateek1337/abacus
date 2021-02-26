@@ -512,7 +512,11 @@ class _SolveAppState extends State<SolveApp> {
           flutterTts.speak(texts[i]);
         });
       } else {
-        if (_isSpeech) onPressedMic();
+        if (_isSpeech) {
+          Timer(Duration(milliseconds: 1000), () {
+            onPressedMic();
+          });
+        }
       }
     });
     flutterTts.speak(texts[i]);
@@ -718,6 +722,7 @@ class _SolveAppState extends State<SolveApp> {
         // print('\n\nSet State1 Called score=$score , finalscore=$finalScore\n\n');
         _finalController.clear();
         _speechController.clear();
+        speech.stop();
         _finalController.removeListener(() {});
         noOfTimes++;
         _enabled = true;
