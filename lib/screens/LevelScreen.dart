@@ -39,17 +39,17 @@ class _LevelScreenState extends State<LevelScreen> {
         home: Scaffold(
             appBar: AppBar(title: Text("Select Level")),
             drawer: AppDrawer(user: user),
-            body: Center(
-              child: Stack(children: <Widget>[
-                // Container(
-                //     decoration: BoxDecoration(
-                //         image: DecorationImage(
-                //             image: AssetImage("images/1.jpg"),
-                //             fit: BoxFit.cover))),
-                // Container(
-                //   color: Color.fromRGBO(255, 255, 255, 0.6),
-                // ),
-                Container(
+            body: Stack(children: <Widget>[
+              // Container(
+              //     decoration: BoxDecoration(
+              //         image: DecorationImage(
+              //             image: AssetImage("images/1.jpg"),
+              //             fit: BoxFit.cover))),
+              // Container(
+              //   color: Color.fromRGBO(255, 255, 255, 0.6),
+              // ),
+              Center(
+                child: Container(
                   padding: EdgeInsets.all(8.0),
                   child: GridView.count(
                     primary: false,
@@ -195,8 +195,8 @@ class _LevelScreenState extends State<LevelScreen> {
                             ),
                         ],
                   ),
-                )
-              ]),
-            )));
+                ),
+              )
+            ])));
   }
 }

@@ -231,6 +231,9 @@ class _SettingWidgetState extends State<SettingWidget> {
                     onToggle: (val) {
                       setState(() {
                         _isMute = val;
+                        if (_isMute) {
+                          _isSpeech = false;
+                        }
                       });
                     },
                   ),

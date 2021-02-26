@@ -237,7 +237,7 @@ class _SolveAppState extends State<SolveApp> {
   BuildContext bottomSheetContext;
   var params;
   double _playbackSpeed = 1;
-  bool _enabled, _valueIsPos, _isautoCorrect, _isSpeech;
+  bool _enabled, _valueIsPos, _isautoCorrect, _isSpeech, _isMute;
   bool timerVisibility, isDataLoaded = false;
   String currQuestion, _time;
   bool _hasSpeech = false;
@@ -533,12 +533,29 @@ class _SolveAppState extends State<SolveApp> {
       _valueIsPos = (prefs.getBool("onlyPositive") ?? false);
       _isautoCorrect = (prefs.getBool("autoCorrect") ?? false);
       _isSpeech = (prefs.getBool("isSpeech") ?? false);
+      _isMute = (prefs.getBool("isMute") ?? false);
       print("\n\n\n Shared : $_playbackSpeed,$_time,$_valueIsPos\n\n\n");
     });
     print(" solve screen Shared loaded");
     timerVisibility = timerMap[_time] != 1;
     print('_time:$_time');
     isDataLoaded = true;
+    if (!_isMute) _speakList(questionTtsList);
+  }
+
+  void playSound(int i) {
+    //create a new player
+    var assetsAudioPlayer = AssetsAudioPlayer();
+    if (i == 1) {
+      assetsAudioPlayer.open(
+        Audio("audios/rightAnswer.mp3"),
+      );
+    } else {
+      assetsAudioPlayer.open(
+        Audio("audios/wrongAnswer.mp3"),
+      );
+    }
+    assetsAudioPlayer.play();
   }
 
   void checkAnswer(bool isSpeechInput) {
@@ -549,7 +566,7 @@ class _SolveAppState extends State<SolveApp> {
       if (double.parse(toMatchRes) == double.parse(currAns)) {
         score++;
         showtoast('Correct Answer');
-        // playSound(1);
+        playSound(1);
         Timer(Duration(milliseconds: 300), () {
           btnFunction(score);
         });
@@ -557,7 +574,7 @@ class _SolveAppState extends State<SolveApp> {
         //_isButtonDisabled = true;
       } else {
         showtoast('Wrong Answer \n Correct Answer is ' + currAns.toString());
-        // playSound(0);
+        playSound(0);
         Timer(Duration(milliseconds: 300), () {
           btnFunction(score);
         });
@@ -604,7 +621,6 @@ class _SolveAppState extends State<SolveApp> {
     print('time:$_time');
     currQuestion = callOper(_valueIsPos);
     // print("\n\n\n\n question: $questionTtsList\n\n");
-    _speakList(questionTtsList);
     _initAdMob();
     _bannerAd = BannerAd(
       adUnitId: AdManager.SolveScreenbannerAdUnitId,
@@ -706,7 +722,7 @@ class _SolveAppState extends State<SolveApp> {
         noOfTimes++;
         _enabled = true;
         currQuestion = callOper(_valueIsPos);
-        _speakList(questionTtsList);
+        if (!_isMute) _speakList(questionTtsList);
         score = score;
       });
     }
@@ -835,20 +851,6 @@ class _SolveAppState extends State<SolveApp> {
     //     testfun();
     //   };
     // }
-    void playSound(int i) {
-      //create a new player
-      var assetsAudioPlayer = AssetsAudioPlayer();
-      if (i == 1) {
-        assetsAudioPlayer.open(
-          Audio("audios/rightAnswer.mp3"),
-        );
-      } else {
-        assetsAudioPlayer.open(
-          Audio("audios/wrongAnswer.mp3"),
-        );
-      }
-      assetsAudioPlayer.play();
-    }
 
     if (isDataLoaded == false) {
       return WillPopScope(
@@ -969,13 +971,18 @@ class _SolveAppState extends State<SolveApp> {
                                                       fontSize: 16.0),
                                                 ),
                                               ),
-                                              IconButton(
-                                                padding:
-                                                    EdgeInsets.only(right: 10),
-                                                onPressed: () {
-                                                  _speakList(questionTtsList);
-                                                },
-                                                icon: Icon(Icons.replay),
+                                              Visibility(
+                                                visible: !_isMute,
+                                                child: IconButton(
+                                                  padding: EdgeInsets.only(
+                                                      right: 10),
+                                                  onPressed: () {
+                                                    if (!_isMute)
+                                                      _speakList(
+                                                          questionTtsList);
+                                                  },
+                                                  icon: Icon(Icons.replay),
+                                                ),
                                               ),
                                               Visibility(
                                                 visible: timerVisibility,
