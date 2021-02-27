@@ -11,6 +11,7 @@ import 'package:abacus/screens/ad_manager.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:abacus/widgets/drawer.dart';
+import 'package:share/share.dart';
 
 import 'SolveScreen.dart';
 
@@ -64,6 +65,7 @@ class _ScoreScreenState extends State<ScoreScreen> {
     );
     _loadBannerAd();
     _stop();
+    if (milliseconds != null) formatTime(milliseconds);
   }
 
   @override
@@ -88,11 +90,12 @@ class _ScoreScreenState extends State<ScoreScreen> {
     _bannerAd.show(anchorType: AnchorType.bottom);
   }
 
+  var secs, hours, minutes, seconds;
   String formatTime(int milliseconds) {
-    var secs = milliseconds ~/ 1000;
-    var hours = (secs ~/ 3600).toString().padLeft(2, '0');
-    var minutes = ((secs % 3600) ~/ 60).toString().padLeft(2, '0');
-    var seconds = (secs % 60).toString().padLeft(2, '0');
+    secs = milliseconds ~/ 1000;
+    hours = (secs ~/ 3600).toString().padLeft(2, '0');
+    minutes = ((secs % 3600) ~/ 60).toString().padLeft(2, '0');
+    seconds = (secs % 60).toString().padLeft(2, '0');
     return "$hours:$minutes:$seconds";
   }
 
@@ -135,13 +138,15 @@ class _ScoreScreenState extends State<ScoreScreen> {
                                 title: Column(
                                   children: [
                                     Text(
-                                      'Your Final Score is ' +
+                                      'You solved ' +
                                           score.toString() +
                                           '\n' +
                                           'out of ' +
                                           quesCount.toString() +
-                                          '. Time taken is' +
-                                          formatTime(milliseconds),
+                                          ' questions correctly' +
+                                          (minutes == null
+                                              ? ''
+                                              : ' in $minutes minutes $seconds seconds.'),
                                       style: new TextStyle(
                                           fontSize: 24.0,
                                           fontWeight: FontWeight.bold,
@@ -167,26 +172,70 @@ class _ScoreScreenState extends State<ScoreScreen> {
                           SizedBox(
                             height: 16,
                           ),
-                          RaisedButton(
-                            onPressed: () => {
-                              _bannerAd?.dispose(),
-                              Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          HomeScreen(user: user)),
-                                  (r) => false)
-                            },
-                            child: Text(
-                              "Done",
-                              style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.white),
+                          Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Expanded(
+                                  child: RaisedButton(
+                                    onPressed: () => {
+                                      _bannerAd?.dispose(),
+                                      Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  HomeScreen(user: user)),
+                                          (r) => false)
+                                    },
+                                    child: Text(
+                                      "Done",
+                                      style: TextStyle(
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.normal,
+                                          color: Colors.white),
+                                    ),
+                                    color: Theme.of(context).accentColor,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(5.0)),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 6,
+                                ),
+                                Expanded(
+                                  child: RaisedButton(
+                                    onPressed: () => {
+                                      Share.share('I solved ' +
+                                          score.toString() +
+                                          '\n' +
+                                          'out of ' +
+                                          quesCount.toString() +
+                                          ' questions correctly' +
+                                          (minutes == null
+                                              ? ''
+                                              : 'in $minutes minutes $seconds seconds.'))
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.share),
+                                        Text(
+                                          "Share Result",
+                                          style: TextStyle(
+                                              fontSize: 20.0,
+                                              fontWeight: FontWeight.normal,
+                                              color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                    color: Theme.of(context).accentColor,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(5.0)),
+                                  ),
+                                ),
+                              ],
                             ),
-                            color: Theme.of(context).accentColor,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5.0)),
                           ),
                         ],
                       )),

@@ -41,7 +41,7 @@ class _LevelScreenState extends State<LevelScreen> {
   void buildlist() {
     for (var i = 0; i < 3; i++) {
       levelDetails[i].add("Number of Questions: 10");
-      levelDetails[i].add("")
+      levelDetails[i].add("");
     }
   }
 

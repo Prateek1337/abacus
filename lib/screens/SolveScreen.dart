@@ -713,7 +713,8 @@ class _SolveAppState extends State<SolveApp> {
                     user: user,
                     score: score,
                     quesCount: quesCount,
-                    milliseconds: _stopwatch.elapsedMilliseconds,
+                    milliseconds:
+                        params == null ? _stopwatch.elapsedMilliseconds : null,
                   ))));
     } else {
       setState(() {
@@ -777,7 +778,7 @@ class _SolveAppState extends State<SolveApp> {
       user: user,
       score: score,
       quesCount: totalQuestions,
-      milliseconds: _stopwatch.elapsedMilliseconds,
+      milliseconds: params == null ? _stopwatch.elapsedMilliseconds : null,
     ));
   }
 
@@ -1127,7 +1128,7 @@ class _SolveAppState extends State<SolveApp> {
                                                                                   user: user,
                                                                                   score: score,
                                                                                   quesCount: noOfTimes,
-                                                                                  milliseconds: _stopwatch.elapsedMilliseconds,
+                                                                                  milliseconds: params == null ? _stopwatch.elapsedMilliseconds : null,
                                                                                 ))));
                                                                   },
                                                                 ),
