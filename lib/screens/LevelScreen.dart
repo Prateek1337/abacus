@@ -2,6 +2,7 @@ import 'package:abacus/screens/AdditionSettingScreen.dart';
 import 'package:abacus/screens/MultiplicationSettingScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:abacus/widgets/drawer.dart';
+import 'package:flutter_custom_dialog/flutter_custom_dialog.dart';
 
 import 'SolveScreen.dart';
 
@@ -31,6 +32,19 @@ class _LevelScreenState extends State<LevelScreen> {
     [2, 4],
     [0, 3]
   ];
+  List<List<String>> levelDetails = [
+    [],
+    [],
+    [],
+  ];
+
+  void buildlist() {
+    for (var i = 0; i < 3; i++) {
+      levelDetails[i].add("Number of Questions: 10");
+      levelDetails[i].add("")
+    }
+  }
+
   Map<int, String> difficulty = {0: 'Easy', 1: 'Medium', 2: 'Hard'};
   @override
   Widget build(BuildContext context) {
@@ -99,7 +113,17 @@ class _LevelScreenState extends State<LevelScreen> {
                                               fontSize: 20)),
                                   trailing: IconButton(
                                     onPressed: () {
-                                      print('Clicked');
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text("Level - " +
+                                                  (index + 1 + oper[isoper][0])
+                                                      .toString()),
+                                              content: Text(
+                                                  levelDetails[isoper][index]),
+                                            );
+                                          });
                                     },
                                     icon: Icon(Icons.info_outline,
                                         color: Colors.white, size: 30.0),

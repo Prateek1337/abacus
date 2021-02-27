@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 // import 'dart:math';
 import 'package:abacus/screens/HomeScreen.dart';
+import 'package:abacus/screens/SolveScreen.dart';
+
 import 'package:abacus/screens/ad_manager.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_admob/firebase_admob.dart';
@@ -29,20 +31,29 @@ Future _stop() async {
 }
 
 class ScoreScreen extends StatefulWidget {
-  final int score, quesCount;
+  final int score, quesCount, milliseconds;
   final String user;
-  ScoreScreen({Key key, @required this.user, this.score, this.quesCount})
+  ScoreScreen(
+      {Key key,
+      @required this.user,
+      this.score,
+      this.quesCount,
+      this.milliseconds})
       : super(key: key);
 
   @override
-  _ScoreScreenState createState() =>
-      _ScoreScreenState(user: user, score: score, quesCount: quesCount);
+  _ScoreScreenState createState() => _ScoreScreenState(
+      user: user,
+      score: score,
+      quesCount: quesCount,
+      milliseconds: milliseconds);
 }
 
 class _ScoreScreenState extends State<ScoreScreen> {
-  final int score, quesCount;
+  final int score, quesCount, milliseconds;
   final String user;
-  _ScoreScreenState({@required this.user, this.score, this.quesCount});
+  _ScoreScreenState(
+      {@required this.user, this.score, this.quesCount, this.milliseconds});
   @override
   void initState() {
     super.initState();
@@ -75,6 +86,14 @@ class _ScoreScreenState extends State<ScoreScreen> {
   void _loadBannerAd() async {
     await _bannerAd.load();
     _bannerAd.show(anchorType: AnchorType.bottom);
+  }
+
+  String formatTime(int milliseconds) {
+    var secs = milliseconds ~/ 1000;
+    var hours = (secs ~/ 3600).toString().padLeft(2, '0');
+    var minutes = ((secs % 3600) ~/ 60).toString().padLeft(2, '0');
+    var seconds = (secs % 60).toString().padLeft(2, '0');
+    return "$hours:$minutes:$seconds";
   }
 
   @override
@@ -120,7 +139,9 @@ class _ScoreScreenState extends State<ScoreScreen> {
                                           score.toString() +
                                           '\n' +
                                           'out of ' +
-                                          quesCount.toString(),
+                                          quesCount.toString() +
+                                          '. Time taken is' +
+                                          formatTime(milliseconds),
                                       style: new TextStyle(
                                           fontSize: 24.0,
                                           fontWeight: FontWeight.bold,

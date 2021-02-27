@@ -248,6 +248,7 @@ class _SolveAppState extends State<SolveApp> {
   String lastError = '';
   String lastStatus = '';
   String _currentLocaleId = '';
+  Stopwatch _stopwatch;
   // int resultListened = 0;
   List<LocaleName> _localeNames = [];
   final SpeechToText speech = SpeechToText();
@@ -545,6 +546,7 @@ class _SolveAppState extends State<SolveApp> {
     print('_time:$_time');
     isDataLoaded = true;
     if (!_isMute) _speakList(questionTtsList);
+    if (noOfTimes == 1 && params == null) handleStartStop();
   }
 
   void playSound(int i) {
@@ -596,6 +598,7 @@ class _SolveAppState extends State<SolveApp> {
     _loadShared();
     flutterTts = FlutterTts();
     ftoast = FToast();
+    _stopwatch = Stopwatch();
     // _playbackSpeed = 1.0;
     // _time = "1";
     // _valueIsPos = true;
@@ -702,6 +705,7 @@ class _SolveAppState extends State<SolveApp> {
       }
       flutterTts.stop();
       Fluttertoast.cancel();
+      if (params == null) handleStartStop();
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -709,6 +713,7 @@ class _SolveAppState extends State<SolveApp> {
                     user: user,
                     score: score,
                     quesCount: quesCount,
+                    milliseconds: _stopwatch.elapsedMilliseconds,
                   ))));
     } else {
       setState(() {
@@ -772,6 +777,7 @@ class _SolveAppState extends State<SolveApp> {
       user: user,
       score: score,
       quesCount: totalQuestions,
+      milliseconds: _stopwatch.elapsedMilliseconds,
     ));
   }
 
@@ -840,6 +846,23 @@ class _SolveAppState extends State<SolveApp> {
       _finalController.text =
           _finalController.text.substring(0, _finalController.text.length - 1);
     }
+  }
+
+  String formatTime(int milliseconds) {
+    var secs = milliseconds ~/ 1000;
+    var hours = (secs ~/ 3600).toString().padLeft(2, '0');
+    var minutes = ((secs % 3600) ~/ 60).toString().padLeft(2, '0');
+    var seconds = (secs % 60).toString().padLeft(2, '0');
+    return "$hours:$minutes:$seconds";
+  }
+
+  void handleStartStop() {
+    if (_stopwatch.isRunning) {
+      _stopwatch.stop();
+    } else {
+      _stopwatch.start();
+    }
+    setState(() {}); // re-render the page
   }
 
   @override
@@ -990,7 +1013,22 @@ class _SolveAppState extends State<SolveApp> {
                                                 ),
                                               ),
                                               Visibility(
-                                                visible: timerVisibility,
+                                                visible: params == null,
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    Text(
+                                                        formatTime(_stopwatch
+                                                            .elapsedMilliseconds),
+                                                        style: TextStyle(
+                                                            fontSize: 12.0)),
+                                                  ],
+                                                ),
+                                              ),
+                                              Visibility(
+                                                visible: timerVisibility &&
+                                                    params != null,
                                                 child: CircularCountDownTimer(
                                                   // Countdown duration in Seconds
                                                   duration: timerMap[_time],
@@ -1048,7 +1086,8 @@ class _SolveAppState extends State<SolveApp> {
                                                     // Here, do whatever you wan
                                                     print(
                                                         '\n\nCountdown Ended\n\n');
-                                                    if (timerVisibility) {
+                                                    if (timerVisibility &&
+                                                        params != null) {
                                                       // score = finalScore;
                                                       // finalScore = 0;
                                                       flutterTts.stop();
@@ -1088,6 +1127,7 @@ class _SolveAppState extends State<SolveApp> {
                                                                                   user: user,
                                                                                   score: score,
                                                                                   quesCount: noOfTimes,
+                                                                                  milliseconds: _stopwatch.elapsedMilliseconds,
                                                                                 ))));
                                                                   },
                                                                 ),
