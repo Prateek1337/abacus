@@ -3,7 +3,7 @@ import 'package:abacus/screens/MultiplicationSettingScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:abacus/widgets/drawer.dart';
 import 'package:flutter_custom_dialog/flutter_custom_dialog.dart';
-
+import 'package:abacus/Variables.dart';
 import 'SolveScreen.dart';
 
 class LevelScreen extends StatefulWidget {
@@ -32,18 +32,6 @@ class _LevelScreenState extends State<LevelScreen> {
     [2, 4],
     [0, 3]
   ];
-  List<List<String>> levelDetails = [
-    [],
-    [],
-    [],
-  ];
-
-  void buildlist() {
-    for (var i = 0; i < 3; i++) {
-      levelDetails[i].add("Number of Questions: 10");
-      levelDetails[i].add("");
-    }
-  }
 
   Map<int, String> difficulty = {0: 'Easy', 1: 'Medium', 2: 'Hard'};
   @override
@@ -120,8 +108,8 @@ class _LevelScreenState extends State<LevelScreen> {
                                               title: Text("Level - " +
                                                   (index + 1 + oper[isoper][0])
                                                       .toString()),
-                                              content: Text(
-                                                  levelDetails[isoper][index]),
+                                              content: Text(Variables()
+                                                  .levelDetails[isoper][index]),
                                             );
                                           });
                                     },
