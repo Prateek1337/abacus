@@ -269,6 +269,18 @@ class _SolveAppState extends State<SolveApp> {
   CODE FOR SPEECH TO TEXT
   --------------------------------------------------------------------------------------------------------
   */
+  String filterWords(String word) {
+    if (word == "sex" || word == "six")
+      return "6";
+    else if (word == "tu")
+      return "2";
+    else if (word == "ford")
+      return "4";
+    else if (word == "xx")
+      return "20";
+    else if (word == "zero") return "0";
+    return word;
+  }
 
   // stt.SpeechToText _speech;
   // bool _isListening = false;
@@ -414,6 +426,7 @@ class _SolveAppState extends State<SolveApp> {
     setState(() {
       lastWords = '${result.recognizedWords}';
       lastWords = lastWords.replaceAll(new RegExp(r"\s+"), "");
+      lastWords = filterWords(lastWords);
       _speechController.text = lastWords;
       print('last words are ' + lastWords);
       if (speech.isListening == false) {
