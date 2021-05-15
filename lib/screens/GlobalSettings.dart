@@ -68,7 +68,7 @@ class _SettingWidgetState extends State<SettingWidget> {
           ? prefs.getBool("autoCorrect")
           : false;
       _isSpeech =
-          prefs.getBool("isSpeech") != null ? prefs.getBool("isSpeech") : false;
+          prefs.getBool("isSpeech") != null ? prefs.getBool("isSpeech") : true;
 
       print("global shared loaded");
     });

@@ -546,11 +546,13 @@ class _SolveAppState extends State<SolveApp> {
   Future _loadShared() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _playbackSpeed = (prefs.getDouble("speed") ?? 1.0);
-      _time = (prefs.getInt("time") ?? 1).toString();
+      _playbackSpeed =
+          prefs.getDouble("speed") != null ? prefs.getDouble("speed") : 1.0;
+      _time =
+          prefs.getInt("time") != null ? prefs.getInt("time").toString() : "1";
       _valueIsPos = (prefs.getBool("onlyPositive") ?? false);
       _isautoCorrect = (prefs.getBool("autoCorrect") ?? false);
-      _isSpeech = (prefs.getBool("isSpeech") ?? false);
+      _isSpeech = (prefs.getBool("isSpeech") ?? true);
       _isMute = (prefs.getBool("isMute") ?? false);
       print("\n\n\n Shared : $_playbackSpeed,$_time,$_valueIsPos\n\n\n");
     });
@@ -558,6 +560,7 @@ class _SolveAppState extends State<SolveApp> {
     timerVisibility = timerMap[_time] != 1;
     print('_time:$_time');
     isDataLoaded = true;
+    flutterTts.setSpeechRate(_playbackSpeed);
     if (!_isMute) _speakList(questionTtsList);
     if (noOfTimes == 1 && params == null) handleStartStop();
   }
@@ -634,7 +637,7 @@ class _SolveAppState extends State<SolveApp> {
       quesCount = params['numberOfQuestions'];
     }
     // _playbackSpeed = double.parse(params['speed']);
-    flutterTts.setSpeechRate(_playbackSpeed);
+    // flutterTts.setSpeechRate(_playbackSpeed);
     flutterTts.setVolume(1.0);
     flutterTts.setVoice('en-in-x-ahp-local');
     _enabled = true;
